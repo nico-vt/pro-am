@@ -1,0 +1,211 @@
+@use "../base/colors";
+@use "../base/typography";
+@use "../utils/mixins";
+@use "../utils/variables";
+
+/*-----------------
+    16. Book Coach
+-----------------------*/
+
+.master-academy {
+	.white-bg {
+		padding: variables.$value__20;
+		min-width: 115px;
+		@include mixins.respond-below(custom575) {
+			margin-top: variables.$value__20;
+		}
+		p {
+			font-size: typography.$font__size__14;
+		}
+	}
+}
+.coach-types {
+	.border-block { 
+		border: 1px solid colors.$lightgray;
+		border-radius: 10px;
+		padding: 24px;
+		@include mixins.respond-below(custom767) {
+			padding: 20px;
+		}
+		ul {
+			margin-top: 20px;
+			flex-wrap: wrap;
+			li {
+				width: 19rem;
+				text-align: left;
+				height: 5.5rem;
+				border-radius: variables.$value__5;
+				padding: 24px;
+				color: colors.$white;
+				background: colors.$darkgray;
+				cursor: pointer;
+				@include mixins.transition(all 0.5s ease-in-out 0s);
+				p{
+					color: colors.$white;
+					padding-right: 85px;
+					margin-bottom: 0;
+					@include mixins.respond-below(custom575) {
+						padding-right: 0;
+					}
+				}
+				&:hover, &.active {
+					background: colors.$primarycolor;
+					h6 {
+						font-weight: typography.$medium;
+					}
+				}
+				&:first-child {
+					@include mixins.respond-below(custom767) {
+						margin-right: 0 !important;
+						margin-bottom: 15px;
+					}
+				}
+			}
+		}
+	}
+}
+.booking-date {
+	.time-slot {
+		border:1px solid colors.$lightgray;
+		border-radius: variables.$value__5;
+		height: variables.$value__60;
+		@extend %display-flex;
+		@extend %justify-content-center;
+		@extend %align-items-center;
+		margin-bottom: 24px;
+		cursor: pointer;
+		span {
+			color: colors.$dullgray;
+			font-size: typography.$font__size__14;
+		}
+		i {
+			display: variables.$none;
+			margin-left: 7px;
+		}
+		&.active {
+			span { 
+				color: colors.$secondarycolor;
+				font-size: typography.$font__size__16;
+				font-weight: typography.$medium;
+			}
+		}
+		&.checked {
+			border-color: colors.$primarycolor;
+			span {
+				color: colors.$primarycolor;
+				font-size: typography.$font__size__16;
+				font-weight: typography.$medium;
+			}
+			i {
+				display: variables.$block;
+				color: colors.$primarycolor;
+				font-weight: typography.$bold;
+			}
+		}
+	}
+	.date-slider {
+		text-align: variables.$center;
+		width: 95%;
+		margin-left: variables.$auto;
+		margin-right: variables.$auto;
+		.booking-date-item {
+			p {
+				margin-bottom: 0;
+			}
+		}
+	}
+}
+.coach {
+	ul {
+		&.booking-info {
+			li {
+				margin-right: 6.25rem;
+			}
+		}
+	}
+	&.lessons {
+		.booking-steps {
+			li { 
+				padding-right: 20px;
+				&:after {
+					right: 7px;
+				}
+			}
+		}
+		.lesson-types {
+			li {
+				text-align: center;
+				margin-right: variables.$value__80;
+				@include mixins.respond-below(custom991) {
+					margin-bottom: 0;
+					margin-right: 40px;
+				}
+				@include mixins.respond-below(custom767) {
+					margin-right: 0;
+				}
+				@include mixins.respond-below(custom575) {
+					margin-bottom: variables.$value__20;
+				}
+				&:last-child {
+					margin-right: 0;
+				}
+				a {
+					margin-bottom: variables.$value__20;
+					@extend %display-flex;
+					@extend %justify-content-center;
+					@extend %align-items-center;
+					padding: 24px 50px;
+					border: 1px solid colors.$lightgray;
+					h6 {
+						position: variables.$relative;
+						display: inline-block;
+						margin-bottom: 0;
+						i {
+							position: variables.$absolute;
+							right: -24px;
+							top: 2px;
+							display: none;
+							margin-left: 10px;
+							color: colors.$primarylight;
+						}
+					}
+					
+				}
+				&.active {
+					a {
+						background: colors.$dull__whitesmoke;
+						i{
+							display: inline-block;
+						}
+					}
+				}
+				p {
+					margin-bottom: 0;
+				}
+			}
+		}
+	}
+}
+.alert-danger {
+	padding: variables.$value__10;
+	background: colors.$warning__bg;
+	color: colors.$red;
+	border: variables.$none;
+	strong {
+		font-size: typography.$font__size__18;
+		font-weight: typography.$semibold;
+	}
+}
+.card {
+	&.time-date-card {
+		padding-bottom: 0;
+		@include mixins.respond-below(custom991) {
+			margin-bottom: 20px;
+		}
+	}
+	.lesson-types {
+		@include mixins.respond-below(custom767) {
+			display: block !important;
+		}
+	}
+}

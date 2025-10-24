@@ -1,0 +1,368 @@
+@use "../base/colors";
+@use "../base/typography";
+@use "../utils/mixins";
+@use "../utils/variables";
+
+/*---------------------
+    30. Authentication
+-----------------------*/
+
+.authendication-pages {
+	h2 {
+		@include mixins.respond-below(custom767) {
+			font-size: 24px;
+		}
+	}
+	.content {
+		padding: 0;
+			&.blur-ellipses {
+				&:before {
+					position: variables.$absolute;
+					width: 600px;
+					height: 600px;
+					background: rgba(9, 126, 82, 0.04);
+					filter: blur(47px);
+					border-radius: variables.$full__width;
+					content: '';
+					top: -400px;
+					right: 0;
+					z-index: -1;
+					@include mixins.respond-below(custom991) {
+						display: none;
+					}
+				}
+			.shadow-card { 
+				position: variables.$relative;
+				&:after {
+					width: 393px;
+					height: 393px;
+					border-radius: 393px;
+					background: rgba(245, 3, 3, 0.05);
+					filter: blur(47px);
+				    position: absolute;
+					bottom: -150px;
+				    left: -150px;
+				    content: "";
+				    z-index: -1;
+					@include mixins.respond-below(custom991) {
+						display: none;
+					}
+				}
+			}
+		}
+		.wrapper {
+			max-width: 100%;
+			.banner-bg {
+			    background-repeat: no-repeat;
+			    background-size: cover;
+			    background-position: center;
+			    overflow: hidden;
+			    height: variables.$full__width;
+			    width: variables.$full__width;
+			    position: fixed;
+			    width: 50%;
+			    &.register {
+					background-image: url(/src/assets/img/bg/register-bg.jpg);
+			    }
+			    &.login {
+					background-image: url(/src/assets/img/bg/login-bg.jpg);
+			    }
+				@include mixins.respond-below(custom991) {
+					display: none;
+				}
+			}
+			header {
+				margin-top: 80px;
+				@include mixins.respond-below(custom991) {
+					margin: 24px 0;
+				}
+				img {
+					@include mixins.respond-below(custom767) {
+						max-width: 180px;
+					}
+				}
+			}
+			p {
+				font-size: 20px;
+			}
+			.shadow-card {
+				margin: variables.$value__40 0;
+				@include mixins.respond-below(custom991) {
+					margin: 0 0 24px 0; 
+				}
+			}
+			.text-bg {
+				backdrop-filter: blur(50px);
+				padding: variables.$value__40;
+				border-radius: variables.$value__10;
+				&.register {
+					background: colors.$greenish__bg;
+				}
+				p {
+					color: colors.$white;
+					margin-bottom: 0;
+				}
+			}
+			.nav-tabs {
+				margin: variables.$value__40 0;
+				border-bottom: 0;
+				.nav-item { 
+					margin-right: 14px;
+					&:last-child {
+						margin-right: 0;
+					}
+					@include mixins.respond-below(custom767) {
+						margin-right: 5px;
+					}
+					.nav-link {
+						padding: 20px 24px;
+						font-size: typography.$font__size__14;
+						border-width: 2px;
+						border-color: transparent;
+						border-radius: variables.$value__10;
+						color: colors.$secondarycolor;
+						@include mixins.respond-below(custom767) {
+							padding: 12px 10px;
+						}
+						span {
+							width: 12px;
+							height: 12px;
+							border-radius: 12px;
+							border: 1px solid colors.$bright__gray;
+							display: inline-block;
+							margin-right: 10px;
+							position: variables.$relative;
+							&:after {
+								width: 6px;
+								height: 6px;
+								border-radius: 6px;
+								background: colors.$primarycolor;
+								opacity: 0;
+								@include mixins.transition(all 0.5s ease-in-out 0s);
+								display: inline-block;
+								position: variables.$absolute;
+								left: 50%;
+								top: 50%;
+								@include mixins.transform(translate(-50%, -50%));
+								content: '';
+							}
+						}
+						&.active {
+							border-color: colors.$primarycolor;
+							background: colors.$dull__whitesmoke;
+							color: colors.$primarycolor;
+							span {
+								&:after {
+									opacity: 1;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		form {
+			.form-group {
+			    margin-bottom: 24px;
+			    .group-img {
+				    position: relative;
+				    i {
+					    position: absolute;
+					    top: variables.$value__20;
+					    right: variables.$value__20;
+					    color: colors.$darkash;
+					    font-size: typography.$font__size__18;
+					    cursor: pointer;
+					}
+					input {
+						padding: variables.$value__20;
+					}
+				}
+				.login-options {
+					.text {
+					    text-align: center;
+					    text-transform: lowercase;
+					    font-size: typography.$font__size__13;
+					    color: colors.$secondarycolor;
+					    position: relative;
+					    &:before, &:after {
+					    	width: 100%;
+							content: "";
+							border-top: 1px solid colors.$gray__dark;
+							position: absolute;
+							top: 50%;
+					    }
+					    &:before {
+					    	left: -100px;
+							@include mixins.respond-below(custom991) {
+								left: -95px;
+							}
+					    }
+					    &:after {
+					    	right: -100px;
+							@include mixins.respond-below(custom991) {
+								right: -95px;
+							}
+					    }
+					}
+				}
+			}
+			.form-check {
+				label { 
+					color: colors.$darkgray;
+					font-size: typography.$font__size__14;
+					a {
+						color: colors.$primarycolor;
+						&:hover {
+							color: colors.$secondarycolor;
+						}
+					}
+				}
+				&.form-switch {
+					.form-check-input { 
+						height: 20px;
+						border-width: 2px;
+						position: relative;
+						background-image: variables.$none;
+						&:checked {
+							background: none;
+							border-color: colors.$primarycolor;
+							&:after {
+								left: 50%;
+							}
+						}
+						&:not(:checked) {
+							border-color: colors.$darkgray;
+						}
+						&:after {
+							position: absolute;
+							left: 3px;
+							top: 2.5px;
+							content: '';
+							width: 10px;
+							height: 10px;
+							border-radius: 10px;
+							border: 2px solid colors.$primarycolor;
+							@include mixins.transition(all 0.5s ease-in-out 0s);
+						}
+					}
+				}
+			}
+			.forgot-pass {
+				color: colors.$red__light;
+				@include mixins.respond-below(custom767) {
+					margin-top: 10px;
+					display: inline-block;
+				}
+				&:hover {
+					color: colors.$secondarycolor;
+				}
+			}
+			.btn-block {
+				margin: 16px 0 variables.$value__40 0;
+			}
+			.social-login {
+				li {
+					margin-right: 14px;
+					&:last-child {
+						margin-right: 0;
+					}
+					.btn-social {
+						padding: 0 24px;
+						min-height: 43px;
+						border: 1px solid colors.$gray__light;
+						font-size: typography.$font__size__12;
+						border-radius: 5px;
+						&:hover {
+							color: colors.$secondarycolor;
+							border-color: colors.$green__light;
+						}
+						img {
+							margin-right: 5px;
+						}
+					}
+				}
+			}
+		}
+		.forgot-password, .change-password {
+			header {
+				padding-bottom: 40px;
+				padding-top: 60px;
+				@include mixins.respond-below(custom767) {
+					padding-bottom: 24px;
+					padding-top: 24px;
+				}
+				img {
+					@include mixins.respond-below(custom767) {
+						max-width: 180px;
+					}
+				}
+			}
+			.form-group {
+				margin: variables.$value__40 0;
+			}
+			.bottom-text {
+				margin-top: 24px;
+				margin-bottom: 0
+			}
+		}
+		.bottom-text {
+			margin-bottom: 80px;
+			@include mixins.respond-below(custom991) {
+				margin-top: 24px;
+				margin-bottom: 24px;
+			}
+			p {
+				font-size: typography.$font__size__16;
+				margin-bottom: 0;
+				a {
+					color: colors.$primarycolor;
+					&:hover {
+						color: colors.$parrot_green;
+					}
+				}
+			}
+		}
+	}
+}
+.no-padding {
+	padding-left: 0;
+	padding-right: 0;
+}
+.no-margin {
+	margin-left: 0;
+	margin-right: 0;
+}
+.shadow-card {
+	background: colors.$white;
+	border-radius: variables.$value__10;
+	padding: 24px;
+	box-shadow: colors.$row__box__shadow;
+	@include mixins.respond-below(custom767) {
+		padding: 20px;
+	}
+}
+.btn-limegreen {
+	background: colors.$active_color;
+	padding: 24px;
+	color: colors.$secondarycolor;
+	font-size: typography.$font__size__32;
+	font-weight: typography.$bold;
+	margin-bottom: 17px;
+	cursor: default;
+	&:not(:disabled) {
+		cursor: default;
+	}
+	i {
+		color: colors.$yellow__dark;
+	}
+	&:hover {
+		background: colors.$primarycolor;
+	}
+}
+.vph-100 {
+	min-height: 100vh;
+	@include mixins.respond-below(custom991) {
+		min-height: auto;
+	}
+}

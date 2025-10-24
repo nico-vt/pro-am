@@ -1,0 +1,145 @@
+@use "../base/colors";
+@use "../base/typography";
+@use "../utils/mixins";
+@use "../utils/variables";
+
+/*-----------------
+    24. Services
+-----------------------*/
+
+.services {
+	.nav {
+		li {
+			padding-right: 24px;
+			&:last-child {
+				margin-right: 0;
+			}
+			.nav-link {
+				padding: 13px variables.$value__30;
+				border-radius: 5px;
+				color: colors.$secondarycolor;
+				@include mixins.respond-below(custom767) {
+					padding: 10px 15px;
+				}
+				&:hover, &.active {
+					background: colors.$secondarycolor;
+					color: colors.$white;
+				}
+			}
+		}
+	}
+	.tab-pane {
+		margin-top: variables.$value__40;
+		.listing-item {
+			margin-bottom: 24px;
+			img {
+				border-radius: 6px 6px 0 0;
+				width: 100%;
+			}
+			p {
+				margin-bottom: 24px;
+			}
+		}
+	}
+}
+.services-detail-page {
+	.banner {
+		img {
+			border-radius: 6px;
+		}
+	}
+	h2 {
+		margin: 24px 0 10px 0;
+		font-size: 36px;
+		@include mixins.respond-below(custom991) {
+			font-size:typography.$font__size__32;
+		}
+	}
+	.dull-bg {
+		margin: 24px 0;
+		padding: 15px;
+	}
+	.our-benefits {
+		margin-bottom: 24px;
+		.info {
+			padding: 24px;
+			@include mixins.respond-below(custom991) {
+				padding-left: 0;
+				padding-bottom: 0;
+			}
+			ul {
+				li {
+					margin-bottom: 12px;
+					display: variables.$flex;
+					align-items: variables.$center;
+					span {
+						width: calc(100% - 24px);
+					}
+					&:last-child {
+						margin-bottom: 0;
+					}
+					i {
+						margin-right: 10px;
+						width: 14px;
+						height: 14px;
+						border-radius: 14px;
+						border: 2px solid colors.$primarycolor;
+						font-size: 8px;
+					    text-align: center;
+					    line-height: 11px;
+					    color: colors.$primarycolor;
+					}
+				}
+			}
+		}
+	}
+	.pagination {
+		margin-top: 64px;
+		padding: 35px;
+		@include mixins.respond-below(custom991) {
+			margin-top: 0;
+			padding: 35px 0 0 0;
+		}
+		a {
+			&:hover {
+				color: colors.$primarycolor;
+				h4 {
+					color: colors.$primarycolor;
+				}
+			}
+		}
+		.icon {
+			img {
+					@include mixins.transition(all 0.5s ease-in-out 0s);
+				&:hover {
+					filter: invert(50%) sepia(20%) saturate(7478%) hue-rotate(100deg) brightness(70%) contrast(40%);
+				}
+			}
+		}
+		.prev, .next {
+			width: 44px;
+			height: 44px;
+			border: 1px solid colors.$bright__gray;
+			display: inline-block;
+			border-radius: 44px;
+			cursor: pointer;
+			@include mixins.transition(all 0.5s ease-in-out 0s);
+			i {
+				@include mixins.transition(all 0.5s ease-in-out 0s);
+			}
+			&:hover {
+				background: colors.$primarycolor;
+				border-color: colors.$primarycolor;
+				i {
+					color: colors.$white;
+				}
+			}
+		}
+		.prev {
+			margin-right: 15px;
+		}
+		.next {
+			margin-left: 15px;
+		}
+	}
+}

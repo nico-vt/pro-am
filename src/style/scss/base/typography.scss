@@ -1,0 +1,79 @@
+@use "../utils/mixins";
+
+/*-----------------
+    1. Typography
+-----------------------*/
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+$body__font__family: 'Outfit', sans-serif;
+$body__font__size:16px;
+
+$bold:700;
+$semibold:600;
+$medium:500;
+$regular:400;
+$__light:300;
+
+$font__size__12:12px;
+$font__size__13:13px;
+$font__size__14:14px;
+$font__size__15:15px;
+$font__size__16:16px;
+$font__size__18:18px;
+$font__size__20:20px;
+$font__size__24:24px;
+$__font__size__28:28px;
+$font__size__30:30px;
+$font__size__32:32px;
+$font__size__36:36px;
+$font__size__62:62px;
+
+h1{
+	font-weight:$bold;
+	font-size:$font__size__36;
+	@include mixins.respond-below(custom991) {
+		font-size:$font__size__32;
+	}
+}
+h2{
+	font-weight:$bold;
+	font-size:$font__size__32;
+	@include mixins.respond-below(custom991) {
+		font-size:$font__size__30;
+	}
+	@include mixins.respond-below(custom767) {
+		font-size:$__font__size__28;
+	}
+}
+h3{
+	font-weight:$semibold;
+	font-size:$font__size__24;
+	@include mixins.respond-below(custom991) {
+		font-size:$font__size__20;
+	}
+	@include mixins.respond-below(custom767) {
+		font-size:$font__size__18;
+	}
+}
+h4{
+	font-weight:$semibold;
+	font-size:$font__size__20;
+	@include mixins.respond-below(custom991) {
+		font-size:$font__size__18;
+	}
+}
+h5{
+	font-weight:$semibold;
+	font-size:$font__size__18;
+	@include mixins.respond-below(custom991) {
+		font-size:$font__size__16;
+	}
+}
+h6{
+	font-weight:$medium;
+	font-size:$font__size__16;
+	@include mixins.respond-below(custom991) {
+		font-size:$font__size__15;
+	}
+}

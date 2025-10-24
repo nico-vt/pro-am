@@ -1,0 +1,67 @@
+@use "../base/colors";
+@use "../utils/mixins";
+
+/*-----------------
+    29. Contact
+-----------------------*/
+
+.contact-us-page {
+	.details {
+		box-shadow: colors.$row__box__shadow;
+		padding: 24px;
+		@include mixins.respond-below(custom991) {
+			margin-bottom: 15px;
+		}
+		i {
+			width: 80px;
+			min-width: 80px;
+			height: 80px;
+			background: colors.$head__gray;
+			border-radius: 10px;
+			font-size: 33px;
+			color: colors.$white;
+		}
+		.info { 
+			margin-left: 15px;
+			h2 {
+				margin-bottom: 15px;
+			}
+			p {
+				margin-bottom: 0;
+			}
+		}
+		&:hover {
+			i {
+				background: colors.$reverse__gradient__color;
+			}
+		}
+	}
+	.google-maps {
+		iframe {
+			width: 100%;
+		}
+	}
+	form { 
+		&.contact-us {
+			padding: 24px;
+			background: colors.$white;
+			button {
+				margin: 24px auto 0 auto;
+			}
+		}
+	}
+}
+.content {
+	&.contact-group {
+		padding: 80px 0px 0px;
+		@include mixins.respond-below(custom991) {
+			padding: 60px 0px 0px;
+		}
+		.google-maps {
+			margin-bottom: 80px;
+			@include mixins.respond-below(custom991) {
+				margin-bottom: 60px;
+			}
+		}
+	}
+}

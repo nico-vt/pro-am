@@ -1,0 +1,110 @@
+@use "../base/colors";
+@use "../base/typography";
+@use "../utils/mixins";
+@use "../utils/variables";
+
+/*-----------------
+    4. Buttons
+-----------------------*/
+
+.btn {
+	font-size: typography.$body__font__size;
+	padding: 12px 20px;
+	font-weight: typography.$medium;
+	border-radius: variables.$value__10;
+	@include mixins.transition(all 0.5s ease-in-out 0s);
+	&:hover {
+		color: colors.$white;
+	}
+	a {
+		color: colors.$white;
+	}
+	@include mixins.respond-below(custom991) {
+		font-size: typography.$font__size__15;
+		padding: 10px 15px;
+	}
+}
+.btn-icon {
+	display: variables.$inline__flex;
+    align-items: variables.$center;
+    vertical-align: variables.$middle;
+}
+.btn-primary {
+	color: colors.$white;
+	background: colors.$primarycolor;
+	border-color: colors.$primarycolor;
+	&:hover {
+		background: colors.$secondarycolor;
+		border-color: colors.$secondarycolor;
+	}
+}
+.btn-secondary {
+	color: colors.$white;
+	background: colors.$secondarycolor;
+	border-color: colors.$secondarycolor;
+	&:hover {
+		background: colors.$primarycolor;
+		border-color: colors.$primarycolor;
+	}
+}
+.btn-secondary-block {
+	color: colors.$white;
+	background: colors.$secondarycolor;
+	border-color: colors.$secondarycolor;
+	padding: 20px;
+	&:hover {
+		background: colors.$white;
+		color: colors.$secondarycolor;
+		border-color: colors.$secondarycolor;
+	}
+}
+.btn-gradient {
+	color: colors.$white;
+	background: colors.$gradient__color;
+	&:hover {
+		background: colors.$reverse__gradient__color;
+	}
+}
+.btn-load-more {
+	background: colors.$white;
+	border: 3px solid colors.$darkash;
+	border-radius: variables.$value__5;
+	color: colors.$secondarycolor;
+	&:hover {
+		background: colors.$secondarycolor;
+		border-color: colors.$secondarycolor;
+		color: colors.$white;
+	}
+}
+.btn-white {
+	background: colors.$white;
+	color: colors.$primarycolor;
+	&:hover {
+		background: colors.$secondarycolor;
+		color: colors.$white;
+	}
+}
+
+.btn-load{
+	background: colors.$white;
+	color: colors.$secondarycolor;
+	border: 3px solid colors.$lightgray;
+	border-radius: variables.$value__5;
+	padding: 16px;
+    min-width: 202px;
+	display: inline-flex;
+	&:hover {
+		background: colors.$secondarycolor;
+		border-color: colors.$secondarycolor;
+		color: colors.$white;
+		img{
+			filter: brightness(0) invert(1);
+		}
+	}
+	&:focus {
+		img {
+			filter: brightness(0) invert(0);
+		}
+	}
+	
+}

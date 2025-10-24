@@ -1,0 +1,93 @@
+@use "../base/colors";
+@use "../utils/mixins";
+@use "../utils/variables";
+
+/*-----------------
+	8. Breadcrumb
+-----------------------*/
+
+.breadcrumb {
+	background: url('/src/assets/img/bg/breadcrumb-bg.png') colors.$secondary__dark__rgba no-repeat;
+	background-size: cover;
+		background-blend-mode: multiply;
+		padding: 60px 0;
+		position: variables.$relative;
+		&:before, &:after {
+			content: '';
+			background: colors.$gradient__color;
+			border-radius: variables.$full__width;
+		}
+		&.breadcrumb-list {
+			background: url('/src/assets/img/bg/breadcrumb-bg2.jpg') colors.$secondary__dark__rgba no-repeat;
+			background-size: cover;
+			.container {
+				position: relative;
+			}
+		}
+		&:before {
+			@include mixins.position(variables.$absolute,variables.$value__60,null,null,variables.$value__40);
+			width: variables.$value__20;
+			height: variables.$value__20;
+			@include mixins.respond-below(custom1200) {
+			top: 24px;
+			left: 24px;
+		}
+		}
+		&:after {
+			@include mixins.position(variables.$absolute,variables.$value__30,130px,null,null);
+			width: variables.$value__30;
+			height: variables.$value__30;
+		}
+		span {
+			&.primary-right-round {
+				content: '';
+				@include mixins.position(variables.$absolute,null,50px,50px,null);
+				width: 13px;
+				height: 13px;
+				background: colors.$primarylight;
+				border-radius: 13px;
+				@include mixins.respond-below(custom1200) {
+					top: 80px;
+				}
+			}
+		}
+		h1 {
+			margin-bottom: variables.$value__15;
+		}
+		ul {
+			position: variables.$relative;
+			color: colors.$white;
+  		li {
+  			padding-right: variables.$value__30;
+  			display: inline-block;
+  			position: variables.$relative;
+  			z-index: 1;
+  			&:after {
+  				@include mixins.position(variables.$absolute,7px,10px,auto,auto);
+			    content: "\f105";
+			    font: normal normal normal 14px/1 FontAwesome;
+			    color: colors.$white;
+  			}
+  			&:last-child {
+  				&:after {
+  					display: none;
+  				}
+  			}
+	  		a {
+	  			color: colors.$white;
+				&:hover {
+					color: colors.$primarycolor;
+				}
+	  		}
+  		}
+  		&:after{
+  			@include mixins.position(variables.$absolute,null,0,-60px,null);
+  			width: 147px;
+  			height: 74px;
+  			content: '';
+  			background: colors.$gradient__color;
+  			border-top-left-radius: 84px;
+			border-top-right-radius: 84px;
+  		}
+  	}
+}
