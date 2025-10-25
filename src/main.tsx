@@ -14,6 +14,7 @@ import '../src/style/css/feather.css'
 import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './index.scss';
+import "./i18n";
 
 
 createRoot(document.getElementById('root')!).render(
