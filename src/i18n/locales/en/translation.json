@@ -1,0 +1,87 @@
+{
+  "proOnboarding": {
+    "welcome": "Welcome!",
+    "personalInformation": "Personal Information",
+    "professionalInformation": "Professional Information",
+
+    "firstName": {
+      "label": "First Name",
+      "placeholder": "Enter your first name"
+    },
+    "lastName": {
+      "label": "Last Name",
+      "placeholder": "Enter your last name"
+    },
+    "nationality": {
+      "label": "Nationality",
+      "placeholder": "Select your nationality"
+    },
+    "birthDate": {
+      "label": "Date of Birth",
+      "placeholder": "Select your date of birth"
+    },
+    "height": {
+      "label": "Height (cm)",
+      "placeholder": "e.g. 180"
+    },
+    "city": {
+      "label": "City of Residence",
+      "placeholder": "Enter your city of residence"
+    },
+    "country": {
+      "label": "Country of Residence",
+      "placeholder": "Enter your country of residence"
+    },
+
+    "sportDiscipline": {
+      "label": "Sport Discipline",
+      "placeholder": "Enter your sport discipline"
+    },
+    "professionalLevel": {
+      "label": "Professional Level",
+      "placeholder": "Select your professional level",
+      "options": {
+        "ATP": "ATP",
+        "ITF": "ITF",
+        "Coach": "Coach",
+        "Senior Player": "Senior Player",
+        "Club Pro": "Club Pro"
+      }
+    },
+    "currentClub": {
+      "label": "Current Club or Institution",
+      "placeholder": "Enter your current club or institution"
+    },
+    "playStyle": {
+      "label": "Play Style",
+      "hand": {
+        "label": "Dominant Hand",
+        "placeholder": "Select your dominant hand",
+        "options": {
+          "Right-handed": "Right-handed",
+          "Left-handed": "Left-handed"
+        }
+      },
+      "backhand": {
+        "label": "Backhand Type",
+        "placeholder": "Select your backhand type",
+        "options": {
+          "One-handed": "One-handed",
+          "Two-handed": "Two-handed"
+        }
+      }
+    },
+    "languages": {
+      "label": "Languages",
+      "placeholder": "Select the languages you speak"
+    },
+    "certifications": {
+      "label": "Licenses or Certifications",
+      "placeholder": "Select your certifications"
+    },
+
+    "multiSelectHint": "Use Ctrl or Cmd to select multiple options",
+    "submit": "Submit",
+    "formError": "This field is required"
+  }
+}
