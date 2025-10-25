@@ -13,7 +13,7 @@ form {
 	input {
 		height: variables.$value__60;
 	}
-	input, textarea { 
+	input, textarea,select { 
 		&.form-control {
 			padding: variables.$value__20;
 			border-radius: variables.$value__10;
@@ -114,4 +114,7 @@ input::-webkit-inner-spin-button {
 }
 input[type=number] {
   	-moz-appearance: textfield;
+}
+.form-error{
+	color: red;
 }

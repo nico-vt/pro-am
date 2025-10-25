@@ -2119,25 +2119,27 @@ header.header-sticky.fixed-top {
 /*-----------------
 	9. Forms
 -----------------------*/
-form label, form input {
+form label, form input, form select {
   color: #192335;
 }
-form input {
+form input, form select {
   height: 60px;
 }
-form input.form-control, form textarea.form-control {
+
+form input.form-control, form textarea.form-control, form select.form-control{
   padding: 20px;
   border-radius: 10px;
   background: #FAFAFA;
   border: none;
 }
-form input.form-control:focus, form textarea.form-control:focus {
+form input.form-control:focus, form textarea.form-control:focus,form select.form-control:focus{
   box-shadow: none;
   background: #FAFAFA;
 }
 form input.form-control::placeholder, form textarea.form-control::placeholder {
   color: #6B7385;
 }
+
 form textarea {
   resize: none;
 }
@@ -2227,6 +2229,10 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+form .form-error{
+  color: red;
 }
 
 /*-----------------

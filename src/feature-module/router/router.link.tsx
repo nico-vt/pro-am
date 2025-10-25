@@ -95,6 +95,7 @@ import UserCancelled from "../user/user-cancelled";
 import UserOngoing from "../user/user-ongoing";
 import ChangePassword from "../auth/change-password";
 import Maintenance from "../pages/maintenance";
+import ProOnboarding from "../onboarding/pro-onboarding";
 
 const routes = all_routes;
 
@@ -593,6 +594,11 @@ const withoutHeaderRoutes = [
   {
     path: routes.forgotPasssword,
     element: <ForgotPassword />,
+    route: Route,
+  },
+  {
+    path: routes.proOnboarding,
+    element: <ProOnboarding />,
     route: Route,
   },
 ];
