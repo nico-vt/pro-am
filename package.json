@@ -36,6 +36,7 @@
     "react-fancybox": "^0.2.5",
     "react-feather": "^2.0.10",
     "react-hook-form": "^7.65.0",
+    "react-i18next": "^16.2.0",
     "react-image-gallery": "^1.4.0",
     "react-modal": "^3.16.3",
     "react-modal-image": "^2.6.0",
