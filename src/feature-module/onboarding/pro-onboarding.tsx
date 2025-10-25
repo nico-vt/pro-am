@@ -1,4 +1,6 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "./language-switch";
 
 export type ProOnboardingInputs = {
   //  Datos personales
@@ -27,7 +29,9 @@ const ProOnboarding = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProOnboardingInputs>();
+  } = useForm<ProOnboardingInputs>( {shouldUnregister: false});
+
+  const { t} = useTranslation();
 
   const onSubmit: SubmitHandler<ProOnboardingInputs> = (data) =>
     console.log(data);
@@ -37,133 +41,163 @@ const ProOnboarding = () => {
         <section className="section dull-bg">
           <div className="container">
             <form className="contact-us" onSubmit={handleSubmit(onSubmit)}>
-            <h2 className="text-center">Welcome!</h2>
-              <h4 className="mb-3">Personal Information</h4>
+              <h2 className="text-center">
+                {t("proOnboarding.welcome", "Welcome!")}
+              </h2>
+              <LanguageSwitcher/>
+
+              {/* ---------------- Datos Personales ---------------- */}
+              <h4 className="mb-3">{t("proOnboarding.personalInformation")}</h4>
               <div className="row">
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
-                  <label htmlFor="first-name" className="form-label">
-                    First Name
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="firstName" className="form-label">
+                    {t("proOnboarding.firstName.label")}
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="first-name"
-                    placeholder="Enter First Name"
+                    id="firstName"
+                    placeholder={t("proOnboarding.firstName.placeholder")}
                     {...register("firstName", { required: true })}
                   />
                   {errors.firstName && (
-                    <span className="form-error">This field is required</span>
+                    <span className="form-error">
+                      {t("proOnboarding.formError")}
+                    </span>
                   )}
                 </div>
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
-                  <label htmlFor="last-name" className="form-label">
-                    Last Name
+
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="lastName" className="form-label">
+                    {t("proOnboarding.lastName.label")}
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="last-name"
-                    placeholder="Enter Last Name"
+                    id="lastName"
+                    placeholder={t("proOnboarding.lastName.placeholder")}
                     {...register("lastName", { required: true })}
                   />
+                  {errors.lastName && (
+                    <span className="form-error">
+                      {t("proOnboarding.formError")}
+                    </span>
+                  )}
                 </div>
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
+
+                <div className="col-md-6 mb-3">
                   <label htmlFor="nationality" className="form-label">
-                    Nationality
+                    {t("proOnboarding.nationality.label")}
                   </label>
                   <select
                     className="form-control"
                     id="nationality"
-                    value={"Select a country..."}
                     {...register("nationality", { required: true })}
                   >
-                    <option value="" disabled>
-                      Select a country...
+                    <option value="">
+                      {t("proOnboarding.nationality.placeholder")}
                     </option>
                     <option>Argentina</option>
                     <option>USA</option>
                     <option>Uruguay</option>
                   </select>
+                  {errors.nationality && (
+                    <span className="form-error">
+                      {t("proOnboarding.formError")}
+                    </span>
+                  )}
                 </div>
 
-                {/* <div className="col-12 col-sm-12 col-md-6 mb-3">
-                  <label htmlFor="e-mail" className="form-label">
-                    Email
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="e-mail"
-                    placeholder="Enter Email Address"
-                  />
-                </div> */}
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
+                <div className="col-md-6 mb-3">
                   <label htmlFor="birthDate" className="form-label">
-                    Birth Date
+                    {t("proOnboarding.birthDate.label")}
                   </label>
                   <input
                     type="date"
                     className="form-control"
                     id="birthDate"
+                    placeholder={t("proOnboarding.birthDate.placeholder")}
                     {...register("birthDate", { required: true })}
                   />
+                  {errors.birthDate && (
+                    <span className="form-error">
+                      {t("proOnboarding.formError")}
+                    </span>
+                  )}
                 </div>
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
+
+                <div className="col-md-6 mb-3">
                   <label htmlFor="height" className="form-label">
-                    Height (cm)
+                    {t("proOnboarding.height.label")}
                   </label>
                   <input
                     type="number"
                     className="form-control"
                     id="height"
-                    placeholder="Enter your height"
+                    placeholder={t("proOnboarding.height.placeholder")}
                     {...register("height", {
                       required: true,
                       valueAsNumber: true,
                     })}
                   />
+                  {errors.height && (
+                    <span className="form-error">
+                      {t("proOnboarding.formError")}
+                    </span>
+                  )}
                 </div>
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
+
+                <div className="col-md-6 mb-3">
                   <label htmlFor="city" className="form-label">
-                    City of Residence
+                    {t("proOnboarding.city.label")}
                   </label>
                   <input
                     type="text"
                     className="form-control"
                     id="city"
-                    placeholder="Enter your city"
+                    placeholder={t("proOnboarding.city.placeholder")}
                     {...register("city", { required: true })}
                   />
+                  {errors.city && (
+                    <span className="form-error">
+                      {t("proOnboarding.formError")}
+                    </span>
+                  )}
                 </div>
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
+
+                <div className="col-md-6 mb-3">
                   <label htmlFor="country" className="form-label">
-                    Country of Residence
+                    {t("proOnboarding.country.label")}
                   </label>
                   <input
                     type="text"
                     className="form-control"
                     id="country"
-                    placeholder="Enter your country"
+                    placeholder={t("proOnboarding.country.placeholder")}
                     {...register("country", { required: true })}
                   />
+                  {errors.country && (
+                    <span className="form-error">
+                      {t("proOnboarding.formError")}
+                    </span>
+                  )}
                 </div>
-                {/* <div className="col-12 col-sm-12 col-md-6 mb-3">
-                  <label htmlFor="phone" className="form-label">
-                    Phone Number
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="phone"
-                    placeholder="Enter Phone Number"
-                  />
-                </div> */}
               </div>
-              <h4 className="mb-3 mt-4">Professional Information</h4>
+
+              {/* ---------------- Datos Profesionales ---------------- */}
+              <h4 className="mb-3 mt-4">
+                {t(
+                  "proOnboarding.professionalInformation",
+                  "Professional Information"
+                )}
+              </h4>
               <div className="row">
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
+                <div className="col-md-6 mb-3">
                   <label htmlFor="sportDiscipline" className="form-label">
-                    Sport Discipline
+                    {t(
+                      "proOnboarding.sportDiscipline.label",
+                      "Sport Discipline"
+                    )}
                   </label>
                   <input
                     type="text"
@@ -175,63 +209,101 @@ const ProOnboarding = () => {
                   />
                 </div>
 
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
+                <div className="col-md-6 mb-3">
                   <label htmlFor="professionalLevel" className="form-label">
-                    Professional Level
+                    {t("proOnboarding.professionalLevel.label")}
                   </label>
                   <select
                     className="form-control"
                     id="professionalLevel"
                     {...register("professionalLevel", { required: true })}
                   >
-                    <option value="">Select level...</option>
-                    <option value="ATP">ATP</option>
-                    <option value="ITF">ITF</option>
-                    <option value="Coach">Coach</option>
-                    <option value="Senior Player">Senior Player</option>
-                    <option value="Club Pro">Club Pro</option>
+                    <option value="">
+                      {t("proOnboarding.professionalLevel.placeholder")}
+                    </option>
+                    {Object.entries(
+                      t("proOnboarding.professionalLevel.options", {
+                        returnObjects: true,
+                      })
+                    ).map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label as string}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
+                <div className="col-md-6 mb-3">
                   <label htmlFor="currentClub" className="form-label">
-                    Current Club or Institution
+                    {t(
+                      "proOnboarding.currentClub.label",
+                      "Current Club or Institution"
+                    )}
                   </label>
                   <input
                     type="text"
                     className="form-control"
                     id="currentClub"
-                    placeholder="Enter your current club"
+                    placeholder={t(
+                      "proOnboarding.currentClub.placeholder",
+                      "Enter your current club"
+                    )}
                     {...register("currentClub")}
                   />
                 </div>
 
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
-                  <label className="form-label">Play Style</label>
+                <div className="col-md-6 mb-3">
+                  <label className="form-label">
+                    {t("proOnboarding.playStyle.label", "Play Style")}
+                  </label>
                   <div className="d-flex gap-2">
                     <select
                       className="form-control"
                       {...register("playStyle.hand", { required: true })}
                     >
-                      <option value="">Select hand...</option>
-                      <option value="Right-handed">Right-handed</option>
-                      <option value="Left-handed">Left-handed</option>
+                      <option value="">
+                        {t(
+                          "proOnboarding.playStyle.hand.placeholder",
+                          "Select hand..."
+                        )}
+                      </option>
+                      {Object.entries(
+                        t("proOnboarding.playStyle.hand.options", {
+                          returnObjects: true,
+                        })
+                      ).map(([key, label]) => (
+                        <option key={key} value={key}>
+                          {label as string}
+                        </option>
+                      ))}
                     </select>
 
                     <select
                       className="form-control"
                       {...register("playStyle.backhand", { required: true })}
                     >
-                      <option value="">Select backhand...</option>
-                      <option value="One-handed">One-handed</option>
-                      <option value="Two-handed">Two-handed</option>
+                      <option value="">
+                        {t(
+                          "proOnboarding.playStyle.hand.placeholder",
+                          "Select hand..."
+                        )}
+                      </option>
+                      {Object.entries(
+                        t("proOnboarding.playStyle.backhand.options", {
+                          returnObjects: true,
+                        })
+                      ).map(([key, label]) => (
+                        <option key={key} value={key}>
+                          {label as string}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
 
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
+                <div className="col-md-6 mb-3">
                   <label htmlFor="languages" className="form-label">
-                    Languages
+                    {t("proOnboarding.languages.label", "Languages")}
                   </label>
                   <select
                     multiple
@@ -246,13 +318,19 @@ const ProOnboarding = () => {
                     <option value="Italian">Italian</option>
                   </select>
                   <small className="text-muted">
-                    Use Ctrl/Cmd to select multiple
+                    {t(
+                      "proOnboarding.multiSelectHint",
+                      "Use Ctrl/Cmd to select multiple"
+                    )}
                   </small>
                 </div>
 
-                <div className="col-12 col-sm-12 col-md-6 mb-3">
+                <div className="col-md-6 mb-3">
                   <label htmlFor="certifications" className="form-label">
-                    Licenses or Certifications
+                    {t(
+                      "proOnboarding.certifications.label",
+                      "Licenses or Certifications"
+                    )}
                   </label>
                   <select
                     multiple
@@ -272,7 +350,7 @@ const ProOnboarding = () => {
                 type="submit"
                 className="btn btn-secondary d-flex align-items-center"
               >
-                Submit
+                {t("proOnboarding.submit")}
                 <i className="feather-arrow-right-circle ms-2" />
               </button>
             </form>
