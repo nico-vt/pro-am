@@ -1,2 +1,2 @@
-export const base_path = "/react";
-export const image_path ='/react/src/'
+export const base_path = "/";
+export const image_path ='/src/'
