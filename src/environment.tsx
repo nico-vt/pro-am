@@ -1,2 +1,2 @@
-export const base_path = "/";
-export const image_path ='/src/'
+export const base_path = "/site";
+export const image_path ='/site/src/'
