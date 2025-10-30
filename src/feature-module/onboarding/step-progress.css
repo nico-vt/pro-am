@@ -1,0 +1,80 @@
+/* Step Progress Component Styles */
+
+.step-progress {
+  user-select: none;
+}
+
+.step-progress-container {
+  min-height: 80px;
+}
+
+.step-circle {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.transition-all {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Tablet Styles */
+@media (max-width: 768px) {
+  .step-progress {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .step-progress-container {
+    min-height: 70px !important;
+  }
+  
+  .step-progress .step-container {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0 15px 10px 15px;
+    margin: 0 -15px;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .step-progress .step-item {
+    min-width: 70px !important;
+    flex-shrink: 0;
+  }
+  
+  .step-progress .step-item .step-circle {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 12px !important;
+  }
+  
+  .step-progress .step-item > div:last-child {
+    font-size: 9px !important;
+    max-width: 65px !important;
+    line-height: 1.1 !important;
+    margin-top: 8px !important;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 480px) {
+  .step-progress .step-item {
+    min-width: 60px !important;
+  }
+  
+  .step-progress .step-item .step-circle {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 11px !important;
+  }
+  
+  .step-progress .step-item > div:last-child {
+    font-size: 8px !important;
+    max-width: 55px !important;
+    margin-top: 6px !important;
+  }
+
+    .step-progress .step-container {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0 ;
+    margin: 0 -15px;
+  }
+}
