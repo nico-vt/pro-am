@@ -54,8 +54,13 @@ const ProOnboarding = () => {
   const {
     register,
     handleSubmit,
+    trigger,
     formState: { errors },
-  } = useForm<ProOnboardingInputs>({ shouldUnregister: false });
+  } = useForm<ProOnboardingInputs>({ 
+    shouldUnregister: false,
+    mode: "onChange",
+    reValidateMode: "onChange"
+  });
   const steps = ["welcome", "personalData", "professionalData", "proAmOffer", "promotionalMaterial"] as const;
   const { step, next, back, isFirstStep, isLastStep } = useSteps({ steps });
 
@@ -70,10 +75,44 @@ const ProOnboarding = () => {
     });
   };
 
-  // Funciones de navegación con scroll
-  const handleNext = () => {
-    next();
-    scrollToTop();
+  // Función para obtener los campos del step actual
+  const getCurrentStepFields = (): (keyof ProOnboardingInputs | `playStyle.hand` | `playStyle.backhand`)[] => {
+    switch (step) {
+      case "welcome":
+        return [];
+      case "personalData":
+        return ["firstName", "lastName", "nationality", "birthDate", "height", "city", "country"];
+      case "professionalData":
+        return ["sportDiscipline", "professionalLevel", "currentClub", "playStyle.hand", "playStyle.backhand", "languages", "certifications"];
+      case "proAmOffer":
+        return ["experienceType", "typicalDuration", "location", "baseFee", "currency"];
+      case "promotionalMaterial":
+        return ["professionalPhoto"]; // Solo la foto es requerida
+      default:
+        return [];
+    }
+  };
+
+  // Funciones de navegación con scroll y validación
+  const handleNext = async () => {
+    // Si estamos en el último step, hacer submit
+    if (isLastStep) {
+      await handleSubmit(onSubmit)();
+      return;
+    }
+
+    // Obtener los campos del step actual
+    const currentStepFields = getCurrentStepFields();
+    
+    // Validar solo los campos del step actual
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isValid = await trigger(currentStepFields as any);
+    
+    // Solo avanzar si la validación es exitosa
+    if (isValid) {
+      next();
+      scrollToTop();
+    }
   };
 
   const handleBack = () => {
@@ -134,9 +173,8 @@ const ProOnboarding = () => {
                 </button>
                 <button
                   onClick={handleNext}
-                  disabled={isLastStep}
-                  className="btn btn-secondary m-0"
-                  type={isLastStep ? "submit" : "button"}
+                  className="btn btn-primary m-0"
+                  type="button"
                 >
                   {isLastStep ? "Finish" : "Next"}
                   <i className="feather-arrow-right-circle ms-2" />
