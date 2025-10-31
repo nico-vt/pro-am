@@ -96,6 +96,7 @@ import UserOngoing from "../user/user-ongoing";
 import ChangePassword from "../auth/change-password";
 import Maintenance from "../pages/maintenance";
 import ProOnboarding from "../onboarding/pro-onboarding";
+import AmateurOnboarding from "../onboarding/amateur-onboarding";
 
 const routes = all_routes;
 
@@ -601,5 +602,10 @@ const withoutHeaderRoutes = [
     element: <ProOnboarding />,
     route: Route,
   },
+  {
+    path: routes.amateurOnboarding,
+    element: <AmateurOnboarding />,
+    route: Route,
+  }
 ];
 export { publicRoutes, withoutHeaderRoutes };
