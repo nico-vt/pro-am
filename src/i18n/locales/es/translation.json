@@ -180,5 +180,11 @@
     "personalData": {
       "title": "Datos Personales"
     }
+  },
+
+  "navigation": {
+    "back": "Atrás",
+    "next": "Siguiente",
+    "finish": "Finalizar"
   }
 }

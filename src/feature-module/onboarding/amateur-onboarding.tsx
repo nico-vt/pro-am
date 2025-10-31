@@ -2,7 +2,14 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useSteps } from "../../hooks/useSteps";
 import { useTranslation } from "react-i18next";
 import StepProgress from "./step-progress";
-import { InputText, InputNumber, InputDate, InputFile } from "./form-components";
+import {
+  InputText,
+  InputNumber,
+  InputDate,
+  InputFile,
+} from "./form-components";
+import LanguageSwitcher from "./language-switch";
+import NavigationButtons from "./navigation-buttons";
 
 export type AmateurOnboardingInputs = {
   //  Datos personales
@@ -44,10 +51,10 @@ const AmateurOnboarding = () => {
     handleSubmit,
     trigger,
     formState: { errors },
-  } = useForm<AmateurOnboardingInputs>({ 
+  } = useForm<AmateurOnboardingInputs>({
     shouldUnregister: false,
     mode: "onChange", // Validar en cada cambio para saber si puede avanzar
-    reValidateMode: "onChange"
+    reValidateMode: "onChange",
   });
 
   const steps = ["welcome", "personalData"] as const;
@@ -74,10 +81,10 @@ const AmateurOnboarding = () => {
 
     // Obtener los campos del step actual
     const currentStepFields = getCurrentStepFields();
-    
+
     // Validar solo los campos del step actual
     const isValid = await trigger(currentStepFields);
-    
+
     // Solo avanzar si la validación es exitosa
     if (isValid) {
       next();
@@ -96,7 +103,15 @@ const AmateurOnboarding = () => {
       case "welcome":
         return [];
       case "personalData":
-        return ["firstName", "lastName", "nationality", "birthDate", "height", "city", "country"];
+        return [
+          "firstName",
+          "lastName",
+          "nationality",
+          "birthDate",
+          "height",
+          "city",
+          "country",
+        ];
       default:
         return [];
     }
@@ -173,17 +188,22 @@ const AmateurOnboarding = () => {
   const renderInput = (input: InputConfig) => {
     const error = errors[input.id];
     const labelText = t(input.label, input.label);
-    const placeholderText = input.placeholder ? t(input.placeholder, "") : undefined;
+    const placeholderText = input.placeholder
+      ? t(input.placeholder, "")
+      : undefined;
     const helperText = input.helperText ? t(input.helperText, "") : undefined;
-    
+
     // Preparar el mensaje de error traducido
-    const errorMessage = error ? t(
-      `${input.label.replace(".label", ".required")}`,
-      `${labelText} es requerido`
-    ) : undefined;
+    const errorMessage = error
+      ? t(
+          `${input.label.replace(".label", ".required")}`,
+          `${labelText} es requerido`
+        )
+      : undefined;
 
     // Crear el objeto de error con el mensaje
-    const errorWithMessage = error && errorMessage ? { ...error, message: errorMessage } : undefined;
+    const errorWithMessage =
+      error && errorMessage ? { ...error, message: errorMessage } : undefined;
 
     switch (input.type) {
       case "text":
@@ -272,6 +292,15 @@ const AmateurOnboarding = () => {
                   )}
                 </p>
               </div>
+              <div className="mb-3">
+                <h5 className="mb-3 text-secondary">
+                  {t(
+                    "proOnboarding.welcome.selectLanguage",
+                    "Selecciona tu idioma preferido"
+                  )}
+                </h5>
+                <LanguageSwitcher />
+              </div>
             </div>
           </div>
         );
@@ -308,24 +337,12 @@ const AmateurOnboarding = () => {
               {/* Renderizar contenido del step actual */}
               {renderStepContent()}
 
-              <div className="mt-4 d-flex justify-content-center gap-3">
-                <button
-                  onClick={handleBack}
-                  disabled={isFirstStep}
-                  className="btn btn-secondary m-0"
-                  type="button"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="btn btn-primary m-0"
-                  type="button"
-                >
-                  {isLastStep ? "Finish" : "Next"}
-                  <i className="feather-arrow-right-circle ms-2" />
-                </button>
-              </div>
+              <NavigationButtons
+                onBack={handleBack}
+                onNext={handleNext}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+              />
             </form>
           </div>
         </section>

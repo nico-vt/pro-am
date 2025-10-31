@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./language-switch";
 import StepProgress from "./step-progress";
 import { useSteps } from "../../hooks/useSteps";
+import NavigationButtons from "./navigation-buttons";
 
 export type ProOnboardingInputs = {
   //  Datos personales
@@ -162,24 +163,12 @@ const ProOnboarding = () => {
                 <PromotionalMaterialSection register={register} errors={errors} />
               )}
 
-              <div className="mt-4 d-flex justify-content-center gap-3">
-                <button
-                  onClick={handleBack}
-                  disabled={isFirstStep}
-                  className="btn btn-secondary m-0"
-                  type="button"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="btn btn-primary m-0"
-                  type="button"
-                >
-                  {isLastStep ? "Finish" : "Next"}
-                  <i className="feather-arrow-right-circle ms-2" />
-                </button>
-              </div>
+              <NavigationButtons
+                onBack={handleBack}
+                onNext={handleNext}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+              />
             </form>
           </div>
         </section>
