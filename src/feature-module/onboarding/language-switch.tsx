@@ -8,7 +8,7 @@ const LANGUAGES = [
   { code: "es", label: "ES", flag: "🇪🇸" }
 ];
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({ classnames }: { classnames?: string }) {
   const { i18n } = useTranslation();
   const form = useFormContext?.(); // safe check (por si no está dentro del provider)
   const clearErrors = form?.clearErrors;
@@ -26,17 +26,19 @@ export default function LanguageSwitcher() {
   }, [i18n]);
 
   return (
-    <div className="flex gap-2 justify-end mb-3">
+    <div className={`d-flex gap-2 justify-content-center mb-3 ${classnames}`}>
       {LANGUAGES.map(({ code, label, flag }) => (
         <button
           key={code}
           onClick={() => handleChangeLanguage(code)}
-          className={`px-2 py-1 rounded-md border ${
-            i18n.language === code ? "bg-gray-800 text-white" : "bg-gray-100"
+          className={`btn btn-sm ${
+            i18n.language === code 
+              ? "btn-dark m-0" 
+              : "btn-outline-secondary m-0"
           }`}
           type="button"
         >
-          <span className="mr-1">{flag}</span>
+          <span className="me-1">{flag}</span>
           {label}
         </button>
       ))}

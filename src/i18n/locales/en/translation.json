@@ -1,36 +1,54 @@
 {
   "proOnboarding": {
-    "welcome": "Welcome!",
     "personalInformation": "Personal Information",
     "professionalInformation": "Professional Information",
+    "proAmOffer": "ProAm Offer",
+    "promotionalMaterial": "Promotional Material",
+    "optional": "(optional)",
+
+    "welcome": {
+      "message": "Welcome!",
+      "title": "Welcome to ProAm!",
+      "subtitle": "Complete your professional profile to start offering unique experiences.",
+      "description": "This process will only take a few minutes and will allow you to connect with players looking to improve their game.",
+      "selectLanguage": "Select your preferred language",
+      "stepsTitle": "Steps to complete:"
+    },
 
     "firstName": {
       "label": "First Name",
-      "placeholder": "Enter your first name"
+      "placeholder": "Enter your first name",
+      "required": "First name is required"
     },
     "lastName": {
       "label": "Last Name",
-      "placeholder": "Enter your last name"
+      "placeholder": "Enter your last name",
+      "required": "Last name is required"
     },
     "nationality": {
       "label": "Nationality",
-      "placeholder": "Select your nationality"
+      "placeholder": "Select your nationality",
+      "required": "Nationality is required"
     },
     "birthDate": {
       "label": "Date of Birth",
-      "placeholder": "Select your date of birth"
+      "placeholder": "Select your date of birth",
+      "required": "Date of birth is required"
     },
     "height": {
       "label": "Height (cm)",
-      "placeholder": "e.g. 180"
+      "placeholder": "e.g. 180",
+      "required": "Height is required"
     },
     "city": {
       "label": "City of Residence",
-      "placeholder": "Enter your city of residence"
+      "placeholder": "Enter your city of residence",
+      "required": "City is required"
     },
     "country": {
       "label": "Country of Residence",
-      "placeholder": "Enter your country of residence"
+      "placeholder": "Enter your country of residence",
+      "required": "Country is required"
     },
 
     "sportDiscipline": {
@@ -80,8 +98,93 @@
       "placeholder": "Select your certifications"
     },
 
+    "experienceType": {
+      "label": "Type of Experience Offered",
+      "placeholder": "Select the type of experience",
+      "training1on1": "1:1 Training",
+      "sparringSession": "Sparring Session",
+      "clinic": "Clinic",
+      "meetAndPlay": "Meet & Play",
+      "proAmTournament": "ProAm Tournament"
+    },
+    "typicalDuration": {
+      "label": "Typical Experience Duration",
+      "placeholder": "Select the duration"
+    },
+    "location": {
+      "label": "Location Where You Offer the Experience",
+      "placeholder": "Club, city or geographic area"
+    },
+    "baseFee": {
+      "label": "Base Fee",
+      "placeholder": "Enter the fee"
+    },
+    "currency": {
+      "placeholder": "Currency"
+    },
+    "includes": {
+      "label": "What does it include?",
+      "equipment": "Equipment",
+      "court": "Court",
+      "transport": "Transport",
+      "videoAnalysis": "Video Analysis"
+    },
+
+    "professionalPhoto": {
+      "label": "Professional Photo or Portrait",
+      "helper": "Upload a clear photo of your face",
+      "required": "Professional photo is required"
+    },
+    "introVideo": {
+      "label": "Short Introduction Video",
+      "placeholder": "Link to YouTube or Vimeo"
+    },
+    "socialLinks": {
+      "label": "Links to social media or official website",
+      "website": {
+        "placeholder": "Official website"
+      },
+      "instagram": {
+        "placeholder": "Instagram"
+      },
+      "twitter": {
+        "placeholder": "Twitter/X"
+      },
+      "linkedin": {
+        "placeholder": "LinkedIn"
+      },
+      "youtube": {
+        "placeholder": "YouTube"
+      }
+    },
+
     "multiSelectHint": "Use Ctrl or Cmd to select multiple options",
     "submit": "Submit",
     "formError": "This field is required"
+  },
+
+  "stepProgress": {
+    "welcome": "Welcome",
+    "personalData": "Personal Data",
+    "professionalData": "Professional Data",
+    "proAmOffer": "ProAm Offer",
+    "promotionalMaterial": "Promotional Material"
+  },
+
+  "amateurOnboarding": {
+    "welcome": {
+      "title": "Welcome to ProAm!",
+      "subtitle": "Connect with professional athletes and improve your skills",
+      "description": "Access personalized training, clinics, and exclusive events with professionals from various sports."
+    },
+    "personalData": {
+      "title": "Personal Information"
+    }
+  },
+
+  "navigation": {
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish"
   }
 }

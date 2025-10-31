@@ -105,6 +105,7 @@ export const all_routes = {
   changePassword: "/auth/change-password",
   forgotPasssword: "/auth/forgot-password",
   proOnboarding: "/pro-onboarding",
+  amateurOnboarding: "/amateur-onboarding",
 
   //contact-us
   contactUs: "/contact-us",
