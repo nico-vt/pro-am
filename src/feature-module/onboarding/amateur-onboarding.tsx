@@ -7,6 +7,7 @@ import {
   InputNumber,
   InputDate,
   InputFile,
+  SelectInput,
 } from "./form-components";
 import LanguageSwitcher from "./language-switch";
 import NavigationButtons from "./navigation-buttons";
@@ -42,6 +43,7 @@ type InputConfig = {
   accept?: string;
   helperText?: string;
   colClass?: string;
+  options?: Array<{ value: string; label: string }>;
 };
 
 const AmateurOnboarding = () => {
@@ -137,10 +139,15 @@ const AmateurOnboarding = () => {
     {
       id: "nationality",
       label: "proOnboarding.nationality.label",
-      type: "text",
+      type: "select",
       placeholder: "proOnboarding.nationality.placeholder",
       required: true,
       colClass: "col-md-6",
+      options: [
+        { value: "argentina", label: "Argentina" },
+        { value: "chile", label: "Chile" },
+        { value: "colombia", label: "Colombia" },
+      ],
     },
     {
       id: "birthDate",
@@ -259,6 +266,21 @@ const AmateurOnboarding = () => {
             error={errorWithMessage}
             accept={input.accept}
             helperText={helperText}
+            colClass={input.colClass}
+          />
+        );
+
+      case "select":
+        return (
+          <SelectInput
+            key={input.id}
+            id={input.id}
+            label={labelText}
+            options={input.options}
+            placeholder={placeholderText}
+            register={register}
+            required={input.required}
+            error={errorWithMessage}
             colClass={input.colClass}
           />
         );

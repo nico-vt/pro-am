@@ -35,7 +35,7 @@ type FileInputProps<T extends FieldValues> = BaseInputProps<T> & {
 }
 
 type SelectInputProps<T extends FieldValues> = BaseInputProps<T> & {
-  options: Array<{ value: string; label: string }>;
+  options?: Array<{ value: string; label: string }>;
   placeholder?: string;
 }
 
@@ -158,12 +158,12 @@ export const SelectInput = <T extends FieldValues>({
         {label} {required && <span className="text-danger">*</span>}
       </label>
       <select
-        className={`form-select ${error ? 'is-invalid' : ''}`}
+        className={`form-select form-control ${error ? 'is-invalid' : ''}`}
         id={id as string}
         {...register(id, { required })}
       >
         {placeholder && <option value="">{placeholder}</option>}
-        {options.map((option) => (
+        {options?.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>
