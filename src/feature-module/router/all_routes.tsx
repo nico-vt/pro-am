@@ -1,5 +1,5 @@
 export const all_routes = {
-  home: "/index",
+  home: "/home",
 
   // Blog Routes
   blogGrid: "/blog/blog-grid",
