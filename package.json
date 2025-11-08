@@ -23,6 +23,7 @@
     "depcheck": "^1.4.7",
     "feather-icons-react": "^0.9.0",
     "google-map-react": "^2.2.5",
+    "i18n-iso-countries": "^7.14.0",
     "lightbox.js-react": "^1.6.2",
     "lightgallery": "^2.8.3",
     "primeflex": "^4.0.0",

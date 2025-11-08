@@ -168,7 +168,8 @@
     "personalData": "Datos Personales",
     "professionalData": "Datos Profesionales",
     "proAmOffer": "Oferta ProAm",
-    "promotionalMaterial": "Material Promocional"
+    "promotionalMaterial": "Material Promocional",
+    "contactAndPayment": "Contacto y Pago"
   },
 
   "amateurOnboarding": {
@@ -179,6 +180,30 @@
     },
     "personalData": {
       "title": "Datos Personales"
+    },
+    "contactAndPayment": {
+      "title": "Contacto y Pago"
+    },
+    "email": {
+      "label": "Correo electrónico",
+      "placeholder": "ejemplo@correo.com",
+      "required": "El correo electrónico es requerido"
+    },
+    "phone": {
+      "label": "Teléfono / WhatsApp",
+      "placeholder": "+1 234 567 8900",
+      "required": "El teléfono es requerido"
+    },
+    "paymentAccount": {
+      "label": "Cuenta de pago",
+      "placeholder": "Seleccione su tipo de cuenta",
+      "helper": "Ingresa tu cuenta de PayPal, email de Stripe o número IBAN",
+      "required": "La cuenta de pago es requerida"
+    },
+    "imageConsent": {
+      "label": "Consentimiento",
+      "checkboxLabel": "Acepto el uso de mi imagen, experiencia y testimonio para fines promocionales de la plataforma",
+      "required": "Debes aceptar el consentimiento para continuar"
     }
   },
 

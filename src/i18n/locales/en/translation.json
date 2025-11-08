@@ -168,7 +168,8 @@
     "personalData": "Personal Data",
     "professionalData": "Professional Data",
     "proAmOffer": "ProAm Offer",
-    "promotionalMaterial": "Promotional Material"
+    "promotionalMaterial": "Promotional Material",
+    "contactAndPayment": "Contact & Payment"
   },
 
   "amateurOnboarding": {
@@ -179,6 +180,30 @@
     },
     "personalData": {
       "title": "Personal Information"
+    },
+    "contactAndPayment": {
+      "title": "Contact & Payment"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "example@email.com",
+      "required": "Email is required"
+    },
+    "phone": {
+      "label": "Phone / WhatsApp",
+      "placeholder": "+1 234 567 8900",
+      "required": "Phone is required"
+    },
+    "paymentAccount": {
+      "label": "Payment Account",
+      "placeholder": "Select your account type",
+      "helper": "Enter your PayPal account, Stripe email or IBAN number",
+      "required": "Payment account is required"
+    },
+    "imageConsent": {
+      "label": "Consent",
+      "checkboxLabel": "I consent to the use of my image, experience, and testimonial for promotional purposes of the platform",
+      "required": "You must accept the consent to continue"
     }
   },
 
