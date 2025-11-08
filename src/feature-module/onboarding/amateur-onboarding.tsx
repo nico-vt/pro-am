@@ -2,15 +2,9 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useSteps } from "../../hooks/useSteps";
 import { useTranslation } from "react-i18next";
 import StepProgress from "./step-progress";
-import {
-  InputText,
-  InputNumber,
-  InputDate,
-  InputFile,
-  SelectInput,
-} from "./form-components";
 import LanguageSwitcher from "./language-switch";
 import NavigationButtons from "./navigation-buttons";
+import { useRenderInput, type InputConfig } from "./form-utils";
 
 export type AmateurOnboardingInputs = {
   //  Datos personales
@@ -26,28 +20,9 @@ export type AmateurOnboardingInputs = {
   professionalPhoto: FileList | null; // foto profesional o retrato
 };
 
-type InputConfig = {
-  id: keyof AmateurOnboardingInputs;
-  label: string;
-  type: string;
-  placeholder?: string;
-  required?: boolean;
-  inputMode?:
-    | "text"
-    | "numeric"
-    | "decimal"
-    | "tel"
-    | "search"
-    | "email"
-    | "url";
-  accept?: string;
-  helperText?: string;
-  colClass?: string;
-  options?: Array<{ value: string; label: string }>;
-};
-
 const AmateurOnboarding = () => {
   const { t } = useTranslation();
+  const { renderInput } = useRenderInput<AmateurOnboardingInputs>();
   const {
     register,
     handleSubmit,
@@ -119,7 +94,7 @@ const AmateurOnboarding = () => {
     }
   };
 
-  const personalDataInputs: InputConfig[] = [
+  const personalDataInputs: InputConfig<AmateurOnboardingInputs>[] = [
     {
       id: "firstName",
       label: "proOnboarding.firstName.label",
@@ -191,105 +166,6 @@ const AmateurOnboarding = () => {
     },
   ];
 
-  // Función para renderizar inputs según su tipo usando componentes
-  const renderInput = (input: InputConfig) => {
-    const error = errors[input.id];
-    const labelText = t(input.label, input.label);
-    const placeholderText = input.placeholder
-      ? t(input.placeholder, "")
-      : undefined;
-    const helperText = input.helperText ? t(input.helperText, "") : undefined;
-
-    // Preparar el mensaje de error traducido
-    const errorMessage = error
-      ? t(
-          `${input.label.replace(".label", ".required")}`,
-          `${labelText} es requerido`
-        )
-      : undefined;
-
-    // Crear el objeto de error con el mensaje
-    const errorWithMessage =
-      error && errorMessage ? { ...error, message: errorMessage } : undefined;
-
-    switch (input.type) {
-      case "text":
-        return (
-          <InputText
-            key={input.id}
-            id={input.id}
-            label={labelText}
-            placeholder={placeholderText}
-            register={register}
-            required={input.required}
-            error={errorWithMessage}
-            colClass={input.colClass}
-          />
-        );
-
-      case "number":
-        return (
-          <InputNumber
-            key={input.id}
-            id={input.id}
-            label={labelText}
-            placeholder={placeholderText}
-            register={register}
-            required={input.required}
-            error={errorWithMessage}
-            inputMode={input.inputMode as "numeric" | "decimal"}
-            colClass={input.colClass}
-          />
-        );
-
-      case "date":
-        return (
-          <InputDate
-            key={input.id}
-            id={input.id}
-            label={labelText}
-            register={register}
-            required={input.required}
-            error={errorWithMessage}
-            colClass={input.colClass}
-          />
-        );
-
-      case "file":
-        return (
-          <InputFile
-            key={input.id}
-            id={input.id}
-            label={labelText}
-            register={register}
-            required={input.required}
-            error={errorWithMessage}
-            accept={input.accept}
-            helperText={helperText}
-            colClass={input.colClass}
-          />
-        );
-
-      case "select":
-        return (
-          <SelectInput
-            key={input.id}
-            id={input.id}
-            label={labelText}
-            options={input.options}
-            placeholder={placeholderText}
-            register={register}
-            required={input.required}
-            error={errorWithMessage}
-            colClass={input.colClass}
-          />
-        );
-
-      default:
-        return null;
-    }
-  };
-
   // Renderizar contenido según el step actual
   const renderStepContent = () => {
     switch (step) {
@@ -333,7 +209,11 @@ const AmateurOnboarding = () => {
             <h3 className="mb-4 text-center">
               {t("amateurOnboarding.personalData.title", "Datos Personales")}
             </h3>
-            <div className="row">{personalDataInputs.map(renderInput)}</div>
+            <div className="row">
+              {personalDataInputs.map((input) =>
+                renderInput({ input, register, errors })
+              )}
+            </div>
           </div>
         );
 
