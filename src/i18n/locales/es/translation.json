@@ -109,7 +109,15 @@
     },
     "typicalDuration": {
       "label": "Duración típica de la experiencia",
-      "placeholder": "Selecciona la duración"
+      "placeholder": "Selecciona la duración",
+      "options": {
+        "30min": "30 minutos",
+        "1hour": "1 hora",
+        "1.5hours": "1.5 horas",
+        "2hours": "2 horas",
+        "halfDay": "Medio día",
+        "fullDay": "Día completo"
+      }
     },
     "location": {
       "label": "Ubicación donde ofrece la experiencia",
@@ -137,7 +145,8 @@
     },
     "introVideo": {
       "label": "Video corto de presentación",
-      "placeholder": "Link a YouTube o Vimeo"
+      "placeholder": "youtube.com/watch?v=... o youtu.be/...",
+      "helper": "Link a YouTube o Vimeo (opcional)"
     },
     "socialLinks": {
       "label": "Enlaces a redes o sitio web oficial",
@@ -160,7 +169,40 @@
 
     "multiSelectHint": "Usa Ctrl o Cmd para seleccionar múltiples opciones",
     "submit": "Enviar",
-    "formError": "Este campo es requerido"
+    "formError": "Este campo es requerido",
+    "invalidUrl": "URL inválida. Ingresa un enlace válido",
+
+    "contactAndPayment": {
+      "title": "Contacto y Datos de Pago",
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "tu@email.com",
+        "required": "El correo electrónico es requerido"
+      },
+      "phone": {
+        "label": "Teléfono / WhatsApp",
+        "placeholder": "+1 234 567 8900",
+        "required": "El teléfono es requerido",
+        "invalid": "Número de teléfono inválido. Incluye el código de país (+XX)"
+      },
+      "documentId": {
+        "label": "Documento/ID profesional",
+        "placeholder": "Pasaporte o DNI"
+      },
+      "paymentAccount": {
+        "label": "Cuenta de pago",
+        "placeholder": "Selecciona método de pago",
+        "required": "La cuenta de pago es requerida"
+      },
+      "agent": {
+        "label": "Representante/Agencia",
+        "placeholder": "Nombre del representante"
+      },
+      "imageConsent": {
+        "label": "Acepto el uso de mi imagen con fines promocionales",
+        "required": "Debes aceptar el consentimiento para continuar"
+      }
+    }
   },
 
   "stepProgress": {
@@ -168,7 +210,8 @@
     "personalData": "Datos Personales",
     "professionalData": "Datos Profesionales",
     "proAmOffer": "Oferta ProAm",
-    "promotionalMaterial": "Material Promocional"
+    "promotionalMaterial": "Material Promocional",
+    "contactAndPayment": "Contacto y Pago"
   },
 
   "amateurOnboarding": {
@@ -179,6 +222,32 @@
     },
     "personalData": {
       "title": "Datos Personales"
+    },
+    "contactAndPayment": {
+      "title": "Contacto y Pago"
+    },
+    "email": {
+      "label": "Correo electrónico",
+      "placeholder": "ejemplo@correo.com",
+      "required": "El correo electrónico es requerido"
+    },
+    "phone": {
+      "label": "Teléfono / WhatsApp",
+      "placeholder": "+54 11 1234 5678",
+      "required": "El teléfono es requerido",
+      "invalid": "Número de teléfono inválido",
+      "missingCountryCode": "Incluye el código de país (ej: +54 para Argentina)"
+    },
+    "paymentAccount": {
+      "label": "Cuenta de pago",
+      "placeholder": "Seleccione su tipo de cuenta",
+      "helper": "Ingresa tu cuenta de PayPal, email de Stripe o número IBAN",
+      "required": "La cuenta de pago es requerida"
+    },
+    "imageConsent": {
+      "label": "Consentimiento",
+      "checkboxLabel": "Acepto el uso de mi imagen, experiencia y testimonio para fines promocionales de la plataforma",
+      "required": "Debes aceptar el consentimiento para continuar"
     }
   },
 

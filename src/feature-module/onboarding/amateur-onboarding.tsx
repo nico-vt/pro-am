@@ -2,18 +2,13 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useSteps } from "../../hooks/useSteps";
 import { useTranslation } from "react-i18next";
 import StepProgress from "./step-progress";
-import {
-  InputText,
-  InputNumber,
-  InputDate,
-  InputFile,
-  SelectInput,
-} from "./form-components";
 import LanguageSwitcher from "./language-switch";
 import NavigationButtons from "./navigation-buttons";
+import { useRenderInput, type InputConfig } from "./form-utils";
+import { useCountries } from "../../hooks/useCountries";
 
-export type AmateurOnboardingInputs = {
-  //  Datos personales
+// Tipos divididos por sección
+type PersonalData = {
   firstName: string;
   lastName: string;
   nationality: string;
@@ -21,33 +16,23 @@ export type AmateurOnboardingInputs = {
   height: number; // en cm
   city: string;
   country: string;
-
-  // Material Promocional
   professionalPhoto: FileList | null; // foto profesional o retrato
 };
 
-type InputConfig = {
-  id: keyof AmateurOnboardingInputs;
-  label: string;
-  type: string;
-  placeholder?: string;
-  required?: boolean;
-  inputMode?:
-    | "text"
-    | "numeric"
-    | "decimal"
-    | "tel"
-    | "search"
-    | "email"
-    | "url";
-  accept?: string;
-  helperText?: string;
-  colClass?: string;
-  options?: Array<{ value: string; label: string }>;
+type ContactAndPaymentData = {
+  email: string;
+  phone: string; // Teléfono / WhatsApp
+  paymentAccount: string; // Cuenta de PayPal / Stripe / IBAN
+  imageConsent: boolean; // Consentimiento de uso de imagen
 };
+
+// Tipo unificado para el formulario completo
+export type AmateurOnboardingInputs = PersonalData & ContactAndPaymentData;
 
 const AmateurOnboarding = () => {
   const { t } = useTranslation();
+  const { renderInput } = useRenderInput<AmateurOnboardingInputs>();
+  const { countryOptions } = useCountries();
   const {
     register,
     handleSubmit,
@@ -59,7 +44,7 @@ const AmateurOnboarding = () => {
     reValidateMode: "onChange",
   });
 
-  const steps = ["welcome", "personalData"] as const;
+  const steps = ["welcome", "personalData", "contactAndPayment"] as const;
   const { step, next, back, isFirstStep, isLastStep } = useSteps({ steps });
 
   const onSubmit: SubmitHandler<AmateurOnboardingInputs> = (data) =>
@@ -113,19 +98,28 @@ const AmateurOnboarding = () => {
           "height",
           "city",
           "country",
+          "professionalPhoto",
+        ];
+      case "contactAndPayment":
+        return [
+          "email",
+          "phone",
+          "paymentAccount",
+          "imageConsent",
         ];
       default:
         return [];
     }
   };
 
-  const personalDataInputs: InputConfig[] = [
+  const personalDataInputs: InputConfig<AmateurOnboardingInputs>[] = [
     {
       id: "firstName",
       label: "proOnboarding.firstName.label",
       type: "text",
       placeholder: "proOnboarding.firstName.placeholder",
       required: true,
+      autoComplete: "given-name",
       colClass: "col-md-6",
     },
     {
@@ -134,6 +128,7 @@ const AmateurOnboarding = () => {
       type: "text",
       placeholder: "proOnboarding.lastName.placeholder",
       required: true,
+      autoComplete: "family-name",
       colClass: "col-md-6",
     },
     {
@@ -143,11 +138,7 @@ const AmateurOnboarding = () => {
       placeholder: "proOnboarding.nationality.placeholder",
       required: true,
       colClass: "col-md-6",
-      options: [
-        { value: "argentina", label: "Argentina" },
-        { value: "chile", label: "Chile" },
-        { value: "colombia", label: "Colombia" },
-      ],
+      options: countryOptions,
     },
     {
       id: "birthDate",
@@ -155,13 +146,13 @@ const AmateurOnboarding = () => {
       type: "date",
       required: true,
       colClass: "col-md-6",
+      max: new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split('T')[0],
     },
     {
       id: "height",
       label: "proOnboarding.height.label",
-      type: "number",
+      type: "height",
       placeholder: "175",
-      inputMode: "numeric",
       required: true,
       colClass: "col-md-6",
     },
@@ -171,15 +162,17 @@ const AmateurOnboarding = () => {
       type: "text",
       placeholder: "proOnboarding.city.placeholder",
       required: true,
+      autoComplete: "address-level2",
       colClass: "col-md-6",
     },
     {
       id: "country",
       label: "proOnboarding.country.label",
-      type: "text",
+      type: "select",
       placeholder: "proOnboarding.country.placeholder",
       required: true,
       colClass: "col-md-6",
+      options: countryOptions,
     },
     {
       id: "professionalPhoto",
@@ -187,108 +180,52 @@ const AmateurOnboarding = () => {
       type: "file",
       accept: "image/*",
       helperText: "proOnboarding.professionalPhoto.helper",
+      required: true,
       colClass: "col-12",
     },
   ];
 
-  // Función para renderizar inputs según su tipo usando componentes
-  const renderInput = (input: InputConfig) => {
-    const error = errors[input.id];
-    const labelText = t(input.label, input.label);
-    const placeholderText = input.placeholder
-      ? t(input.placeholder, "")
-      : undefined;
-    const helperText = input.helperText ? t(input.helperText, "") : undefined;
-
-    // Preparar el mensaje de error traducido
-    const errorMessage = error
-      ? t(
-          `${input.label.replace(".label", ".required")}`,
-          `${labelText} es requerido`
-        )
-      : undefined;
-
-    // Crear el objeto de error con el mensaje
-    const errorWithMessage =
-      error && errorMessage ? { ...error, message: errorMessage } : undefined;
-
-    switch (input.type) {
-      case "text":
-        return (
-          <InputText
-            key={input.id}
-            id={input.id}
-            label={labelText}
-            placeholder={placeholderText}
-            register={register}
-            required={input.required}
-            error={errorWithMessage}
-            colClass={input.colClass}
-          />
-        );
-
-      case "number":
-        return (
-          <InputNumber
-            key={input.id}
-            id={input.id}
-            label={labelText}
-            placeholder={placeholderText}
-            register={register}
-            required={input.required}
-            error={errorWithMessage}
-            inputMode={input.inputMode as "numeric" | "decimal"}
-            colClass={input.colClass}
-          />
-        );
-
-      case "date":
-        return (
-          <InputDate
-            key={input.id}
-            id={input.id}
-            label={labelText}
-            register={register}
-            required={input.required}
-            error={errorWithMessage}
-            colClass={input.colClass}
-          />
-        );
-
-      case "file":
-        return (
-          <InputFile
-            key={input.id}
-            id={input.id}
-            label={labelText}
-            register={register}
-            required={input.required}
-            error={errorWithMessage}
-            accept={input.accept}
-            helperText={helperText}
-            colClass={input.colClass}
-          />
-        );
-
-      case "select":
-        return (
-          <SelectInput
-            key={input.id}
-            id={input.id}
-            label={labelText}
-            options={input.options}
-            placeholder={placeholderText}
-            register={register}
-            required={input.required}
-            error={errorWithMessage}
-            colClass={input.colClass}
-          />
-        );
-
-      default:
-        return null;
-    }
-  };
+  const contactAndPaymentInputs: InputConfig<AmateurOnboardingInputs>[] = [
+    {
+      id: "email",
+      label: "amateurOnboarding.email.label",
+      type: "email",
+      placeholder: "amateurOnboarding.email.placeholder",
+      required: true,
+      autoComplete: "email",
+      colClass: "col-md-6",
+    },
+    {
+      id: "phone",
+      label: "amateurOnboarding.phone.label",
+      type: "tel",
+      placeholder: "amateurOnboarding.phone.placeholder",
+      required: true,
+      autoComplete: "tel",
+      colClass: "col-md-6",
+    },
+    {
+      id: "paymentAccount",
+      label: "amateurOnboarding.paymentAccount.label",
+      type: "select",
+      placeholder: "amateurOnboarding.paymentAccount.placeholder",
+      required: true,
+      colClass: "col-12",
+      options: [
+        { value: "paypal", label: "PayPal" },
+        { value: "stripe", label: "Stripe" },
+        { value: "iban", label: "IBAN" },
+      ],
+    },
+    {
+      id: "imageConsent",
+      label: "amateurOnboarding.imageConsent.label",
+      type: "checkbox",
+      checkboxLabel: "amateurOnboarding.imageConsent.checkboxLabel",
+      required: true,
+      colClass: "col-12",
+    },
+  ];
 
   // Renderizar contenido según el step actual
   const renderStepContent = () => {
@@ -333,7 +270,25 @@ const AmateurOnboarding = () => {
             <h3 className="mb-4 text-center">
               {t("amateurOnboarding.personalData.title", "Datos Personales")}
             </h3>
-            <div className="row">{personalDataInputs.map(renderInput)}</div>
+            <div className="row">
+              {personalDataInputs.map((input) =>
+                renderInput({ input, register, errors })
+              )}
+            </div>
+          </div>
+        );
+
+      case "contactAndPayment":
+        return (
+          <div>
+            <h3 className="mb-4 text-center">
+              {t("amateurOnboarding.contactAndPayment.title", "Contacto y Pago")}
+            </h3>
+            <div className="row">
+              {contactAndPaymentInputs.map((input) =>
+                renderInput({ input, register, errors })
+              )}
+            </div>
           </div>
         );
 

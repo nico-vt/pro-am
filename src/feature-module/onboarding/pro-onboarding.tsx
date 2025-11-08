@@ -1,9 +1,11 @@
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useForm, type SubmitHandler, type FieldError } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./language-switch";
 import StepProgress from "./step-progress";
 import { useSteps } from "../../hooks/useSteps";
 import NavigationButtons from "./navigation-buttons";
+import { useRenderInput, type InputConfig } from "./form-utils";
+import { useCountries } from "../../hooks/useCountries";
 
 export type ProOnboardingInputs = {
   //  Datos personales
@@ -49,24 +51,291 @@ export type ProOnboardingInputs = {
     linkedin: string;
     youtube: string;
   };
+
+  // Datos de contacto y pago
+  email: string;
+  phone: string; // Teléfono / WhatsApp
+  documentId: string; // Documento/ID profesional/Pasaporte (opcional según país)
+  paymentAccount: string; // PayPal / Stripe / IBAN
+  agent: string; // Representante/Agencia (opcional)
+  imageConsent: boolean; // Consentimiento de uso de imagen
 };
 
 const ProOnboarding = () => {
+  const { t, i18n } = useTranslation();
+  const { renderInput } = useRenderInput<ProOnboardingInputs>();
+  const { countryOptions } = useCountries();
   const {
     register,
     handleSubmit,
     trigger,
+    control,
     formState: { errors },
   } = useForm<ProOnboardingInputs>({ 
     shouldUnregister: false,
     mode: "onChange",
     reValidateMode: "onChange"
   });
-  const steps = ["welcome", "personalData", "professionalData", "proAmOffer", "promotionalMaterial"] as const;
+  const steps = ["welcome", "personalData", "professionalData", "proAmOffer", "promotionalMaterial", "contactAndPayment"] as const;
   const { step, next, back, isFirstStep, isLastStep } = useSteps({ steps });
+
+  // Helper para extraer el error simple de campos anidados
+  const getFieldError = (fieldId: string): FieldError | undefined => {
+    const keys = fieldId.split('.');
+    let error: Record<string, unknown> | undefined = errors as Record<string, unknown>;
+    for (const key of keys) {
+      error = error?.[key] as Record<string, unknown> | undefined;
+      if (!error) break;
+    }
+    return error as FieldError | undefined;
+  };
 
   const onSubmit: SubmitHandler<ProOnboardingInputs> = (data) =>
     console.log(data);
+
+  // Configuración de inputs para datos personales
+  const personalDataInputs: InputConfig<ProOnboardingInputs>[] = [
+    {
+      id: "firstName",
+      label: t("proOnboarding.firstName.label"),
+      type: "text",
+      placeholder: t("proOnboarding.firstName.placeholder"),
+      required: true,
+      autoComplete: "given-name"
+    },
+    {
+      id: "lastName",
+      label: t("proOnboarding.lastName.label"),
+      type: "text",
+      placeholder: t("proOnboarding.lastName.placeholder"),
+      required: true,
+      autoComplete: "family-name"
+    },
+    {
+      id: "nationality",
+      label: t("proOnboarding.nationality.label"),
+      type: "singleselect",
+      placeholder: t("proOnboarding.nationality.placeholder"),
+      required: true,
+      options: countryOptions,
+      control: control
+    },
+    {
+      id: "birthDate",
+      label: t("proOnboarding.birthDate.label"),
+      type: "date",
+      placeholder: t("proOnboarding.birthDate.placeholder"),
+      required: true,
+      autoComplete: "bday",
+      max: new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split("T")[0]
+    },
+    {
+      id: "height",
+      label: t("proOnboarding.height.label"),
+      type: "height",
+      placeholder: t("proOnboarding.height.placeholder"),
+      required: true,
+      isMetric: i18n.language === "es"
+    },
+    {
+      id: "city",
+      label: t("proOnboarding.city.label"),
+      type: "text",
+      placeholder: t("proOnboarding.city.placeholder"),
+      required: true,
+      autoComplete: "address-level2"
+    },
+    {
+      id: "country",
+      label: t("proOnboarding.country.label"),
+      type: "singleselect",
+      placeholder: t("proOnboarding.country.placeholder"),
+      required: true,
+      options: countryOptions,
+      control: control
+    }
+  ];
+
+  // Configuración de inputs para datos profesionales (solo campos simples)
+  const professionalDataInputs: InputConfig<ProOnboardingInputs>[] = [
+    {
+      id: "sportDiscipline",
+      label: t("proOnboarding.sportDiscipline.label", "Sport Discipline"),
+      type: "text",
+      required: false // Es readonly, no requiere validación
+    },
+    {
+      id: "professionalLevel",
+      label: t("proOnboarding.professionalLevel.label"),
+      type: "singleselect",
+      placeholder: t("proOnboarding.professionalLevel.placeholder"),
+      required: true,
+      options: Object.entries(
+        t("proOnboarding.professionalLevel.options", { returnObjects: true }) as Record<string, string>
+      ).map(([value, label]) => ({ value, label })),
+      control: control,
+      isSearchable: false
+    },
+    {
+      id: "currentClub",
+      label: t("proOnboarding.currentClub.label", "Current Club or Institution"),
+      type: "text",
+      placeholder: t("proOnboarding.currentClub.placeholder", "Enter your current club"),
+      required: false
+    },
+    {
+      id: "languages",
+      label: t("proOnboarding.languages.label", "Languages"),
+      type: "multiselect",
+      placeholder: t("proOnboarding.languages.placeholder", "Select languages..."),
+      required: false,
+      options: [
+        { value: "English", label: "English" },
+        { value: "Spanish", label: "Spanish" },
+        { value: "Portuguese", label: "Portuguese" },
+        { value: "French", label: "French" },
+        { value: "Italian", label: "Italian" },
+        { value: "German", label: "German" },
+        { value: "Chinese", label: "Chinese" },
+        { value: "Japanese", label: "Japanese" },
+        { value: "Arabic", label: "Arabic" }
+      ],
+      control: control,
+      colClass: "col-md-6"
+    },
+    {
+      id: "certifications",
+      label: t("proOnboarding.certifications.label", "Licenses or Certifications"),
+      type: "multiselect",
+      placeholder: t("proOnboarding.certifications.placeholder", "Select certifications..."),
+      required: false,
+      options: [
+        { value: "ITF", label: "ITF" },
+        { value: "PTR", label: "PTR" },
+        { value: "RPT", label: "RPT" },
+        { value: "USPTA", label: "USPTA" },
+        { value: "USPTR", label: "USPTR" },
+        { value: "LTA", label: "LTA" }
+      ],
+      control: control,
+      colClass: "col-md-6"
+    }
+  ];
+
+  // Configuración de inputs para oferta ProAm (campos simples)
+  const proAmOfferInputs: InputConfig<ProOnboardingInputs>[] = [
+    {
+      id: "experienceType",
+      label: t("proOnboarding.experienceType.label", "Tipo de experiencia ofrecida"),
+      type: "singleselect",
+      placeholder: t("proOnboarding.experienceType.placeholder", "Selecciona el tipo de experiencia"),
+      required: true,
+      options: [
+        { value: "training1on1", label: t("proOnboarding.experienceType.training1on1", "Entrenamiento 1:1") },
+        { value: "sparringSession", label: t("proOnboarding.experienceType.sparringSession", "Sesión de sparring") },
+        { value: "clinic", label: t("proOnboarding.experienceType.clinic", "Clínica") },
+        { value: "meetAndPlay", label: t("proOnboarding.experienceType.meetAndPlay", "Meet & Play") },
+        { value: "proAmTournament", label: t("proOnboarding.experienceType.proAmTournament", "Torneo ProAm") }
+      ],
+      control: control,
+      isSearchable: false
+    },
+    {
+      id: "typicalDuration",
+      label: t("proOnboarding.typicalDuration.label", "Duración típica de la experiencia"),
+      type: "singleselect",
+      placeholder: t("proOnboarding.typicalDuration.placeholder", "Selecciona la duración"),
+      required: true,
+      options: Object.entries(
+        t("proOnboarding.typicalDuration.options", { returnObjects: true }) as Record<string, string>
+      ).map(([value, label]) => ({ value, label })),
+      control: control,
+      isSearchable: false
+    },
+    {
+      id: "location",
+      label: t("proOnboarding.location.label", "Ubicación donde ofrece la experiencia"),
+      type: "text",
+      placeholder: t("proOnboarding.location.placeholder", "Club, ciudad o área geográfica"),
+      required: true
+    }
+  ];
+
+  // Configuración de inputs para material promocional (campos simples)
+  const promotionalMaterialInputs: InputConfig<ProOnboardingInputs>[] = [
+    {
+      id: "professionalPhoto",
+      label: t("proOnboarding.professionalPhoto.label", "Foto profesional o retrato"),
+      type: "file",
+      required: true,
+      accept: "image/*"
+    },
+    {
+      id: "introVideo",
+      label: t("proOnboarding.introVideo.label", "Video corto de presentación"),
+      type: "url",
+      placeholder: t("proOnboarding.introVideo.placeholder", "youtube.com/watch?v=... o youtu.be/..."),
+      required: false,
+      helperText: t("proOnboarding.introVideo.helper", "Link a YouTube o Vimeo (opcional)")
+    }
+  ];
+
+  // Configuración de inputs para contacto y pago
+  const contactAndPaymentInputs: InputConfig<ProOnboardingInputs>[] = [
+    {
+      id: "email",
+      label: t("proOnboarding.contactAndPayment.email.label", "Correo electrónico"),
+      type: "email",
+      placeholder: t("proOnboarding.contactAndPayment.email.placeholder", "tu@email.com"),
+      required: true,
+      autoComplete: "email"
+    },
+    {
+      id: "phone",
+      label: t("proOnboarding.contactAndPayment.phone.label", "Teléfono / WhatsApp"),
+      type: "tel",
+      placeholder: t("proOnboarding.contactAndPayment.phone.placeholder", "+1 234 567 8900"),
+      required: true,
+      autoComplete: "tel"
+    },
+    {
+      id: "documentId",
+      label: t("proOnboarding.contactAndPayment.documentId.label", "Documento/ID profesional"),
+      type: "text",
+      placeholder: t("proOnboarding.contactAndPayment.documentId.placeholder", "Pasaporte o DNI"),
+      required: false,
+      helperText: t("proOnboarding.optional", "(opcional)")
+    },
+    {
+      id: "paymentAccount",
+      label: t("proOnboarding.contactAndPayment.paymentAccount.label", "Cuenta de pago"),
+      type: "singleselect",
+      placeholder: t("proOnboarding.contactAndPayment.paymentAccount.placeholder", "Selecciona método de pago"),
+      required: true,
+      options: [
+        { value: "paypal", label: "PayPal" },
+        { value: "stripe", label: "Stripe" },
+        { value: "iban", label: "IBAN" }
+      ],
+      control: control,
+      isSearchable: false
+    },
+    {
+      id: "agent",
+      label: t("proOnboarding.contactAndPayment.agent.label", "Representante/Agencia"),
+      type: "text",
+      placeholder: t("proOnboarding.contactAndPayment.agent.placeholder", "Nombre del representante"),
+      required: false,
+      helperText: t("proOnboarding.optional", "(opcional)")
+    },
+    {
+      id: "imageConsent",
+      label: "",
+      type: "checkbox",
+      checkboxLabel: t("proOnboarding.contactAndPayment.imageConsent.label", "Acepto el uso de mi imagen con fines promocionales"),
+      required: true
+    }
+  ];
 
   // Función para hacer scroll hacia arriba
   const scrollToTop = () => {
@@ -89,6 +358,8 @@ const ProOnboarding = () => {
         return ["experienceType", "typicalDuration", "location", "baseFee", "currency"];
       case "promotionalMaterial":
         return ["professionalPhoto"]; // Solo la foto es requerida
+      case "contactAndPayment":
+        return ["email", "phone", "paymentAccount", "imageConsent"]; // documentId y agent son opcionales
       default:
         return [];
     }
@@ -145,22 +416,57 @@ const ProOnboarding = () => {
 
               {/* ---------------- Datos Personales ---------------- */}
               {step === "personalData" && (
-                <PersonalDataSection register={register} errors={errors} />
+                <PersonalDataSection 
+                  inputs={personalDataInputs}
+                  register={register} 
+                  errors={errors}
+                  renderInput={renderInput}
+                  getFieldError={getFieldError}
+                />
               )}
 
               {/* ---------------- Datos Profesionales ---------------- */}
               {step === "professionalData" && (
-                <ProfessionalDataSection register={register} errors={errors} />
+                <ProfessionalDataSection 
+                  inputs={professionalDataInputs}
+                  register={register} 
+                  errors={errors}
+                  renderInput={renderInput}
+                  getFieldError={getFieldError}
+                />
               )}
 
               {/* ---------------- Oferta ProAm ---------------- */}
               {step === "proAmOffer" && (
-                <ProAmOfferSection register={register} errors={errors} />
+                <ProAmOfferSection 
+                  inputs={proAmOfferInputs}
+                  register={register} 
+                  errors={errors}
+                  renderInput={renderInput}
+                  getFieldError={getFieldError}
+                />
               )}
 
               {/* ---------------- Material Promocional ---------------- */}
               {step === "promotionalMaterial" && (
-                <PromotionalMaterialSection register={register} errors={errors} />
+                <PromotionalMaterialSection 
+                  inputs={promotionalMaterialInputs}
+                  register={register} 
+                  errors={errors}
+                  renderInput={renderInput}
+                  getFieldError={getFieldError}
+                />
+              )}
+
+              {/* ---------------- Contacto y Pago ---------------- */}
+              {step === "contactAndPayment" && (
+                <ContactAndPaymentSection 
+                  inputs={contactAndPaymentInputs}
+                  register={register} 
+                  errors={errors}
+                  renderInput={renderInput}
+                  getFieldError={getFieldError}
+                />
               )}
 
               <NavigationButtons
@@ -188,146 +494,59 @@ type DataSectionProps = {
   >["formState"]["errors"];
 };
 
-const PersonalDataSection = ({ register, errors }: DataSectionProps) => {
+type PersonalDataSectionProps = DataSectionProps & {
+  inputs: InputConfig<ProOnboardingInputs>[];
+  renderInput: ReturnType<typeof useRenderInput<ProOnboardingInputs>>['renderInput'];
+  getFieldError: (fieldId: string) => FieldError | undefined;
+};
+
+const PersonalDataSection = ({ inputs, register, renderInput, getFieldError }: PersonalDataSectionProps) => {
   const { t } = useTranslation();
+  
+  // Construir errores simples para los campos de esta sección
+  const sectionErrors: Record<string, FieldError> = {};
+  inputs.forEach(input => {
+    const error = getFieldError(input.id);
+    if (error) sectionErrors[input.id] = error;
+  });
+  
   return (
     <>
       <h4 className="mb-3">{t("proOnboarding.personalInformation")}</h4>
       <div className="row">
-        <div className="col-md-6 mb-3">
-          <label htmlFor="firstName" className="form-label">
-            {t("proOnboarding.firstName.label")}
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="firstName"
-            placeholder={t("proOnboarding.firstName.placeholder")}
-            {...register("firstName", { required: true })}
-          />
-          {errors.firstName && (
-            <span className="form-error">{t("proOnboarding.formError")}</span>
-          )}
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label htmlFor="lastName" className="form-label">
-            {t("proOnboarding.lastName.label")}
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="lastName"
-            placeholder={t("proOnboarding.lastName.placeholder")}
-            {...register("lastName", { required: true })}
-          />
-          {errors.lastName && (
-            <span className="form-error">{t("proOnboarding.formError")}</span>
-          )}
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label htmlFor="nationality" className="form-label">
-            {t("proOnboarding.nationality.label")}
-          </label>
-          <select
-            className="form-control"
-            id="nationality"
-            {...register("nationality", { required: true })}
-          >
-            <option value="">
-              {t("proOnboarding.nationality.placeholder")}
-            </option>
-            <option>Argentina</option>
-            <option>USA</option>
-            <option>Uruguay</option>
-          </select>
-          {errors.nationality && (
-            <span className="form-error">{t("proOnboarding.formError")}</span>
-          )}
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label htmlFor="birthDate" className="form-label">
-            {t("proOnboarding.birthDate.label")}
-          </label>
-          <input
-            type="date"
-            className="form-control"
-            id="birthDate"
-            placeholder={t("proOnboarding.birthDate.placeholder")}
-            {...register("birthDate", { required: true })}
-          />
-          {errors.birthDate && (
-            <span className="form-error">{t("proOnboarding.formError")}</span>
-          )}
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label htmlFor="height" className="form-label">
-            {t("proOnboarding.height.label")}
-          </label>
-          <input
-            type="number"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            className="form-control"
-            id="height"
-            placeholder={t("proOnboarding.height.placeholder")}
-            {...register("height", {
-              required: true,
-              valueAsNumber: true,
-            })}
-          />
-          {errors.height && (
-            <span className="form-error">{t("proOnboarding.formError")}</span>
-          )}
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label htmlFor="city" className="form-label">
-            {t("proOnboarding.city.label")}
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="city"
-            placeholder={t("proOnboarding.city.placeholder")}
-            {...register("city", { required: true })}
-          />
-          {errors.city && (
-            <span className="form-error">{t("proOnboarding.formError")}</span>
-          )}
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label htmlFor="country" className="form-label">
-            {t("proOnboarding.country.label")}
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="country"
-            placeholder={t("proOnboarding.country.placeholder")}
-            {...register("country", { required: true })}
-          />
-          {errors.country && (
-            <span className="form-error">{t("proOnboarding.formError")}</span>
-          )}
-        </div>
+        {inputs.map((input) => (
+          <div key={input.id} className={input.colClass || "col-md-6 mb-3"}>
+            {renderInput({ input, register, errors: sectionErrors })}
+          </div>
+        ))}
       </div>
     </>
   );
 };
 
-const ProfessionalDataSection = ({ register, errors }: DataSectionProps) => {
+type ProfessionalDataSectionProps = DataSectionProps & {
+  inputs: InputConfig<ProOnboardingInputs>[];
+  renderInput: ReturnType<typeof useRenderInput<ProOnboardingInputs>>['renderInput'];
+  getFieldError: (fieldId: string) => FieldError | undefined;
+};
+
+const ProfessionalDataSection = ({ inputs, register, renderInput, getFieldError }: ProfessionalDataSectionProps) => {
   const { t } = useTranslation();
+  
+  // Construir errores simples para los campos de esta sección
+  const sectionErrors: Record<string, FieldError> = {};
+  inputs.forEach(input => {
+    const error = getFieldError(input.id);
+    if (error) sectionErrors[input.id] = error;
+  });
+  
   return (
     <>
       <h4 className="mb-3 mt-4">
         {t("proOnboarding.professionalInformation", "Professional Information")}
       </h4>
       <div className="row">
+        {/* Renderizar sportDiscipline con valor readonly */}
         <div className="col-md-6 mb-3">
           <label htmlFor="sportDiscipline" className="form-label">
             {t("proOnboarding.sportDiscipline.label", "Sport Discipline")}
@@ -340,54 +559,16 @@ const ProfessionalDataSection = ({ register, errors }: DataSectionProps) => {
             readOnly
             {...register("sportDiscipline")}
           />
-          {errors.sportDiscipline && (
-            <span className="form-error">{t("proOnboarding.formError")}</span>
-          )}
         </div>
 
-        <div className="col-md-6 mb-3">
-          <label htmlFor="professionalLevel" className="form-label">
-            {t("proOnboarding.professionalLevel.label")}
-          </label>
-          <select
-            className="form-control"
-            id="professionalLevel"
-            {...register("professionalLevel", { required: true })}
-          >
-            <option value="">
-              {t("proOnboarding.professionalLevel.placeholder")}
-            </option>
-            {Object.entries(
-              t("proOnboarding.professionalLevel.options", {
-                returnObjects: true,
-              })
-            ).map(([key, label]) => (
-              <option key={key} value={key}>
-                {label as string}
-              </option>
-            ))}
-          </select>
-        </div>
+        {/* Renderizar todos los campos (incluyendo multiselects) usando renderInput */}
+        {inputs.slice(1).map((input) => (
+          <div key={input.id} className={input.colClass || "col-md-6 mb-3"}>
+            {renderInput({ input, register, errors: sectionErrors })}
+          </div>
+        ))}
 
-        <div className="col-md-6 mb-3">
-          <label htmlFor="currentClub" className="form-label">
-            {t(
-              "proOnboarding.currentClub.label",
-              "Current Club or Institution"
-            )}
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="currentClub"
-            placeholder={t(
-              "proOnboarding.currentClub.placeholder",
-              "Enter your current club"
-            )}
-            {...register("currentClub")}
-          />
-        </div>
-
+        {/* playStyle: dos selects juntos (requiere renderizado personalizado) */}
         <div className="col-md-6 mb-3">
           <label className="form-label">
             {t("proOnboarding.playStyle.label", "Play Style")}
@@ -398,18 +579,13 @@ const ProfessionalDataSection = ({ register, errors }: DataSectionProps) => {
               {...register("playStyle.hand", { required: true })}
             >
               <option value="">
-                {t(
-                  "proOnboarding.playStyle.hand.placeholder",
-                  "Select hand..."
-                )}
+                {t("proOnboarding.playStyle.hand.placeholder", "Select hand...")}
               </option>
               {Object.entries(
-                t("proOnboarding.playStyle.hand.options", {
-                  returnObjects: true,
-                })
+                t("proOnboarding.playStyle.hand.options", { returnObjects: true }) as Record<string, string>
               ).map(([key, label]) => (
                 <option key={key} value={key}>
-                  {label as string}
+                  {label}
                 </option>
               ))}
             </select>
@@ -419,171 +595,53 @@ const ProfessionalDataSection = ({ register, errors }: DataSectionProps) => {
               {...register("playStyle.backhand", { required: true })}
             >
               <option value="">
-                {t(
-                  "proOnboarding.playStyle.hand.placeholder",
-                  "Select hand..."
-                )}
+                {t("proOnboarding.playStyle.backhand.placeholder", "Select backhand...")}
               </option>
               {Object.entries(
-                t("proOnboarding.playStyle.backhand.options", {
-                  returnObjects: true,
-                })
+                t("proOnboarding.playStyle.backhand.options", { returnObjects: true }) as Record<string, string>
               ).map(([key, label]) => (
                 <option key={key} value={key}>
-                  {label as string}
+                  {label}
                 </option>
               ))}
             </select>
           </div>
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label htmlFor="languages" className="form-label">
-            {t("proOnboarding.languages.label", "Languages")}
-          </label>
-          <select
-            multiple
-            className="form-control"
-            id="languages"
-            {...register("languages")}
-          >
-            <option value="English">English</option>
-            <option value="Spanish">Spanish</option>
-            <option value="Portuguese">Portuguese</option>
-            <option value="French">French</option>
-            <option value="Italian">Italian</option>
-          </select>
-          <small className="text-muted">
-            {t(
-              "proOnboarding.multiSelectHint",
-              "Use Ctrl/Cmd to select multiple"
-            )}
-          </small>
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label htmlFor="certifications" className="form-label">
-            {t(
-              "proOnboarding.certifications.label",
-              "Licenses or Certifications"
-            )}
-          </label>
-          <select
-            multiple
-            className="form-control"
-            id="certifications"
-            {...register("certifications")}
-          >
-            <option value="ITF">ITF</option>
-            <option value="PTR">PTR</option>
-            <option value="RPT">RPT</option>
-            <option value="USPTA">USPTA</option>
-          </select>
         </div>
       </div>
     </>
   );
 };
 
-const ProAmOfferSection = ({ register, errors }: DataSectionProps) => {
+type ProAmOfferSectionProps = DataSectionProps & {
+  inputs: InputConfig<ProOnboardingInputs>[];
+  renderInput: ReturnType<typeof useRenderInput<ProOnboardingInputs>>['renderInput'];
+  getFieldError: (fieldId: string) => FieldError | undefined;
+};
+
+const ProAmOfferSection = ({ inputs, register, errors, renderInput, getFieldError }: ProAmOfferSectionProps) => {
   const { t } = useTranslation();
+  
+  // Construir errores simples para los campos de esta sección
+  const sectionErrors: Record<string, FieldError> = {};
+  inputs.forEach(input => {
+    const error = getFieldError(input.id);
+    if (error) sectionErrors[input.id] = error;
+  });
+  
   return (
     <>
       <h4 className="mb-3 mt-4">
         {t("proOnboarding.proAmOffer", "Oferta ProAm")}
       </h4>
       <div className="row">
-        <div className="col-md-6 mb-3">
-          <label htmlFor="experienceType" className="form-label">
-            {t(
-              "proOnboarding.experienceType.label",
-              "Tipo de experiencia ofrecida"
-            )}
-          </label>
-          <select
-            className="form-control"
-            id="experienceType"
-            {...register("experienceType", { required: true })}
-          >
-            <option value="">
-              {t(
-                "proOnboarding.experienceType.placeholder",
-                "Selecciona el tipo de experiencia"
-              )}
-            </option>
-            <option value="training1on1">
-              {t("proOnboarding.experienceType.training1on1", "Entrenamiento 1:1")}
-            </option>
-            <option value="sparringSession">
-              {t("proOnboarding.experienceType.sparringSession", "Sesión de sparring")}
-            </option>
-            <option value="clinic">
-              {t("proOnboarding.experienceType.clinic", "Clínica")}
-            </option>
-            <option value="meetAndPlay">
-              {t("proOnboarding.experienceType.meetAndPlay", "Meet & Play")}
-            </option>
-            <option value="proAmTournament">
-              {t("proOnboarding.experienceType.proAmTournament", "Torneo ProAm")}
-            </option>
-          </select>
-          {errors.experienceType && (
-            <span className="form-error">{t("proOnboarding.formError")}</span>
-          )}
-        </div>
+        {/* Renderizar campos simples usando renderInput */}
+        {inputs.map((input) => (
+          <div key={input.id} className={input.colClass || "col-md-6 mb-3"}>
+            {renderInput({ input, register, errors: sectionErrors })}
+          </div>
+        ))}
 
-        <div className="col-md-6 mb-3">
-          <label htmlFor="typicalDuration" className="form-label">
-            {t(
-              "proOnboarding.typicalDuration.label",
-              "Duración típica de la experiencia"
-            )}
-          </label>
-          <select
-            className="form-control"
-            id="typicalDuration"
-            {...register("typicalDuration", { required: true })}
-          >
-            <option value="">
-              {t(
-                "proOnboarding.typicalDuration.placeholder",
-                "Selecciona la duración"
-              )}
-            </option>
-            <option value="30min">30 minutos</option>
-            <option value="1hour">1 hora</option>
-            <option value="1.5hours">1.5 horas</option>
-            <option value="2hours">2 horas</option>
-            <option value="halfDay">Medio día</option>
-            <option value="fullDay">Día completo</option>
-          </select>
-          {errors.typicalDuration && (
-            <span className="form-error">{t("proOnboarding.formError")}</span>
-          )}
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label htmlFor="location" className="form-label">
-            {t(
-              "proOnboarding.location.label",
-              "Ubicación donde ofrece la experiencia"
-            )}
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="location"
-            placeholder={t(
-              "proOnboarding.location.placeholder",
-              "Club, ciudad o área geográfica"
-            )}
-            {...register("location", { required: true })}
-          />
-          {errors.location && (
-            <span className="form-error">{t("proOnboarding.formError")}</span>
-          )}
-        </div>
-
+        {/* baseFee + currency: dos campos juntos (requiere renderizado personalizado) */}
         <div className="col-md-6 mb-3">
           <label className="form-label">
             {t("proOnboarding.baseFee.label", "Tarifa base")}
@@ -592,10 +650,7 @@ const ProAmOfferSection = ({ register, errors }: DataSectionProps) => {
             <input
               type="number"
               className="form-control"
-              placeholder={t(
-                "proOnboarding.baseFee.placeholder",
-                "Ingresa la tarifa"
-              )}
+              placeholder={t("proOnboarding.baseFee.placeholder", "Ingresa la tarifa")}
               {...register("baseFee", {
                 required: true,
                 valueAsNumber: true,
@@ -619,6 +674,7 @@ const ProAmOfferSection = ({ register, errors }: DataSectionProps) => {
           )}
         </div>
 
+        {/* includes: checkboxes (renderizado personalizado) */}
         <div className="col-12 mb-3">
           <label className="form-label">
             {t("proOnboarding.includes.label", "¿Qué incluye?")}
@@ -683,55 +739,36 @@ const ProAmOfferSection = ({ register, errors }: DataSectionProps) => {
   );
 };
 
-const PromotionalMaterialSection = ({ register, errors }: DataSectionProps) => {
+type PromotionalMaterialSectionProps = DataSectionProps & {
+  inputs: InputConfig<ProOnboardingInputs>[];
+  renderInput: ReturnType<typeof useRenderInput<ProOnboardingInputs>>['renderInput'];
+  getFieldError: (fieldId: string) => FieldError | undefined;
+};
+
+const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldError }: PromotionalMaterialSectionProps) => {
   const { t } = useTranslation();
+  
+  // Construir errores simples para los campos de esta sección
+  const sectionErrors: Record<string, FieldError> = {};
+  inputs.forEach(input => {
+    const error = getFieldError(input.id);
+    if (error) sectionErrors[input.id] = error;
+  });
+  
   return (
     <>
       <h4 className="mb-3 mt-4">
         {t("proOnboarding.promotionalMaterial", "Material Promocional")}
       </h4>
       <div className="row">
-        <div className="col-md-6 mb-3">
-          <label htmlFor="professionalPhoto" className="form-label">
-            {t(
-              "proOnboarding.professionalPhoto.label",
-              "Foto profesional o retrato"
-            )}
-          </label>
-          <input
-            type="file"
-            className="form-control"
-            id="professionalPhoto"
-            accept="image/*"
-            {...register("professionalPhoto", { required: true })}
-          />
-          {errors.professionalPhoto && (
-            <span className="form-error">{t("proOnboarding.formError")}</span>
-          )}
-        </div>
+        {/* Renderizar professionalPhoto e introVideo usando renderInput */}
+        {inputs.map((input) => (
+          <div key={input.id} className={input.colClass || "col-md-6 mb-3"}>
+            {renderInput({ input, register, errors: sectionErrors })}
+          </div>
+        ))}
 
-        <div className="col-md-6 mb-3">
-          <label htmlFor="introVideo" className="form-label">
-            {t(
-              "proOnboarding.introVideo.label",
-              "Video corto de presentación"
-            )}
-            <small className="text-muted ms-1">
-              {t("proOnboarding.optional", "(opcional)")}
-            </small>
-          </label>
-          <input
-            type="url"
-            className="form-control"
-            id="introVideo"
-            placeholder={t(
-              "proOnboarding.introVideo.placeholder",
-              "Link a YouTube o Vimeo"
-            )}
-            {...register("introVideo")}
-          />
-        </div>
-
+        {/* socialLinks: campos anidados (renderizado personalizado) */}
         <div className="col-12 mb-3">
           <label className="form-label">
             ✅ {t("proOnboarding.socialLinks.label", "Enlaces a redes o sitio web oficial")}
@@ -743,10 +780,7 @@ const PromotionalMaterialSection = ({ register, errors }: DataSectionProps) => {
                 <input
                   type="url"
                   className="form-control"
-                  placeholder={t(
-                    "proOnboarding.socialLinks.website.placeholder",
-                    "Sitio web oficial"
-                  )}
+                  placeholder={t("proOnboarding.socialLinks.website.placeholder", "Sitio web oficial")}
                   {...register("socialLinks.website")}
                 />
               </div>
@@ -757,10 +791,7 @@ const PromotionalMaterialSection = ({ register, errors }: DataSectionProps) => {
                 <input
                   type="url"
                   className="form-control"
-                  placeholder={t(
-                    "proOnboarding.socialLinks.instagram.placeholder",
-                    "Instagram"
-                  )}
+                  placeholder={t("proOnboarding.socialLinks.instagram.placeholder", "Instagram")}
                   {...register("socialLinks.instagram")}
                 />
               </div>
@@ -771,10 +802,7 @@ const PromotionalMaterialSection = ({ register, errors }: DataSectionProps) => {
                 <input
                   type="url"
                   className="form-control"
-                  placeholder={t(
-                    "proOnboarding.socialLinks.twitter.placeholder",
-                    "Twitter/X"
-                  )}
+                  placeholder={t("proOnboarding.socialLinks.twitter.placeholder", "Twitter/X")}
                   {...register("socialLinks.twitter")}
                 />
               </div>
@@ -785,10 +813,7 @@ const PromotionalMaterialSection = ({ register, errors }: DataSectionProps) => {
                 <input
                   type="url"
                   className="form-control"
-                  placeholder={t(
-                    "proOnboarding.socialLinks.linkedin.placeholder",
-                    "LinkedIn"
-                  )}
+                  placeholder={t("proOnboarding.socialLinks.linkedin.placeholder", "LinkedIn")}
                   {...register("socialLinks.linkedin")}
                 />
               </div>
@@ -799,16 +824,46 @@ const PromotionalMaterialSection = ({ register, errors }: DataSectionProps) => {
                 <input
                   type="url"
                   className="form-control"
-                  placeholder={t(
-                    "proOnboarding.socialLinks.youtube.placeholder",
-                    "YouTube"
-                  )}
+                  placeholder={t("proOnboarding.socialLinks.youtube.placeholder", "YouTube")}
                   {...register("socialLinks.youtube")}
                 />
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </>
+  );
+};
+
+type ContactAndPaymentSectionProps = DataSectionProps & {
+  inputs: InputConfig<ProOnboardingInputs>[];
+  renderInput: ReturnType<typeof useRenderInput<ProOnboardingInputs>>['renderInput'];
+  getFieldError: (fieldId: string) => FieldError | undefined;
+};
+
+const ContactAndPaymentSection = ({ inputs, register, renderInput, getFieldError }: ContactAndPaymentSectionProps) => {
+  const { t } = useTranslation();
+  
+  // Construir errores simples para los campos de esta sección
+  const sectionErrors: Record<string, FieldError> = {};
+  inputs.forEach(input => {
+    const error = getFieldError(input.id);
+    if (error) sectionErrors[input.id] = error;
+  });
+  
+  return (
+    <>
+      <h4 className="mb-3 mt-4">
+        {t("proOnboarding.contactAndPayment.title", "Contacto y Datos de Pago")}
+      </h4>
+      <div className="row">
+        {/* Renderizar todos los campos usando renderInput */}
+        {inputs.map((input) => (
+          <div key={input.id} className={input.colClass || (input.type === "checkbox" ? "col-12 mb-3" : "col-md-6 mb-3")}>
+            {renderInput({ input, register, errors: sectionErrors })}
+          </div>
+        ))}
       </div>
     </>
   );

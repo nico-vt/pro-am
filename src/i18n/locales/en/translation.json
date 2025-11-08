@@ -36,8 +36,8 @@
       "required": "Date of birth is required"
     },
     "height": {
-      "label": "Height (cm)",
-      "placeholder": "e.g. 180",
+      "label": "Height (ft)",
+      "placeholder": "e.g. 5.9",
       "required": "Height is required"
     },
     "city": {
@@ -109,7 +109,15 @@
     },
     "typicalDuration": {
       "label": "Typical Experience Duration",
-      "placeholder": "Select the duration"
+      "placeholder": "Select the duration",
+      "options": {
+        "30min": "30 minutes",
+        "1hour": "1 hour",
+        "1.5hours": "1.5 hours",
+        "2hours": "2 hours",
+        "halfDay": "Half day",
+        "fullDay": "Full day"
+      }
     },
     "location": {
       "label": "Location Where You Offer the Experience",
@@ -136,8 +144,9 @@
       "required": "Professional photo is required"
     },
     "introVideo": {
-      "label": "Short Introduction Video",
-      "placeholder": "Link to YouTube or Vimeo"
+      "label": "Short introductory video",
+      "placeholder": "youtube.com/watch?v=... or youtu.be/...",
+      "helper": "Link to YouTube or Vimeo (optional)"
     },
     "socialLinks": {
       "label": "Links to social media or official website",
@@ -160,7 +169,40 @@
 
     "multiSelectHint": "Use Ctrl or Cmd to select multiple options",
     "submit": "Submit",
-    "formError": "This field is required"
+    "formError": "This field is required",
+    "invalidUrl": "Invalid URL. Enter a valid link",
+
+    "contactAndPayment": {
+      "title": "Contact & Payment Information",
+      "email": {
+        "label": "Email",
+        "placeholder": "your@email.com",
+        "required": "Email is required"
+      },
+      "phone": {
+        "label": "Phone / WhatsApp",
+        "placeholder": "+1 234 567 8900",
+        "required": "Phone is required",
+        "invalid": "Invalid phone number. Include country code (+XX)"
+      },
+      "documentId": {
+        "label": "Professional ID/Document",
+        "placeholder": "Passport or ID"
+      },
+      "paymentAccount": {
+        "label": "Payment Account",
+        "placeholder": "Select payment method",
+        "required": "Payment account is required"
+      },
+      "agent": {
+        "label": "Agent/Representative",
+        "placeholder": "Representative name"
+      },
+      "imageConsent": {
+        "label": "I consent to the use of my image for promotional purposes",
+        "required": "You must accept the consent to continue"
+      }
+    }
   },
 
   "stepProgress": {
@@ -168,7 +210,8 @@
     "personalData": "Personal Data",
     "professionalData": "Professional Data",
     "proAmOffer": "ProAm Offer",
-    "promotionalMaterial": "Promotional Material"
+    "promotionalMaterial": "Promotional Material",
+    "contactAndPayment": "Contact & Payment"
   },
 
   "amateurOnboarding": {
@@ -179,6 +222,32 @@
     },
     "personalData": {
       "title": "Personal Information"
+    },
+    "contactAndPayment": {
+      "title": "Contact & Payment"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "example@email.com",
+      "required": "Email is required"
+    },
+    "phone": {
+      "label": "Phone / WhatsApp",
+      "placeholder": "+1 234 567 8900",
+      "required": "Phone is required",
+      "invalid": "Invalid phone number",
+      "missingCountryCode": "Include country code (e.g., +1 for USA)"
+    },
+    "paymentAccount": {
+      "label": "Payment Account",
+      "placeholder": "Select your account type",
+      "helper": "Enter your PayPal account, Stripe email or IBAN number",
+      "required": "Payment account is required"
+    },
+    "imageConsent": {
+      "label": "Consent",
+      "checkboxLabel": "I consent to the use of my image, experience, and testimonial for promotional purposes of the platform",
+      "required": "You must accept the consent to continue"
     }
   },
 

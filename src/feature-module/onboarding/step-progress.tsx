@@ -45,7 +45,8 @@ const StepProgress = ({
       personalData: t("stepProgress.personalData", "Datos Personales"),
       professionalData: t("stepProgress.professionalData", "Datos Profesionales"),
       proAmOffer: t("stepProgress.proAmOffer", "Oferta ProAm"),
-      promotionalMaterial: t("stepProgress.promotionalMaterial", "Material Promocional")
+      promotionalMaterial: t("stepProgress.promotionalMaterial", "Material Promocional"),
+      contactAndPayment: t("stepProgress.contactAndPayment", "Contacto y Pago")
     };
     
     return defaultLabels[step] || `Step ${index + 1}`;
