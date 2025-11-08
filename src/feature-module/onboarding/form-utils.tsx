@@ -9,6 +9,7 @@ import {
   TextareaInput,
   CheckboxInput,
   InputEmail,
+  InputUrl,
   InputTel,
   InputHeight,
 } from './form-components';
@@ -30,6 +31,7 @@ export type InputConfig<T extends FieldValues> = {
   max?: number | string;
   multiple?: boolean;
   autoComplete?: string;
+  isMetric?: boolean; // Para InputHeight (cm vs ft)
 };
 
 type RenderInputProps<T extends FieldValues> = {
@@ -171,7 +173,7 @@ export const useRenderInput = <T extends FieldValues>() => {
 
       case 'url':
         return (
-          <InputText
+          <InputUrl
             key={input.id as string}
             id={input.id}
             label={labelText}
@@ -179,6 +181,7 @@ export const useRenderInput = <T extends FieldValues>() => {
             register={register}
             required={input.required}
             error={errorWithMessage}
+            helperText={input.helperText}
             colClass={input.colClass}
           />
         );

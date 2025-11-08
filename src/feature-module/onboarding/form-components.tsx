@@ -55,6 +55,11 @@ type EmailInputProps<T extends FieldValues> = BaseInputProps<T> & {
   autoComplete?: string;
 }
 
+type UrlInputProps<T extends FieldValues> = BaseInputProps<T> & {
+  placeholder?: string;
+  helperText?: string;
+}
+
 type TelInputProps<T extends FieldValues> = BaseInputProps<T> & {
   placeholder?: string;
   autoComplete?: string;
@@ -264,6 +269,39 @@ export const InputEmail = <T extends FieldValues>({
           }
         })}
       />
+      {error && (
+        <div className="invalid-feedback">{error.message}</div>
+      )}
+    </div>
+  )
+}
+
+// Input URL
+export const InputUrl = <T extends FieldValues>({
+  id, label, placeholder, register, required, error, helperText, colClass = "col-12"
+}: UrlInputProps<T>) => {
+  return (
+    <div className={`${colClass} mb-3`}>
+      <label htmlFor={id as string} className="form-label">
+        {label} {required && <span className="text-danger">*</span>}
+      </label>
+      <input
+        type="text"
+        className={`form-control ${error ? 'is-invalid' : ''}`}
+        id={id as string}
+        placeholder={placeholder}
+        {...register(id, { 
+          required,
+          pattern: {
+            // Patrón flexible que acepta URLs con o sin protocolo, con o sin www, dominios cortos como youtu.be, versión móvil, etc.
+            value: /^(https?:\/\/)?(www\.|m\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/,
+            message: "URL inválida. Ingresa un enlace válido"
+          }
+        })}
+      />
+      {helperText && (
+        <small className="form-text text-muted d-block">{helperText}</small>
+      )}
       {error && (
         <div className="invalid-feedback">{error.message}</div>
       )}
