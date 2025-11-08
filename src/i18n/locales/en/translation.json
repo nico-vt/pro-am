@@ -109,7 +109,15 @@
     },
     "typicalDuration": {
       "label": "Typical Experience Duration",
-      "placeholder": "Select the duration"
+      "placeholder": "Select the duration",
+      "options": {
+        "30min": "30 minutes",
+        "1hour": "1 hour",
+        "1.5hours": "1.5 hours",
+        "2hours": "2 hours",
+        "halfDay": "Half day",
+        "fullDay": "Full day"
+      }
     },
     "location": {
       "label": "Location Where You Offer the Experience",
