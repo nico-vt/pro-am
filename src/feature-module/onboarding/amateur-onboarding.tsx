@@ -5,9 +5,10 @@ import StepProgress from "./step-progress";
 import LanguageSwitcher from "./language-switch";
 import NavigationButtons from "./navigation-buttons";
 import { useRenderInput, type InputConfig } from "./form-utils";
+import { useCountries } from "../../hooks/useCountries";
 
-export type AmateurOnboardingInputs = {
-  //  Datos personales
+// Tipos divididos por sección
+type PersonalData = {
   firstName: string;
   lastName: string;
   nationality: string;
@@ -15,14 +16,23 @@ export type AmateurOnboardingInputs = {
   height: number; // en cm
   city: string;
   country: string;
-
-  // Material Promocional
   professionalPhoto: FileList | null; // foto profesional o retrato
 };
+
+type ContactAndPaymentData = {
+  email: string;
+  phone: string; // Teléfono / WhatsApp
+  paymentAccount: string; // Cuenta de PayPal / Stripe / IBAN
+  imageConsent: boolean; // Consentimiento de uso de imagen
+};
+
+// Tipo unificado para el formulario completo
+export type AmateurOnboardingInputs = PersonalData & ContactAndPaymentData;
 
 const AmateurOnboarding = () => {
   const { t } = useTranslation();
   const { renderInput } = useRenderInput<AmateurOnboardingInputs>();
+  const { countryOptions } = useCountries();
   const {
     register,
     handleSubmit,
@@ -34,7 +44,7 @@ const AmateurOnboarding = () => {
     reValidateMode: "onChange",
   });
 
-  const steps = ["welcome", "personalData"] as const;
+  const steps = ["welcome", "personalData", "contactAndPayment"] as const;
   const { step, next, back, isFirstStep, isLastStep } = useSteps({ steps });
 
   const onSubmit: SubmitHandler<AmateurOnboardingInputs> = (data) =>
@@ -88,6 +98,14 @@ const AmateurOnboarding = () => {
           "height",
           "city",
           "country",
+          "professionalPhoto",
+        ];
+      case "contactAndPayment":
+        return [
+          "email",
+          "phone",
+          "paymentAccount",
+          "imageConsent",
         ];
       default:
         return [];
@@ -101,6 +119,7 @@ const AmateurOnboarding = () => {
       type: "text",
       placeholder: "proOnboarding.firstName.placeholder",
       required: true,
+      autoComplete: "given-name",
       colClass: "col-md-6",
     },
     {
@@ -109,6 +128,7 @@ const AmateurOnboarding = () => {
       type: "text",
       placeholder: "proOnboarding.lastName.placeholder",
       required: true,
+      autoComplete: "family-name",
       colClass: "col-md-6",
     },
     {
@@ -118,11 +138,7 @@ const AmateurOnboarding = () => {
       placeholder: "proOnboarding.nationality.placeholder",
       required: true,
       colClass: "col-md-6",
-      options: [
-        { value: "argentina", label: "Argentina" },
-        { value: "chile", label: "Chile" },
-        { value: "colombia", label: "Colombia" },
-      ],
+      options: countryOptions,
     },
     {
       id: "birthDate",
@@ -130,13 +146,13 @@ const AmateurOnboarding = () => {
       type: "date",
       required: true,
       colClass: "col-md-6",
+      max: new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split('T')[0],
     },
     {
       id: "height",
       label: "proOnboarding.height.label",
-      type: "number",
+      type: "height",
       placeholder: "175",
-      inputMode: "numeric",
       required: true,
       colClass: "col-md-6",
     },
@@ -146,15 +162,17 @@ const AmateurOnboarding = () => {
       type: "text",
       placeholder: "proOnboarding.city.placeholder",
       required: true,
+      autoComplete: "address-level2",
       colClass: "col-md-6",
     },
     {
       id: "country",
       label: "proOnboarding.country.label",
-      type: "text",
+      type: "select",
       placeholder: "proOnboarding.country.placeholder",
       required: true,
       colClass: "col-md-6",
+      options: countryOptions,
     },
     {
       id: "professionalPhoto",
@@ -162,6 +180,49 @@ const AmateurOnboarding = () => {
       type: "file",
       accept: "image/*",
       helperText: "proOnboarding.professionalPhoto.helper",
+      required: true,
+      colClass: "col-12",
+    },
+  ];
+
+  const contactAndPaymentInputs: InputConfig<AmateurOnboardingInputs>[] = [
+    {
+      id: "email",
+      label: "amateurOnboarding.email.label",
+      type: "email",
+      placeholder: "amateurOnboarding.email.placeholder",
+      required: true,
+      autoComplete: "email",
+      colClass: "col-md-6",
+    },
+    {
+      id: "phone",
+      label: "amateurOnboarding.phone.label",
+      type: "tel",
+      placeholder: "amateurOnboarding.phone.placeholder",
+      required: true,
+      autoComplete: "tel",
+      colClass: "col-md-6",
+    },
+    {
+      id: "paymentAccount",
+      label: "amateurOnboarding.paymentAccount.label",
+      type: "select",
+      placeholder: "amateurOnboarding.paymentAccount.placeholder",
+      required: true,
+      colClass: "col-12",
+      options: [
+        { value: "paypal", label: "PayPal" },
+        { value: "stripe", label: "Stripe" },
+        { value: "iban", label: "IBAN" },
+      ],
+    },
+    {
+      id: "imageConsent",
+      label: "amateurOnboarding.imageConsent.label",
+      type: "checkbox",
+      checkboxLabel: "amateurOnboarding.imageConsent.checkboxLabel",
+      required: true,
       colClass: "col-12",
     },
   ];
@@ -211,6 +272,20 @@ const AmateurOnboarding = () => {
             </h3>
             <div className="row">
               {personalDataInputs.map((input) =>
+                renderInput({ input, register, errors })
+              )}
+            </div>
+          </div>
+        );
+
+      case "contactAndPayment":
+        return (
+          <div>
+            <h3 className="mb-4 text-center">
+              {t("amateurOnboarding.contactAndPayment.title", "Contacto y Pago")}
+            </h3>
+            <div className="row">
+              {contactAndPaymentInputs.map((input) =>
                 renderInput({ input, register, errors })
               )}
             </div>
