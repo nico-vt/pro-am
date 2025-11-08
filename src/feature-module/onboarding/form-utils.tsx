@@ -10,12 +10,13 @@ import {
   CheckboxInput,
   InputEmail,
   InputTel,
+  InputHeight,
 } from './form-components';
 
 export type InputConfig<T extends FieldValues> = {
   id: Path<T>;
   label: string;
-  type: 'text' | 'number' | 'date' | 'file' | 'select' | 'textarea' | 'checkbox' | 'url' | 'email' | 'tel';
+  type: 'text' | 'number' | 'date' | 'file' | 'select' | 'textarea' | 'checkbox' | 'url' | 'email' | 'tel' | 'height';
   placeholder?: string;
   required?: boolean;
   inputMode?: 'text' | 'numeric' | 'decimal' | 'tel' | 'search' | 'email' | 'url';
@@ -25,8 +26,8 @@ export type InputConfig<T extends FieldValues> = {
   options?: Array<{ value: string; label: string }>;
   rows?: number;
   checkboxLabel?: string;
-  min?: number;
-  max?: number;
+  min?: number | string;
+  max?: number | string;
   multiple?: boolean;
 };
 
@@ -37,7 +38,7 @@ type RenderInputProps<T extends FieldValues> = {
 };
 
 export const useRenderInput = <T extends FieldValues>() => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const renderInput = ({ input, register, errors }: RenderInputProps<T>) => {
     const error = errors[input.id];
@@ -45,6 +46,7 @@ export const useRenderInput = <T extends FieldValues>() => {
     const placeholderText = input.placeholder ? t(input.placeholder, '') : undefined;
     const helperText = input.helperText ? t(input.helperText, '') : undefined;
     const checkboxLabelText = input.checkboxLabel ? t(input.checkboxLabel, input.checkboxLabel) : '';
+    const isMetric = i18n.language === 'es'; // español usa cm, inglés usa ft
 
     // Preparar el mensaje de error traducido
     const errorMessage = error
@@ -84,8 +86,8 @@ export const useRenderInput = <T extends FieldValues>() => {
             required={input.required}
             error={errorWithMessage}
             inputMode={input.inputMode as 'numeric' | 'decimal'}
-            min={input.min}
-            max={input.max}
+            min={typeof input.min === 'number' ? input.min : undefined}
+            max={typeof input.max === 'number' ? input.max : undefined}
             colClass={input.colClass}
           />
         );
@@ -99,6 +101,8 @@ export const useRenderInput = <T extends FieldValues>() => {
             register={register}
             required={input.required}
             error={errorWithMessage}
+            min={typeof input.min === 'string' ? input.min : undefined}
+            max={typeof input.max === 'string' ? input.max : undefined}
             colClass={input.colClass}
           />
         );
@@ -201,6 +205,21 @@ export const useRenderInput = <T extends FieldValues>() => {
             register={register}
             required={input.required}
             error={errorWithMessage}
+            colClass={input.colClass}
+          />
+        );
+
+      case 'height':
+        return (
+          <InputHeight
+            key={input.id as string}
+            id={input.id}
+            label={labelText}
+            placeholder={placeholderText}
+            register={register}
+            required={input.required}
+            error={errorWithMessage}
+            isMetric={isMetric}
             colClass={input.colClass}
           />
         );

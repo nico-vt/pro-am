@@ -286,3 +286,56 @@ export const InputTel = <T extends FieldValues>({
     </div>
   )
 }
+
+type HeightInputProps<T extends FieldValues> = BaseInputProps<T> & {
+  placeholder?: string;
+  isMetric: boolean; // true for cm, false for ft
+}
+
+// Input Height (with automatic conversion)
+export const InputHeight = <T extends FieldValues>({
+  id, label, placeholder, register, required, error, isMetric, colClass = "col-12"
+}: HeightInputProps<T>) => {
+  // Límites según la unidad
+  const min = isMetric ? 120 : 4; // 120 cm o 4 ft
+  const max = isMetric ? 250 : 8.2; // 250 cm o 8.2 ft
+
+  return (
+    <div className={`${colClass} mb-3`}>
+      <label htmlFor={id as string} className="form-label">
+        {label} {required && <span className="text-danger">*</span>}
+      </label>
+      <input
+        type="number"
+        step={isMetric ? "1" : "0.1"}
+        min={min}
+        max={max}
+        className={`form-control ${error ? 'is-invalid' : ''}`}
+        id={id as string}
+        placeholder={placeholder}
+        inputMode="decimal"
+        {...register(id, { 
+          required,
+          setValueAs: (v) => {
+            const numValue = typeof v === 'string' ? parseFloat(v) : v;
+            if (isNaN(numValue)) return 0;
+            // Si es métrico (español), devolver como está (cm)
+            if (isMetric) return Math.round(numValue);
+            // Si es imperial (inglés), convertir de ft a cm
+            // 1 ft = 30.48 cm
+            return Math.round(numValue * 30.48);
+          },
+          validate: (value: number) => {
+            // Validar el valor ya convertido a cm
+            if (value < 120) return isMetric ? 'La altura mínima es 120 cm' : 'Minimum height is 4 ft';
+            if (value > 250) return isMetric ? 'La altura máxima es 250 cm' : 'Maximum height is 8.2 ft';
+            return true;
+          }
+        })}
+      />
+      {error && (
+        <div className="invalid-feedback">{error.message}</div>
+      )}
+    </div>
+  )
+}

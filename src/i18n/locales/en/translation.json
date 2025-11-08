@@ -36,8 +36,8 @@
       "required": "Date of birth is required"
     },
     "height": {
-      "label": "Height (cm)",
-      "placeholder": "e.g. 180",
+      "label": "Height (ft)",
+      "placeholder": "e.g. 5.9",
       "required": "Height is required"
     },
     "city": {
