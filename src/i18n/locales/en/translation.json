@@ -192,7 +192,8 @@
     "phone": {
       "label": "Phone / WhatsApp",
       "placeholder": "+1 234 567 8900",
-      "required": "Phone is required"
+      "required": "Phone is required",
+      "invalid": "Invalid phone number. Include country code (+XX)"
     },
     "paymentAccount": {
       "label": "Payment Account",

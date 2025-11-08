@@ -207,8 +207,10 @@ export const useRenderInput = <T extends FieldValues>() => {
             placeholder={placeholderText}
             register={register}
             required={input.required}
-            error={errorWithMessage}
+            error={error} // Pasar error original, no errorWithMessage
             autoComplete={input.autoComplete}
+            requiredMessage={t(`${input.label.replace('.label', '.required')}`, `${labelText} is required`)}
+            invalidMessage={t(`${input.label.replace('.label', '.invalid')}`, 'Invalid phone number')}
             colClass={input.colClass}
           />
         );

@@ -1,4 +1,5 @@
 import type { UseFormRegister, FieldValues, Path, FieldError } from 'react-hook-form'
+import { isValidPhoneNumber } from 'libphonenumber-js'
 
 // Base Props para todos los inputs
 type BaseInputProps<T extends FieldValues> = {
@@ -57,6 +58,8 @@ type EmailInputProps<T extends FieldValues> = BaseInputProps<T> & {
 type TelInputProps<T extends FieldValues> = BaseInputProps<T> & {
   placeholder?: string;
   autoComplete?: string;
+  invalidMessage?: string;
+  requiredMessage?: string;
 }
 
 // Input Text
@@ -270,7 +273,7 @@ export const InputEmail = <T extends FieldValues>({
 
 // Input Tel (Phone)
 export const InputTel = <T extends FieldValues>({
-  id, label, placeholder, register, required, error, autoComplete, colClass = "col-12"
+  id, label, placeholder, register, required, error, autoComplete, invalidMessage, requiredMessage, colClass = "col-12"
 }: TelInputProps<T>) => {
   return (
     <div className={`${colClass} mb-3`}>
@@ -284,7 +287,19 @@ export const InputTel = <T extends FieldValues>({
         placeholder={placeholder}
         autoComplete={autoComplete}
         inputMode="tel"
-        {...register(id, { required })}
+        {...register(id, { 
+          validate: (value: string) => {
+            if (required && !value) {
+              return requiredMessage || "Phone is required";
+            }
+            if (!value) return true;
+            try {
+              return isValidPhoneNumber(value) || (invalidMessage || "Invalid phone number");
+            } catch {
+              return invalidMessage || "Invalid phone number";
+            }
+          }
+        })}
       />
       {error && (
         <div className="invalid-feedback">{error.message}</div>
