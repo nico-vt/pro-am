@@ -18,8 +18,8 @@ const AllRoutes = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home/>}  />
         <Route  element={<HeaderLayout />}>
+          <Route path="/home" element={<Home />} />
           {publicRoutes.map((route, idx) => (
             <Route path={route.path} element={route.element} key={idx} />
           ))}

@@ -555,13 +555,13 @@ const publicRoutes = [
   {
     path: "/",
     name: "Root",
-    element: <Navigate to="/index" />,
+    element: <Navigate to="/home" />,
     route: Route,
   },
   {
     path: "*",
     name: "NotFound",
-    element: <Navigate to="/index" />,
+    element: <Navigate to="/home" />,
     route: Route,
   },
 ];

@@ -1,5 +1,5 @@
 export const all_routes = {
-  home: "/index",
+  home: "/home",
 
   // Blog Routes
   blogGrid: "/blog/blog-grid",
@@ -104,7 +104,7 @@ export const all_routes = {
   login: "/auth/login",
   changePassword: "/auth/change-password",
   forgotPasssword: "/auth/forgot-password",
-  proOnboarding: "/pro-onboarding",
+  proOnboarding: "/professional-onboarding",
   amateurOnboarding: "/amateur-onboarding",
 
   //contact-us
