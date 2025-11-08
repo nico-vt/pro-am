@@ -138,11 +138,22 @@ const Home = () => {
                     <Link
                       to={routes.amateurOnboarding}
                       className="btn btn-primary"
+                      style={{ backgroundColor: '#a9a51d', borderColor: '#a9a51d' }}
                     >
                       Soy amateur
+                      <span className="lh-1">
+                        <i className="feather-arrow-right-circle ms-2" />
+                      </span>
                     </Link>
-                    <Link to={routes.proOnboarding} className="btn btn-secondary">
+                    <Link 
+                      to={routes.proOnboarding} 
+                      className="btn btn-secondary"
+                      style={{ backgroundColor: '#3ab9ec', borderColor: '#3ab9ec' }}
+                    >
                       Soy profesional
+                      <span className="lh-1">
+                        <i className="feather-arrow-right-circle ms-2" />
+                      </span>
                     </Link>
                   </div>
                 </div>
@@ -152,6 +163,39 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Journey */}
+      <section className="section journey-section">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12 d-flex align-items-center">
+              <div className="start-your-journey aos" data-aos="fade-up">
+                <h2>
+                  ¿Qué es ProAmLinks?
+                </h2>
+                <p className="mb-2">
+                Pro Am Links es una red internacional que une profesionales de varios deportes, con amateurs interesados en experiencias reales de juego, de entrenamiento, etc.
+                </p>
+                <p>
+                Si sos profesional y buscas una nueva vía para valorizar tu experiencia, ampliar tu red de contactos y generar ingresos adicionales, eso es Pro Am Links. 
+                </p>
+                <div className="mt-4">
+                  <h4>¿Cómo funciona?</h4>
+                  <p>Te registras con tu perfil profesional, definís tus condiciones y disponibilidad, y nosotros conectamos tu propuesta con aficionados dispuestos a pagar por compartir la experiencia contigo. La gestión, los pagos y la comunicación se realizan desde una sola plataforma, de manera segura y transparente. Nadie te va a contactar hasta que haya pagado el fee que tú mismo estableciste. De cada transacción Pro Am Links retiene solamente el 20% y el restante 80%, es tuyo.</p>
+                </div>
+                <div className="mt-4">
+                  <h4>¿Por qué unirte ahora?</h4>
+                  <p>Estamos iniciando nuestra etapa de expansión en Latinoamérica, y el Uruguay Open es la primera oportunidad para que los jugadores profesionales se integren desde el comienzo. Los primeros perfiles seleccionados, obtendrán mayor visibilidad en los países dónde decidan jugar.</p>
+                  <p>Si sos profesional o formas parte del circuito, registrate escaneando el código QR y completá tu ficha. Nuestro equipo revisará tu perfil y te contactará para integrarte al programa inicial de profesionales de Pro Am Links.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* /Journey */}
+
+
       <section className="section work-section">
         <div className="work-cock-img">
           <ImageWithBasePath src="assets/img/icons/work-cock.svg" alt="Icon" />
@@ -976,96 +1020,6 @@ const Home = () => {
         </div>
       </section>
       {/* /Featured Coaches */}
-
-      {/* Journey */}
-      <section className="section journey-section">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-6 d-flex align-items-center">
-              <div className="start-your-journey aos" data-aos="fade-up">
-                <h2>
-                  Start Your Journey With{" "}
-                  <span className="active-sport">Dreamsports</span> Badminton
-                  Today.
-                </h2>
-                <p>
-                  At DreamSports Badminton, we prioritize your satisfaction and
-                  value your feedback as we continuously improve and evolve our
-                  learning experiences.
-                </p>
-                <p>
-                  Our instructors utilize modern methods for effective badminton
-                  lessons, offering introductory sessions for beginners and
-                  personalized development plans to foster individual growth.
-                </p>
-                <span className="stay-approach">
-                  Stay Ahead With Our Innovative Approach:
-                </span>
-                <div className="journey-list">
-                  <ul>
-                    <li>
-                      <i className="fa-solid fa-circle-check" />
-                      Skilled Professionals
-                    </li>
-                    <li>
-                      <i className="fa-solid fa-circle-check" />
-                      Modern Techniques
-                    </li>
-                    <li>
-                      <i className="fa-solid fa-circle-check" />
-                      Intro Lesson
-                    </li>
-                  </ul>
-                  <ul>
-                    <li>
-                      <i className="fa-solid fa-circle-check" />
-                      Personal Development
-                    </li>
-                    <li>
-                      <i className="fa-solid fa-circle-check" />
-                      Advanced Equipment
-                    </li>
-                    <li>
-                      <i className="fa-solid fa-circle-check" />
-                      Interactive Classes For Easy Learning.
-                    </li>
-                  </ul>
-                </div>
-                <div className="convenient-btns">
-                  <Link
-                    to={routes.register}
-                    className="btn btn-primary d-inline-flex align-items-center"
-                  >
-                    <span>
-                      <i className="feather-user-plus me-2" />
-                    </span>
-                    Join With Us
-                  </Link>
-                  <Link
-                    to={routes.aboutUs}
-                    className="btn btn-secondary d-inline-flex align-items-center"
-                  >
-                    <span>
-                      <i className="feather-align-justify me-2" />
-                    </span>
-                    Learn More
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-6">
-              <div className="journey-img aos" data-aos="fade-up">
-                <ImageWithBasePath
-                  src="assets/img/journey-01.png"
-                  className="img-fluid"
-                  alt="User"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* /Journey */}
 
       {/* Group Coaching */}
       <section className="section group-coaching">
