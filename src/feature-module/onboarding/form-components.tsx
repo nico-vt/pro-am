@@ -180,9 +180,10 @@ export const SelectInput = <T extends FieldValues>({
       <select
         className={`form-select form-control ${error ? 'is-invalid' : ''}`}
         id={id as string}
+        defaultValue=""
         {...register(id, { required })}
       >
-        {placeholder && <option value="">{placeholder}</option>}
+        <option value="" disabled>{placeholder || "Seleccionar..."}</option>
         {options?.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
