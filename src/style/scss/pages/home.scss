@@ -324,6 +324,23 @@
     }
 }
 
+.header-trans {
+    .main-nav > li > a {
+        color: colors.$white;
+    }
+    .main-nav > li.active > a {
+        color: #a9a51d;
+    }
+    .main-nav > li:hover > a {
+        color: #a9a51d;
+    }
+    .header-navbar-rht .log-register a {
+        color: colors.$white;
+        &:hover {
+            color: #a9a51d;
+        }
+    }
+}
 
 @-webkit-keyframes fly {
     0% {

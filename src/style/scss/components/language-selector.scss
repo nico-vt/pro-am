@@ -1,0 +1,84 @@
+@use "../base/colors";
+@use "../base/typography";
+@use "../utils/mixins";
+
+.language-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+
+  .lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: transparent;
+    border: 2px solid colors.$white;
+    border-radius: 5px;
+    color: colors.$white;
+    font-weight: typography.$medium;
+    font-size: typography.$font__size__14;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 60px;
+    justify-content: center;
+
+    .lang-flag {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .lang-label {
+      font-size: typography.$font__size__14;
+      letter-spacing: 0.5px;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
+
+    &.active {
+      background: colors.$white;
+      color: colors.$primarycolor;
+      border-color: colors.$white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  @include mixins.respond-below(custom991) {
+    gap: 6px;
+
+    .lang-btn {
+      padding: 6px 12px;
+      min-width: 50px;
+      font-size: typography.$font__size__12;
+
+      .lang-flag {
+        font-size: 14px;
+      }
+
+      .lang-label {
+        font-size: typography.$font__size__12;
+      }
+    }
+  }
+
+  @include mixins.respond-below(custom575) {
+    .lang-btn {
+      padding: 6px 10px;
+      min-width: 45px;
+
+      .lang-label {
+        display: none;
+      }
+
+      .lang-flag {
+        font-size: 18px;
+      }
+    }
+  }
+}
+

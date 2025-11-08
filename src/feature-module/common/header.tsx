@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { all_routes } from "../router/all_routes";
 import ImageWithBasePath from "../../core/data/img/ImageWithBasePath";
+import LanguageSelector from "./language-selector";
 
 
 const Header = () => {
   const routes = all_routes;
   const location = useLocation();
-  const onHandleMobileMenu = () => {
-    const root = document.getElementsByTagName("html")[0];
-    root.classList.add("menu-opened");
-  };
-  const onhandleCloseMenu = () => {
-    const root = document.getElementsByTagName("html")[0];
-    root.classList.remove("menu-opened");
-  };
-  const header = [
+  // Funciones del menú comentadas temporalmente
+  // const onHandleMobileMenu = () => {
+  //   const root = document.getElementsByTagName("html")[0];
+  //   root.classList.add("menu-opened");
+  // };
+  // const onhandleCloseMenu = () => {
+  //   const root = document.getElementsByTagName("html")[0];
+  //   root.classList.remove("menu-opened");
+  // };
+  
+  // Array de header comentado temporalmente
+  /* const header = [
     {
       tittle: "Home",
       showAsTab: false,
@@ -467,71 +470,63 @@ const Header = () => {
       hasSubRoute: false,
       showSubRoute: false,
     },
-  ];
-  const [headerState, setHeaderState] = useState(header);
+  ]; */
+  // const [headerState, setHeaderState] = useState(header);
 
   const customStyle = {
-    background: location.pathname.includes(routes.home)
-      ? "rgb(23, 124, 130)"
-      : "#ffffff",
+    backgroundColor: "#3ab9ec",
   };
-  const expandSubMenus = (menu: string) => {
-    sessionStorage.setItem("menuValue", menu);
+  // Funciones de expansión de menús comentadas temporalmente
+  // const expandSubMenus = (menu: string) => {
+  //   sessionStorage.setItem("menuValue", menu);
   
-    // Update `header` by toggling `showAsTab` for the clicked menu
-    const updatedHeader = headerState.map((mainMenu: any) => {
-      if (mainMenu.tittle === menu) {
-        // Toggle `showAsTab` for the selected `mainMenu`
-        return { ...mainMenu, showAsTab: !mainMenu.showAsTab };
-      } else {
-        // Collapse all other menus
-        return { ...mainMenu, showAsTab: false };
-      }
-    });
+  //   // Update `header` by toggling `showAsTab` for the clicked menu
+  //   const updatedHeader = headerState.map((mainMenu: any) => {
+  //     if (mainMenu.tittle === menu) {
+  //       // Toggle `showAsTab` for the selected `mainMenu`
+  //       return { ...mainMenu, showAsTab: !mainMenu.showAsTab };
+  //     } else {
+  //       // Collapse all other menus
+  //       return { ...mainMenu, showAsTab: false };
+  //     }
+  //   });
   
-    setHeaderState(updatedHeader); // Update state to trigger re-render
-  };
-  const expandSubMenus2 = (menu: string) => {
-    sessionStorage.setItem("menuValue2", menu);
+  //   setHeaderState(updatedHeader); // Update state to trigger re-render
+  // };
+  // const expandSubMenus2 = (menu: string) => {
+  //   sessionStorage.setItem("menuValue2", menu);
   
-    const updatedHeader = header.map((mainMenu: any) => {
-      if (mainMenu.menu) {
-        // Update nested menus if they exist
-        const updatedMenu = mainMenu.menu.map((resMenu: any) => {
-          if (resMenu.menuValue === menu) {
-            // Toggle the `showAsTab` for the selected menu
-            return {
-              ...resMenu,
-              showAsTab2: !resMenu.showAsTab2,
-            };
-          } else {
-            // Collapse all other menus
-            return {
-              ...resMenu,
-              showAsTab2: false,
-            };
-          }
-        });
+  //   const updatedHeader = header.map((mainMenu: any) => {
+  //     if (mainMenu.menu) {
+  //       // Update nested menus if they exist
+  //       const updatedMenu = mainMenu.menu.map((resMenu: any) => {
+  //         if (resMenu.menuValue === menu) {
+  //           // Toggle the `showAsTab` for the selected menu
+  //           return {
+  //             ...resMenu,
+  //             showAsTab2: !resMenu.showAsTab2,
+  //           };
+  //         } else {
+  //           // Collapse all other menus
+  //           return {
+  //             ...resMenu,
+  //             showAsTab2: false,
+  //           };
+  //         }
+  //       });
   
-        return {
-          ...mainMenu,
-          menu: updatedMenu,
-        };
-      }
+  //       return {
+  //         ...mainMenu,
+  //         menu: updatedMenu,
+  //       };
+  //     }
   
-      return mainMenu;
-    });
+  //     return mainMenu;
+  //   });
   
-    // Assuming you're managing `header` in state:
-    setHeaderState(updatedHeader); // Trigger re-render with the updated structure
-  };
-
-  const [isIndex, setIsIndex] = useState(false);
-
-  useEffect(() => {
-    // Check if the current route is "/"
-    setIsIndex(location.pathname === "/index");
-  }, [location]);
+  //   // Assuming you're managing `header` in state:
+  //   setHeaderState(updatedHeader); // Trigger re-render with the updated structure
+  // };
   return (
     <header
       className={
@@ -544,37 +539,30 @@ const Header = () => {
       <div className="container-fluid">
         <nav className="navbar navbar-expand-lg header-nav">
           <div className="navbar-header">
-            <Link id="mobile_btn" to="#" onClick={() => onHandleMobileMenu()}>
+            {/* <Link id="mobile_btn" to="#" onClick={() => onHandleMobileMenu()}>
               <span className="bar-icon">
                 <span />
                 <span />
                 <span />
               </span>
-            </Link>
+            </Link> */}
             <Link to={routes.home} className="navbar-brand logo">
-              {/* <ImageWithBasePath src="assets/img/logo.svg" className="img-fluid" alt="Logo" /> */}
-
-              {location.pathname.includes(routes.home) ? (
-                <ImageWithBasePath
-                  src="assets/img/logo.svg"
-                  className="img-fluid"
-                  alt="Logo"
-                />
-              ) : (
-                <ImageWithBasePath
-                  src="assets/img/logo-black.svg"
-                  className="img-fluid"
-                  alt="Another Image"
-                />
-              )}
+              <ImageWithBasePath
+                src="assets/img/logo-blanco.png"
+                className="img-fluid"
+                style={{ maxHeight: '40px' }}
+                alt="Logo"
+              />
             </Link>
           </div>
-          <div className="main-menu-wrapper">
+          {/* Menú de navegación comentado temporalmente */}
+          {/* <div className="main-menu-wrapper">
             <div className="menu-header">
               <Link to={routes.home} className="menu-logo">
                 <ImageWithBasePath
-                  src="assets/img/logo-black.svg"
+                  src="assets/img/logo-blanco.png"
                   className="img-fluid"
+                  style={{ maxHeight: '40px' }}
                   alt="Logo"
                 />
               </Link>
@@ -654,26 +642,10 @@ const Header = () => {
 
 
             </ul>
-          </div>
+          </div> */}
           <ul className="nav header-navbar-rht">
             <li className="nav-item">
-              <div className={`nav-link btn log-register ${isIndex ? "btn-white" : "btn-primary"}`}>
-                <Link to={routes.login}>
-                  <span>
-                    <i className="feather-users" />
-                  </span>
-                  Login
-                </Link>{" "}
-                / <Link to={routes.register}>Register</Link>
-              </div>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link btn btn-secondary" to={routes.addCourt}>
-                <span>
-                  <i className="feather-check-circle" />
-                </span>
-                List Your Court
-              </Link>
+              <LanguageSelector />
             </li>
           </ul>
         </nav>
