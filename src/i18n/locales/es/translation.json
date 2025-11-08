@@ -137,7 +137,8 @@
     },
     "introVideo": {
       "label": "Video corto de presentación",
-      "placeholder": "Link a YouTube o Vimeo"
+      "placeholder": "youtube.com/watch?v=... o youtu.be/...",
+      "helper": "Link a YouTube o Vimeo (opcional)"
     },
     "socialLinks": {
       "label": "Enlaces a redes o sitio web oficial",
@@ -160,7 +161,40 @@
 
     "multiSelectHint": "Usa Ctrl o Cmd para seleccionar múltiples opciones",
     "submit": "Enviar",
-    "formError": "Este campo es requerido"
+    "formError": "Este campo es requerido",
+    "invalidUrl": "URL inválida. Ingresa un enlace válido",
+
+    "contactAndPayment": {
+      "title": "Contacto y Datos de Pago",
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "tu@email.com",
+        "required": "El correo electrónico es requerido"
+      },
+      "phone": {
+        "label": "Teléfono / WhatsApp",
+        "placeholder": "+1 234 567 8900",
+        "required": "El teléfono es requerido",
+        "invalid": "Número de teléfono inválido. Incluye el código de país (+XX)"
+      },
+      "documentId": {
+        "label": "Documento/ID profesional",
+        "placeholder": "Pasaporte o DNI"
+      },
+      "paymentAccount": {
+        "label": "Cuenta de pago",
+        "placeholder": "Selecciona método de pago",
+        "required": "La cuenta de pago es requerida"
+      },
+      "agent": {
+        "label": "Representante/Agencia",
+        "placeholder": "Nombre del representante"
+      },
+      "imageConsent": {
+        "label": "Acepto el uso de mi imagen con fines promocionales",
+        "required": "Debes aceptar el consentimiento para continuar"
+      }
+    }
   },
 
   "stepProgress": {

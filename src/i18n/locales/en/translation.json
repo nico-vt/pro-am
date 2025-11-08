@@ -136,8 +136,9 @@
       "required": "Professional photo is required"
     },
     "introVideo": {
-      "label": "Short Introduction Video",
-      "placeholder": "Link to YouTube or Vimeo"
+      "label": "Short introductory video",
+      "placeholder": "youtube.com/watch?v=... or youtu.be/...",
+      "helper": "Link to YouTube or Vimeo (optional)"
     },
     "socialLinks": {
       "label": "Links to social media or official website",
@@ -160,7 +161,40 @@
 
     "multiSelectHint": "Use Ctrl or Cmd to select multiple options",
     "submit": "Submit",
-    "formError": "This field is required"
+    "formError": "This field is required",
+    "invalidUrl": "Invalid URL. Enter a valid link",
+
+    "contactAndPayment": {
+      "title": "Contact & Payment Information",
+      "email": {
+        "label": "Email",
+        "placeholder": "your@email.com",
+        "required": "Email is required"
+      },
+      "phone": {
+        "label": "Phone / WhatsApp",
+        "placeholder": "+1 234 567 8900",
+        "required": "Phone is required",
+        "invalid": "Invalid phone number. Include country code (+XX)"
+      },
+      "documentId": {
+        "label": "Professional ID/Document",
+        "placeholder": "Passport or ID"
+      },
+      "paymentAccount": {
+        "label": "Payment Account",
+        "placeholder": "Select payment method",
+        "required": "Payment account is required"
+      },
+      "agent": {
+        "label": "Agent/Representative",
+        "placeholder": "Representative name"
+      },
+      "imageConsent": {
+        "label": "I consent to the use of my image for promotional purposes",
+        "required": "You must accept the consent to continue"
+      }
+    }
   },
 
   "stepProgress": {
