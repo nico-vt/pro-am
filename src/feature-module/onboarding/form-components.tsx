@@ -48,6 +48,14 @@ type CheckboxInputProps<T extends FieldValues> = BaseInputProps<T> & {
   checkboxLabel: string;
 }
 
+type EmailInputProps<T extends FieldValues> = BaseInputProps<T> & {
+  placeholder?: string;
+}
+
+type TelInputProps<T extends FieldValues> = BaseInputProps<T> & {
+  placeholder?: string;
+}
+
 // Input Text
 export const InputText = <T extends FieldValues>({
   id, label, placeholder, register, required, error, colClass = "col-12"
@@ -58,7 +66,7 @@ export const InputText = <T extends FieldValues>({
         {label} {required && <span className="text-danger">*</span>}
       </label>
       <input
-        type="text"
+        type='text'
         className={`form-control ${error ? 'is-invalid' : ''}`}
         id={id as string}
         placeholder={placeholder}
@@ -222,6 +230,59 @@ export const CheckboxInput = <T extends FieldValues>({
           <div className="invalid-feedback">{error.message}</div>
         )}
       </div>
+    </div>
+  )
+}
+
+// Input Email
+export const InputEmail = <T extends FieldValues>({
+  id, label, placeholder, register, required, error, colClass = "col-12"
+}: EmailInputProps<T>) => {
+  return (
+    <div className={`${colClass} mb-3`}>
+      <label htmlFor={id as string} className="form-label">
+        {label} {required && <span className="text-danger">*</span>}
+      </label>
+      <input
+        type="email"
+        className={`form-control ${error ? 'is-invalid' : ''}`}
+        id={id as string}
+        placeholder={placeholder}
+        {...register(id, { 
+          required,
+          pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: "Email inválido"
+          }
+        })}
+      />
+      {error && (
+        <div className="invalid-feedback">{error.message}</div>
+      )}
+    </div>
+  )
+}
+
+// Input Tel (Phone)
+export const InputTel = <T extends FieldValues>({
+  id, label, placeholder, register, required, error, colClass = "col-12"
+}: TelInputProps<T>) => {
+  return (
+    <div className={`${colClass} mb-3`}>
+      <label htmlFor={id as string} className="form-label">
+        {label} {required && <span className="text-danger">*</span>}
+      </label>
+      <input
+        type="tel"
+        className={`form-control ${error ? 'is-invalid' : ''}`}
+        id={id as string}
+        placeholder={placeholder}
+        inputMode="tel"
+        {...register(id, { required })}
+      />
+      {error && (
+        <div className="invalid-feedback">{error.message}</div>
+      )}
     </div>
   )
 }

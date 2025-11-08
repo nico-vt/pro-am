@@ -8,12 +8,14 @@ import {
   SelectInput,
   TextareaInput,
   CheckboxInput,
+  InputEmail,
+  InputTel,
 } from './form-components';
 
 export type InputConfig<T extends FieldValues> = {
   id: Path<T>;
   label: string;
-  type: 'text' | 'number' | 'date' | 'file' | 'select' | 'textarea' | 'checkbox' | 'url';
+  type: 'text' | 'number' | 'date' | 'file' | 'select' | 'textarea' | 'checkbox' | 'url' | 'email' | 'tel';
   placeholder?: string;
   required?: boolean;
   inputMode?: 'text' | 'numeric' | 'decimal' | 'tel' | 'search' | 'email' | 'url';
@@ -42,6 +44,7 @@ export const useRenderInput = <T extends FieldValues>() => {
     const labelText = t(input.label, input.label);
     const placeholderText = input.placeholder ? t(input.placeholder, '') : undefined;
     const helperText = input.helperText ? t(input.helperText, '') : undefined;
+    const checkboxLabelText = input.checkboxLabel ? t(input.checkboxLabel, input.checkboxLabel) : '';
 
     // Preparar el mensaje de error traducido
     const errorMessage = error
@@ -152,7 +155,7 @@ export const useRenderInput = <T extends FieldValues>() => {
             key={input.id as string}
             id={input.id}
             label={labelText}
-            checkboxLabel={input.checkboxLabel || ''}
+            checkboxLabel={checkboxLabelText}
             register={register}
             required={input.required}
             error={errorWithMessage}
@@ -163,6 +166,34 @@ export const useRenderInput = <T extends FieldValues>() => {
       case 'url':
         return (
           <InputText
+            key={input.id as string}
+            id={input.id}
+            label={labelText}
+            placeholder={placeholderText}
+            register={register}
+            required={input.required}
+            error={errorWithMessage}
+            colClass={input.colClass}
+          />
+        );
+
+      case 'email':
+        return (
+          <InputEmail
+            key={input.id as string}
+            id={input.id}
+            label={labelText}
+            placeholder={placeholderText}
+            register={register}
+            required={input.required}
+            error={errorWithMessage}
+            colClass={input.colClass}
+          />
+        );
+
+      case 'tel':
+        return (
+          <InputTel
             key={input.id as string}
             id={input.id}
             label={labelText}
