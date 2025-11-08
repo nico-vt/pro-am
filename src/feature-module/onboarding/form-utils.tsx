@@ -12,12 +12,13 @@ import {
   InputUrl,
   InputTel,
   InputHeight,
+  MultiSelectInput,
 } from './form-components';
 
 export type InputConfig<T extends FieldValues> = {
   id: Path<T>;
   label: string;
-  type: 'text' | 'number' | 'date' | 'file' | 'select' | 'textarea' | 'checkbox' | 'url' | 'email' | 'tel' | 'height';
+  type: 'text' | 'number' | 'date' | 'file' | 'select' | 'textarea' | 'checkbox' | 'url' | 'email' | 'tel' | 'height' | 'multiselect';
   placeholder?: string;
   required?: boolean;
   inputMode?: 'text' | 'numeric' | 'decimal' | 'tel' | 'search' | 'email' | 'url';
@@ -32,6 +33,7 @@ export type InputConfig<T extends FieldValues> = {
   multiple?: boolean;
   autoComplete?: string;
   isMetric?: boolean; // Para InputHeight (cm vs ft)
+  control?: unknown; // Para MultiSelectInput - será tipado en el componente
 };
 
 type RenderInputProps<T extends FieldValues> = {
@@ -229,6 +231,26 @@ export const useRenderInput = <T extends FieldValues>() => {
             required={input.required}
             error={errorWithMessage}
             isMetric={isMetric}
+            colClass={input.colClass}
+          />
+        );
+
+      case 'multiselect':
+        if (!input.control) {
+          console.error(`MultiSelectInput "${input.id as string}" requires a control prop`);
+          return null;
+        }
+        return (
+          <MultiSelectInput
+            key={input.id as string}
+            id={input.id}
+            label={labelText}
+            options={input.options || []}
+            control={input.control as never}
+            placeholder={placeholderText}
+            helperText={helperText}
+            required={input.required}
+            error={errorWithMessage}
             colClass={input.colClass}
           />
         );
