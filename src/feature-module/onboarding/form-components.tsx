@@ -14,6 +14,7 @@ type BaseInputProps<T extends FieldValues> = {
 type TextInputProps<T extends FieldValues> = BaseInputProps<T> & {
   placeholder?: string;
   inputMode?: "text" | "numeric" | "decimal" | "tel" | "search" | "email" | "url";
+  autoComplete?: string;
 }
 
 type NumberInputProps<T extends FieldValues> = BaseInputProps<T> & {
@@ -50,15 +51,17 @@ type CheckboxInputProps<T extends FieldValues> = BaseInputProps<T> & {
 
 type EmailInputProps<T extends FieldValues> = BaseInputProps<T> & {
   placeholder?: string;
+  autoComplete?: string;
 }
 
 type TelInputProps<T extends FieldValues> = BaseInputProps<T> & {
   placeholder?: string;
+  autoComplete?: string;
 }
 
 // Input Text
 export const InputText = <T extends FieldValues>({
-  id, label, placeholder, register, required, error, colClass = "col-12"
+  id, label, placeholder, register, required, error, autoComplete, colClass = "col-12"
 }: TextInputProps<T>) => {
   return (
     <div className={`${colClass} mb-3`}>
@@ -70,6 +73,7 @@ export const InputText = <T extends FieldValues>({
         className={`form-control ${error ? 'is-invalid' : ''}`}
         id={id as string}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         {...register(id, { required })}
       />
       {error && (
@@ -236,7 +240,7 @@ export const CheckboxInput = <T extends FieldValues>({
 
 // Input Email
 export const InputEmail = <T extends FieldValues>({
-  id, label, placeholder, register, required, error, colClass = "col-12"
+  id, label, placeholder, register, required, error, autoComplete, colClass = "col-12"
 }: EmailInputProps<T>) => {
   return (
     <div className={`${colClass} mb-3`}>
@@ -248,6 +252,7 @@ export const InputEmail = <T extends FieldValues>({
         className={`form-control ${error ? 'is-invalid' : ''}`}
         id={id as string}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         {...register(id, { 
           required,
           pattern: {
@@ -265,7 +270,7 @@ export const InputEmail = <T extends FieldValues>({
 
 // Input Tel (Phone)
 export const InputTel = <T extends FieldValues>({
-  id, label, placeholder, register, required, error, colClass = "col-12"
+  id, label, placeholder, register, required, error, autoComplete, colClass = "col-12"
 }: TelInputProps<T>) => {
   return (
     <div className={`${colClass} mb-3`}>
@@ -277,6 +282,7 @@ export const InputTel = <T extends FieldValues>({
         className={`form-control ${error ? 'is-invalid' : ''}`}
         id={id as string}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         inputMode="tel"
         {...register(id, { required })}
       />

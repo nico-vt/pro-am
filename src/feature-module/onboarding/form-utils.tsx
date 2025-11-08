@@ -29,6 +29,7 @@ export type InputConfig<T extends FieldValues> = {
   min?: number | string;
   max?: number | string;
   multiple?: boolean;
+  autoComplete?: string;
 };
 
 type RenderInputProps<T extends FieldValues> = {
@@ -71,6 +72,7 @@ export const useRenderInput = <T extends FieldValues>() => {
             register={register}
             required={input.required}
             error={errorWithMessage}
+            autoComplete={input.autoComplete}
             colClass={input.colClass}
           />
         );
@@ -191,6 +193,7 @@ export const useRenderInput = <T extends FieldValues>() => {
             register={register}
             required={input.required}
             error={errorWithMessage}
+            autoComplete={input.autoComplete}
             colClass={input.colClass}
           />
         );
@@ -205,6 +208,7 @@ export const useRenderInput = <T extends FieldValues>() => {
             register={register}
             required={input.required}
             error={errorWithMessage}
+            autoComplete={input.autoComplete}
             colClass={input.colClass}
           />
         );
