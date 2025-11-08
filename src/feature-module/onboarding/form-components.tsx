@@ -80,6 +80,7 @@ type TelInputProps<T extends FieldValues> = BaseInputProps<T> & {
   autoComplete?: string;
   invalidMessage?: string;
   requiredMessage?: string;
+  missingCountryCodeMessage?: string;
 };
 
 type MultiSelectInputProps<T extends FieldValues> = Omit<BaseInputProps<T>, 'register'> & {
@@ -87,6 +88,14 @@ type MultiSelectInputProps<T extends FieldValues> = Omit<BaseInputProps<T>, 'reg
   placeholder?: string;
   helperText?: string;
   control: Control<T>;
+};
+
+type SingleSelectInputProps<T extends FieldValues> = Omit<BaseInputProps<T>, 'register'> & {
+  options: Array<{ value: string; label: string }>;
+  placeholder?: string;
+  helperText?: string;
+  control: Control<T>;
+  isSearchable?: boolean;
 };
 
 // Input Text
@@ -230,7 +239,7 @@ export const SelectInput = <T extends FieldValues>({
         {label} {required && <span className="text-danger">*</span>}
       </label>
       <select
-        className={`form-select form-control ${error ? "is-invalid" : ""}`}
+        className={`form-select ${error ? "is-invalid" : ""}`}
         id={id as string}
         defaultValue=""
         {...register(id, { required })}
@@ -393,6 +402,7 @@ export const InputTel = <T extends FieldValues>({
   autoComplete,
   invalidMessage,
   requiredMessage,
+  missingCountryCodeMessage,
   colClass = "col-12",
 }: TelInputProps<T>) => {
   return (
@@ -413,6 +423,12 @@ export const InputTel = <T extends FieldValues>({
               return requiredMessage || "Phone is required";
             }
             if (!value) return true;
+            
+            // Verificar si el número comienza con +
+            if (!value.trim().startsWith('+')) {
+              return missingCountryCodeMessage || "Include country code (e.g., +54)";
+            }
+            
             try {
               return (
                 isValidPhoneNumber(value) ||
@@ -420,7 +436,7 @@ export const InputTel = <T extends FieldValues>({
                 "Invalid phone number"
               );
             } catch {
-              return invalidMessage || "Invalid phone number";
+              return missingCountryCodeMessage || "Include country code (e.g., +54)";
             }
           },
         })}
@@ -598,6 +614,132 @@ export const MultiSelectInput = <T extends FieldValues>({
                 ':active': {
                   backgroundColor: '#0d6efd',
                   color: 'white'
+                }
+              })
+            }}
+          />
+        )}
+      />
+      {helperText && (
+        <small className="form-text text-muted d-block mt-1">{helperText}</small>
+      )}
+      {error && (
+        <div className="invalid-feedback d-block">{error.message}</div>
+      )}
+    </div>
+  );
+};
+
+// Single Select Input with react-select (for searchable dropdowns like countries)
+export const SingleSelectInput = <T extends FieldValues>({
+  id,
+  label,
+  options,
+  control,
+  required,
+  error,
+  placeholder = "Select...",
+  helperText,
+  isSearchable = true,
+  colClass = "col-12",
+}: SingleSelectInputProps<T>) => {
+  return (
+    <div className={`${colClass} mb-3`}>
+      <label htmlFor={id as string} className="form-label">
+        {label} {required && <span className="text-danger">*</span>}
+      </label>
+      <Controller
+        name={id}
+        control={control}
+        rules={{ required }}
+        render={({ field }) => (
+          <Select
+            {...field}
+            inputId={id as string}
+            options={options}
+            placeholder={placeholder}
+            isSearchable={isSearchable}
+            isClearable
+            className={error ? 'is-invalid' : ''}
+            classNamePrefix="react-select"
+            value={options.find(option => option.value === field.value) || null}
+            onChange={(selected) => {
+              field.onChange(selected ? selected.value : '')
+            }}
+            styles={{
+              control: (base, state) => ({
+                ...base,
+                backgroundColor: '#f8f9fa',
+                borderColor: error ? '#dc3545' : state.isFocused ? '#86b7fe' : '#dee2e6',
+                borderRadius: '0.375rem',
+                borderWidth: '1px',
+                '&:hover': {
+                  borderColor: error ? '#dc3545' : '#86b7fe',
+                  backgroundColor: '#f8f9fa'
+                },
+                boxShadow: state.isFocused 
+                  ? error 
+                    ? '0 0 0 0.25rem rgba(220, 53, 69, 0.25)' 
+                    : '0 0 0 0.25rem rgba(13, 110, 253, 0.25)'
+                  : 'none',
+                minHeight: '38px',
+                maxHeight: '60px',
+                fontSize: '1rem',
+                padding: '0 0.75rem'
+              }),
+              valueContainer: (base) => ({
+                ...base,
+                padding: '0'
+              }),
+              input: (base) => ({
+                ...base,
+                margin: '0',
+                padding: '0'
+              }),
+              singleValue: (base) => ({
+                ...base,
+                color: '#212529'
+              }),
+              placeholder: (base) => ({
+                ...base,
+                color: '#6c757d'
+              }),
+              menu: (base) => ({
+                ...base,
+                borderRadius: '0.375rem',
+                marginTop: '4px',
+                zIndex: 9999
+              }),
+              menuList: (base) => ({
+                ...base,
+                maxHeight: '300px'
+              }),
+              option: (base, state) => ({
+                ...base,
+                backgroundColor: state.isSelected 
+                  ? '#0d6efd' 
+                  : state.isFocused 
+                    ? '#e7f1ff' 
+                    : 'white',
+                color: state.isSelected ? 'white' : '#212529',
+                cursor: 'pointer',
+                ':active': {
+                  backgroundColor: '#0d6efd',
+                  color: 'white'
+                }
+              }),
+              clearIndicator: (base) => ({
+                ...base,
+                cursor: 'pointer',
+                ':hover': {
+                  color: '#dc3545'
+                }
+              }),
+              dropdownIndicator: (base) => ({
+                ...base,
+                cursor: 'pointer',
+                ':hover': {
+                  color: '#0d6efd'
                 }
               })
             }}

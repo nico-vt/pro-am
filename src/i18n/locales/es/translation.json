@@ -233,9 +233,10 @@
     },
     "phone": {
       "label": "Teléfono / WhatsApp",
-      "placeholder": "+1 234 567 8900",
+      "placeholder": "+54 11 1234 5678",
       "required": "El teléfono es requerido",
-      "invalid": "Número de teléfono inválido. Incluye el código de país (+XX)"
+      "invalid": "Número de teléfono inválido",
+      "missingCountryCode": "Incluye el código de país (ej: +54 para Argentina)"
     },
     "paymentAccount": {
       "label": "Cuenta de pago",

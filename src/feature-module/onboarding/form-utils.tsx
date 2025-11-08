@@ -13,12 +13,13 @@ import {
   InputTel,
   InputHeight,
   MultiSelectInput,
+  SingleSelectInput,
 } from './form-components';
 
 export type InputConfig<T extends FieldValues> = {
   id: Path<T>;
   label: string;
-  type: 'text' | 'number' | 'date' | 'file' | 'select' | 'textarea' | 'checkbox' | 'url' | 'email' | 'tel' | 'height' | 'multiselect';
+  type: 'text' | 'number' | 'date' | 'file' | 'select' | 'singleselect' | 'textarea' | 'checkbox' | 'url' | 'email' | 'tel' | 'height' | 'multiselect';
   placeholder?: string;
   required?: boolean;
   inputMode?: 'text' | 'numeric' | 'decimal' | 'tel' | 'search' | 'email' | 'url';
@@ -33,7 +34,8 @@ export type InputConfig<T extends FieldValues> = {
   multiple?: boolean;
   autoComplete?: string;
   isMetric?: boolean; // Para InputHeight (cm vs ft)
-  control?: unknown; // Para MultiSelectInput - será tipado en el componente
+  control?: unknown; // Para MultiSelectInput y SingleSelectInput - será tipado en el componente
+  isSearchable?: boolean; // Para SingleSelectInput - habilitar/deshabilitar búsqueda
 };
 
 type RenderInputProps<T extends FieldValues> = {
@@ -216,6 +218,7 @@ export const useRenderInput = <T extends FieldValues>() => {
             autoComplete={input.autoComplete}
             requiredMessage={t(`${input.label.replace('.label', '.required')}`, `${labelText} is required`)}
             invalidMessage={t(`${input.label.replace('.label', '.invalid')}`, 'Invalid phone number')}
+            missingCountryCodeMessage={t(`${input.label.replace('.label', '.missingCountryCode')}`, 'Include country code (e.g., +54 for Argentina)')}
             colClass={input.colClass}
           />
         );
@@ -231,6 +234,27 @@ export const useRenderInput = <T extends FieldValues>() => {
             required={input.required}
             error={errorWithMessage}
             isMetric={isMetric}
+            colClass={input.colClass}
+          />
+        );
+
+      case 'singleselect':
+        if (!input.control) {
+          console.error(`SingleSelectInput "${input.id as string}" requires a control prop`);
+          return null;
+        }
+        return (
+          <SingleSelectInput
+            key={input.id as string}
+            id={input.id}
+            label={labelText}
+            options={input.options || []}
+            control={input.control as never}
+            placeholder={placeholderText}
+            helperText={helperText}
+            required={input.required}
+            error={errorWithMessage}
+            isSearchable={input.isSearchable !== undefined ? input.isSearchable : true}
             colClass={input.colClass}
           />
         );
