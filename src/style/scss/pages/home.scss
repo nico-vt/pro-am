@@ -56,7 +56,7 @@
 .hero-section {
     position: variables.$relative;
     min-height: 800px;
-    background-image: url(/src/assets/img/bg/banner.jpg);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2)), url(/src/assets/img/bg/hero-img.webp);
     background-repeat: variables.$no_repeat;
     background-size: variables.$cover;
     background-position: variables.$center;
@@ -109,18 +109,19 @@
         }
         .search-box {
             width: variables.$full__width;
-            background: colors.$dull__whitesmoke;
-            box-shadow: colors.$listing__box__shadow;
-            border-radius: 10px;
-            padding: 10px;
+            background: transparent;
+            box-shadow: none;
             margin-top: 40px;
-            display: inline-block;
+            display: flex;
             form {
                 display: variables.$flex;
                 align-items: variables.$center;
                 @include mixins.respond-below(custom575) {
                     display: block;
                 }
+            }
+            .btn-secondary {
+                margin-left: 15px;
             }
             .search-input {
                 float: variables.$left;
@@ -305,6 +306,24 @@
         }
     }
 }
+.hero-section .search-box {
+    .btn-primary {
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+        &:hover {
+            background: #0a5c47; // Un verde más oscuro y alineado al primario
+            border-color: #0a5c47;
+        }
+    }
+
+    .btn-secondary {
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+        &:hover {
+            background: #151c2a; // Un azul/gris más oscuro que el secundario
+            border-color: #151c2a;
+        }
+    }
+}
+
 
 @-webkit-keyframes fly {
     0% {

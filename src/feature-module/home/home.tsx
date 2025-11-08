@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ImageWithBasePath from "../../core/data/img/ImageWithBasePath";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -7,20 +7,20 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import { all_routes } from "../router/all_routes";
-import { Dropdown } from "primereact/dropdown";
+// import { Dropdown } from "primereact/dropdown";
 
 const Home = () => {
 
   const routes=all_routes;
-  const [selectedTimeframe, setSelectedTimeframe] = useState();
-  const [selectedSort, setSelectedSort] = useState();
+  // const [selectedTimeframe, setSelectedTimeframe] = useState();
+  // const [selectedSort, setSelectedSort] = useState();
 
 
-  const timeframeOptions = [
-    { name: 'Courts' },
-    { name: 'Coaches' },
-  ];
-  const sortOptions = [{ name: "German" }, { name: "Russian" }, { name: "France" }, { name: "UK" }, { name: "Colombia" }];
+  // const timeframeOptions = [
+    // { name: 'Courts' },
+    // { name: 'Coaches' },
+  // ];
+  // const sortOptions = [{ name: "German" }, { name: "Russian" }, { name: "France" }, { name: "UK" }, { name: "Colombia" }];
 
 
   const settings = {
@@ -55,7 +55,8 @@ const Home = () => {
   return (
     <>
       <section className="hero-section">
-        <div className="banner-cock-one">
+        {/* Vectores de fondo comentados por el momento */}
+        {/* <div className="banner-cock-one">
           <ImageWithBasePath
             src="assets/img/icons/banner-cock1.svg"
             alt="Banner"
@@ -75,33 +76,32 @@ const Home = () => {
           <div className="banner-dot-two">
             <span />
           </div>
-        </div>
+        </div> */}
         <div className="container">
           <div className="home-banner">
             <div className="row align-items-center w-100">
-              <div className="col-lg-7 col-md-10 mx-auto">
+              <div className="col-lg-8 col-md-10">
                 <div className="section-search">
-                  <h4>World Class Badminton Coaching &amp; Premium Courts</h4>
                   <h1>
-                    Choose Your <span>Coaches</span> and Start Your Training
+                    Hacé que tu talento juegue a tu favor.
                   </h1>
                   <p className="sub-info">
-                    Unleash Your Athletic Potential with Expert Coaching,
-                    State-of-the-Art Facilities, and Personalized Training
-                    Programs.
+                    Una plataforma que te vincula directamente con amateurs y
+                    aficionados que pagarán por vivir la experiencia real de
+                    jugar, entrenar o compartir cancha contigo.
                   </p>
-                  <div className="search-box">
+                  {/* <div className="search-box">
                     <form action={routes.coachesGrid}>
                       <div className="search-input line">
                         <div className="form-group mb-0">
                           <label>Search for</label>
-                          {/* <Select
+                          <Select
                             options={[
                               { value: "courts", label: "Courts" },
                               { value: "coaches", label: "Coaches" },
                             ]}
                             className="select"
-                          /> */}
+                          />
 
                           <Dropdown
                               value={selectedTimeframe}
@@ -133,18 +133,21 @@ const Home = () => {
                         </button>
                       </div>
                     </form>
+                  </div> */}
+                  <div className="search-box">
+                    <Link
+                      to={routes.amateurOnboarding}
+                      className="btn btn-primary"
+                    >
+                      Soy amateur
+                    </Link>
+                    <Link to={routes.proOnboarding} className="btn btn-secondary">
+                      Soy profesional
+                    </Link>
                   </div>
                 </div>
               </div>
-              <div className="col-lg-5">
-                <div className="banner-imgs text-center">
-                  <ImageWithBasePath
-                    className="img-fluid"
-                    src="assets/img/bg/banner-right.png"
-                    alt="Banner"
-                  />
-                </div>
-              </div>
+              {/* La columna de la imagen se puede quedar comentada o eliminarla */}
             </div>
           </div>
         </div>
