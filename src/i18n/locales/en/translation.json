@@ -8,7 +8,7 @@
 
     "welcome": {
       "message": "Welcome!",
-      "title": "Welcome to ProAm!",
+      "title": "Welcome to ProAm Links!",
       "subtitle": "Complete your professional profile to start offering unique experiences.",
       "description": "This process will only take a few minutes and will allow you to connect with players looking to improve their game.",
       "selectLanguage": "Select your preferred language",
@@ -209,7 +209,7 @@
     "duplicate": "A record with this data already exists",
     "successScreen": {
       "title": "Registration Completed!",
-      "message": "Your professional profile has been successfully created. You can now start offering your services.",
+      "message": "Thank you for your interest! Our team will review your profile and contact you very soon so you can start offering your professional services.",
       "button": "Go to Home"
     }
   },
@@ -225,7 +225,7 @@
 
   "amateurOnboarding": {
     "welcome": {
-      "title": "Welcome to ProAm!",
+      "title": "Welcome to ProAm Links!",
       "subtitle": "Connect with professional athletes and improve your skills",
       "description": "Access personalized training, clinics, and exclusive events with professionals from various sports."
     },
@@ -264,7 +264,7 @@
     "duplicate": "A record with this data already exists",
     "successScreen": {
       "title": "Registration Completed!",
-      "message": "Your registration has been successfully completed. You can now access exclusive experiences with professionals.",
+      "message": "Thank you for joining! We’ll contact you soon so you can access exclusive experiences and enjoy sports with world-class professionals.",
       "button": "Go to Home"
     }
   },
