@@ -206,7 +206,12 @@
     "success": "Registration successful!",
     "error": "Error submitting form",
     "emailDuplicate": "This email is already registered",
-    "duplicate": "A record with this data already exists"
+    "duplicate": "A record with this data already exists",
+    "successScreen": {
+      "title": "Registration Completed!",
+      "message": "Your professional profile has been successfully created. You can now start offering your services.",
+      "button": "Go to Home"
+    }
   },
 
   "stepProgress": {
@@ -256,7 +261,12 @@
     "success": "Registration successful!",
     "error": "Error submitting form",
     "emailDuplicate": "This email is already registered",
-    "duplicate": "A record with this data already exists"
+    "duplicate": "A record with this data already exists",
+    "successScreen": {
+      "title": "Registration Completed!",
+      "message": "Your registration has been successfully completed. You can now access exclusive experiences with professionals.",
+      "button": "Go to Home"
+    }
   },
 
   "navigation": {

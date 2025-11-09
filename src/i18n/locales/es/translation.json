@@ -206,7 +206,12 @@
     "success": "¡Registro exitoso!",
     "error": "Error al enviar el formulario",
     "emailDuplicate": "Este correo electrónico ya está registrado",
-    "duplicate": "Ya existe un registro con estos datos"
+    "duplicate": "Ya existe un registro con estos datos",
+    "successScreen": {
+      "title": "¡Registro Completado!",
+      "message": "Tu perfil profesional ha sido creado exitosamente. Ahora puedes comenzar a ofrecer tus servicios.",
+      "button": "Ir al Inicio"
+    }
   },
 
   "stepProgress": {
@@ -256,7 +261,12 @@
     "success": "¡Registro exitoso!",
     "error": "Error al enviar el formulario",
     "emailDuplicate": "Este correo electrónico ya está registrado",
-    "duplicate": "Ya existe un registro con estos datos"
+    "duplicate": "Ya existe un registro con estos datos",
+    "successScreen": {
+      "title": "¡Registro Completado!",
+      "message": "Tu registro ha sido completado exitosamente. Ahora puedes acceder a experiencias exclusivas con profesionales.",
+      "button": "Ir al Inicio"
+    }
   },
 
   "navigation": {
