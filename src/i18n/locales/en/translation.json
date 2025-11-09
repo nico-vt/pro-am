@@ -202,7 +202,11 @@
         "label": "I consent to the use of my image for promotional purposes",
         "required": "You must accept the consent to continue"
       }
-    }
+    },
+    "success": "Registration successful!",
+    "error": "Error submitting form",
+    "emailDuplicate": "This email is already registered",
+    "duplicate": "A record with this data already exists"
   },
 
   "stepProgress": {
@@ -248,7 +252,11 @@
       "label": "Consent",
       "checkboxLabel": "I consent to the use of my image, experience, and testimonial for promotional purposes of the platform",
       "required": "You must accept the consent to continue"
-    }
+    },
+    "success": "Registration successful!",
+    "error": "Error submitting form",
+    "emailDuplicate": "This email is already registered",
+    "duplicate": "A record with this data already exists"
   },
 
   "navigation": {

@@ -202,7 +202,11 @@
         "label": "Acepto el uso de mi imagen con fines promocionales",
         "required": "Debes aceptar el consentimiento para continuar"
       }
-    }
+    },
+    "success": "¡Registro exitoso!",
+    "error": "Error al enviar el formulario",
+    "emailDuplicate": "Este correo electrónico ya está registrado",
+    "duplicate": "Ya existe un registro con estos datos"
   },
 
   "stepProgress": {
@@ -248,7 +252,11 @@
       "label": "Consentimiento",
       "checkboxLabel": "Acepto el uso de mi imagen, experiencia y testimonio para fines promocionales de la plataforma",
       "required": "Debes aceptar el consentimiento para continuar"
-    }
+    },
+    "success": "¡Registro exitoso!",
+    "error": "Error al enviar el formulario",
+    "emailDuplicate": "Este correo electrónico ya está registrado",
+    "duplicate": "Ya existe un registro con estos datos"
   },
 
   "navigation": {
