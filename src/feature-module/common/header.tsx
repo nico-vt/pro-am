@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { all_routes } from "../router/all_routes";
 import ImageWithBasePath from "../../core/data/img/ImageWithBasePath";
 import LanguageSelector from "./language-selector";
+import logo from '../../assets/img/logo-blanco.png';
 
 
 const Header = () => {
@@ -548,7 +549,7 @@ const Header = () => {
             </Link> */}
             <Link to={routes.home} className="navbar-brand logo">
               <ImageWithBasePath
-                src="assets/img/logo-blanco.png"
+                src={logo}
                 className="img-fluid"
                 style={{ maxHeight: '40px' }}
                 alt="Logo"

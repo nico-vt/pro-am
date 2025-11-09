@@ -4,6 +4,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import ImageWithBasePath from "../../core/data/img/ImageWithBasePath";
 import { all_routes } from "../router/all_routes";
+import logo from '../../assets/img/logo-blanco.png';
 
 const Footer = () => {
   const routes = all_routes;
@@ -17,7 +18,7 @@ const Footer = () => {
       <div className="container" data-aos="fade-up" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Link to={routes.home}>
           <ImageWithBasePath
-            src="assets/img/logo-blanco.png"
+            src={logo}
             alt="Logo ProAmLinks"
             style={{ maxHeight: '50px' }}
           />
