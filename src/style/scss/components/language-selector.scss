@@ -2,62 +2,121 @@
 @use "../base/typography";
 @use "../utils/mixins";
 
+$accent-blue: #3ab9ec;
+
 .language-selector {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   margin: 0;
   padding: 0;
 
-  .lang-btn {
+  .lang-label {
+    font-size: typography.$font__size__14;
+    letter-spacing: 0.5px;
+    font-weight: typography.$medium;
+  }
+
+  .lang-dropdown-btn {
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 8px 14px;
-    background: transparent;
+    background: colors.$white;
     border: 2px solid colors.$white;
     border-radius: 5px;
-    color: colors.$white;
+    color: $accent-blue;
     font-weight: typography.$medium;
-    font-size: typography.$font__size__14;
     cursor: pointer;
     transition: all 0.3s ease;
     min-width: 60px;
     justify-content: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 
-    .lang-flag {
-      font-size: 16px;
-      line-height: 1;
+    text-decoration: none !important;
+
+    &.no-arrow::after {
+      display: none !important;
     }
 
-    .lang-label {
-      font-size: typography.$font__size__14;
-      letter-spacing: 0.5px;
+    svg {
+      stroke: $accent-blue;
+      transition: all 0.3s ease;
     }
 
-    &:hover {
-      background: rgba(255, 255, 255, 0.1);
+    &:hover,
+    &.show {
+      background: #f8f9fa;
       transform: translateY(-1px);
+      color: $accent-blue;
+      text-decoration: none;
+      border-color: #f8f9fa;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+
+      svg {
+        stroke: $accent-blue;
+      }
     }
 
-    &.active {
-      background: colors.$white;
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(58, 185, 236, 0.3);
+    }
+  }
+
+  .dropdown-menu {
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border: none;
+    padding: 4px 0;
+    margin-top: 8px !important;
+  }
+
+  .dropdown-item {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    color: colors.$primarycolor;
+    font-weight: typography.$medium;
+    background-color: transparent;
+
+    .check-icon-wrapper {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      svg {
+        stroke: $accent-blue;
+        stroke-width: 3px;
+      }
+    }
+
+    &:hover:not(.active) {
+      background-color: rgba(58, 185, 236, 0.1);
       color: colors.$primarycolor;
-      border-color: colors.$white;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    &.active,
+    &:active {
+      background-color: transparent;
+      color: $accent-blue;
+      font-weight: 700;
+    }
+
+    &.active:hover {
+      background-color: rgba(58, 185, 236, 0.1);
     }
   }
 
   @include mixins.respond-below(custom991) {
-    gap: 6px;
-
-    .lang-btn {
+    .lang-dropdown-btn {
       padding: 6px 12px;
       min-width: 50px;
-      font-size: typography.$font__size__12;
+      gap: 5px;
 
-      .lang-flag {
-        font-size: 14px;
+      svg {
+        width: 16px;
+        height: 16px;
       }
 
       .lang-label {
@@ -67,18 +126,18 @@
   }
 
   @include mixins.respond-below(custom575) {
-    .lang-btn {
+    .lang-dropdown-btn {
       padding: 6px 10px;
       min-width: 45px;
+      gap: 0;
 
-      .lang-label {
+      .lang-label-desktop {
         display: none;
       }
 
-      .lang-flag {
-        font-size: 18px;
+      svg:first-of-type {
+        margin-right: 4px;
       }
     }
   }
 }
-
