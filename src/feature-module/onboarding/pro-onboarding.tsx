@@ -1,7 +1,6 @@
 import { useForm, type SubmitHandler, type FieldError } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import LanguageSwitcher from "./language-switch";
 import StepProgress from "./step-progress";
 import { useSteps } from "../../hooks/useSteps";
 import NavigationButtons from "./navigation-buttons";
@@ -397,7 +396,7 @@ const ProOnboarding = () => {
   return (
     <div>
       <div className="main-wrapper contact-us-page">
-        <section className="">
+        <section className="" style={{ minHeight: '100vh' }}>
           <div className="container">
             <form
               className="contact-us position-relative"
@@ -868,9 +867,8 @@ const ContactAndPaymentSection = ({ inputs, register, renderInput, getFieldError
 const SuccessSection = ({ navigate }: { navigate: ReturnType<typeof useNavigate> }) => {
   const { t } = useTranslation();
   return (
-    <section className="" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
-      <div className="container">
-        <div className="contact-us position-relative text-center py-5">
+    <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '70vh' }}>
+      <div className="text-center py-5">
           {/* Icono de éxito */}
           <div className="mb-4">
             <svg
@@ -910,15 +908,14 @@ const SuccessSection = ({ navigate }: { navigate: ReturnType<typeof useNavigate>
             {t("proOnboarding.successScreen.button", "Ir al Inicio")}
           </button>
         </div>
-      </div>
-    </section>
+    </div>
   );
 };
 
 const WelcomeSection = () => {
   const { t } = useTranslation();
   return (
-    <div className="text-center py-4">
+    <div className="d-flex align-items-center justify-content-center text-center" style={{ minHeight: '70vh' }}>
       <div className="mb-3">
         <h1 className="display-4 mb-4 text-primary">
           {t("proOnboarding.welcome.title", "¡Bienvenido a ProAm!")}
@@ -939,82 +936,13 @@ const WelcomeSection = () => {
         </div>
       </div>
 
-      <div className="mb-3">
+      {/* <div className="mb-3">
         <h5 className="mb-3 text-secondary">
           {t("proOnboarding.welcome.selectLanguage", "Selecciona tu idioma preferido")}
         </h5>
         <LanguageSwitcher />
-      </div>
+      </div> */}
 
-      <div className="row justify-content-center">
-        <div className="col-md-8">
-          <div className="card border-0 shadow-sm">
-            <div className="card-body p-2">
-              <h6 className="card-title text-secondary mb-3">
-                {t("proOnboarding.welcome.stepsTitle", "Pasos a completar:")}
-              </h6>
-              <div className="row text-start">
-                <div className="col-md-6 mb-3">
-                  <div className="d-flex align-items-center">
-                    <div className="me-3">
-                      <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{width: '32px', height: '32px', fontSize: '14px'}}>
-                        1
-                      </div>
-                    </div>
-                    <div>
-                      <small className="fw-semibold">
-                        {t("stepProgress.personalData", "Datos Personales")}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6 mb-3">
-                  <div className="d-flex align-items-center">
-                    <div className="me-3">
-                      <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{width: '32px', height: '32px', fontSize: '14px'}}>
-                        2
-                      </div>
-                    </div>
-                    <div>
-                      <small className="fw-semibold">
-                        {t("stepProgress.professionalData", "Datos Profesionales")}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6 mb-3">
-                  <div className="d-flex align-items-center">
-                    <div className="me-3">
-                      <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{width: '32px', height: '32px', fontSize: '14px'}}>
-                        3
-                      </div>
-                    </div>
-                    <div>
-                      <small className="fw-semibold">
-                        {t("stepProgress.proAmOffer", "Oferta ProAm")}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6 mb-3">
-                  <div className="d-flex align-items-center">
-                    <div className="me-3">
-                      <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{width: '32px', height: '32px', fontSize: '14px'}}>
-                        4
-                      </div>
-                    </div>
-                    <div>
-                      <small className="fw-semibold">
-                        {t("stepProgress.promotionalMaterial", "Material Promocional")}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

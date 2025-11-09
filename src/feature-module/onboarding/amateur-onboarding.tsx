@@ -3,7 +3,6 @@ import { useSteps } from "../../hooks/useSteps";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import StepProgress from "./step-progress";
-import LanguageSwitcher from "./language-switch";
 import NavigationButtons from "./navigation-buttons";
 import { useRenderInput, type InputConfig } from "./form-utils";
 import { useCountries } from "../../hooks/useCountries";
@@ -263,7 +262,7 @@ const AmateurOnboarding = () => {
     switch (step) {
       case "welcome":
         return (
-          <div className="text-center py-5">
+          <div className="d-flex align-items-center justify-content-center text-center" style={{ minHeight: '70vh' }}>
             <div className="mb-3">
               <h1 className="display-4 mb-4 text-primary">
                 {t("amateurOnboarding.welcome.title", "¡Bienvenido a ProAm!")}
@@ -282,7 +281,7 @@ const AmateurOnboarding = () => {
                   )}
                 </p>
               </div>
-              <div className="mb-3">
+              {/* <div className="mb-3">
                 <h5 className="mb-3 text-secondary">
                   {t(
                     "proOnboarding.welcome.selectLanguage",
@@ -290,7 +289,7 @@ const AmateurOnboarding = () => {
                   )}
                 </h5>
                 <LanguageSwitcher />
-              </div>
+              </div> */}
             </div>
           </div>
         );
@@ -325,43 +324,39 @@ const AmateurOnboarding = () => {
 
       case "success":
         return (
-          <section className="" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
-            <div className="container">
-              <div className="contact-us position-relative text-center py-5">
-                <div className="mb-4">
-                  <div className="mb-4">
-                    <svg
-                      width="80"
-                      height="80"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-success"
-                    >
-                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                  </div>
-                  <h1 className="display-4 mb-4 text-success">
-                    {t("amateurOnboarding.successScreen.title", "¡Registro Completado!")}
-                  </h1>
-                  <p className="lead text-muted mb-4">
-                    {t("amateurOnboarding.successScreen.message", "Tu perfil ha sido creado exitosamente. Ahora puedes explorar y reservar experiencias con profesionales.")}
-                  </p>
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-lg"
-                    onClick={() => navigate("/home")}
-                  >
-                    {t("amateurOnboarding.successScreen.button", "Ir al Inicio")}
-                  </button>
-                </div>
+          <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '70vh' }}>
+            <div className="text-center py-5">
+              <div className="mb-4">
+                <svg
+                  width="80"
+                  height="80"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-success"
+                >
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
               </div>
+              <h1 className="display-4 mb-4 text-success">
+                {t("amateurOnboarding.successScreen.title", "¡Registro Completado!")}
+              </h1>
+              <p className="lead text-muted mb-4">
+                {t("amateurOnboarding.successScreen.message", "Tu perfil ha sido creado exitosamente. Ahora puedes explorar y reservar experiencias con profesionales.")}
+              </p>
+              <button
+                type="button"
+                className="btn btn-primary btn-lg"
+                onClick={() => navigate("/home")}
+              >
+                {t("amateurOnboarding.successScreen.button", "Ir al Inicio")}
+              </button>
             </div>
-          </section>
+          </div>
         );
 
       default:
@@ -372,7 +367,7 @@ const AmateurOnboarding = () => {
   return (
     <div>
       <div className="main-wrapper contact-us-page">
-        <section className="">
+        <section className="" style={{ minHeight: '100vh' }}>
           <div className="container">
             <form
               className="contact-us position-relative"
