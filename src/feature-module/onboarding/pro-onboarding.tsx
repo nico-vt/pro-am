@@ -6,22 +6,22 @@ import { useSteps } from "../../hooks/useSteps";
 import NavigationButtons from "./navigation-buttons";
 import { useRenderInput, type InputConfig } from "./form-utils";
 import { useCountries } from "../../hooks/useCountries";
+import { submitProfessionalOnboarding } from "../../core/supabase/client";
 
 export type ProOnboardingInputs = {
   //  Datos personales
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   nationality: string;
-  birthDate: string; // formato ISO (YYYY-MM-DD)
+  birth_date: string; // formato ISO (YYYY-MM-DD)
   height: number; // en cm
   city: string;
   country: string;
 
   // Datos profesionales
-  sportDiscipline: "Tennis"; // fijo según tu descripción, pero se deja por claridad
-  professionalLevel: "ATP" | "ITF" | "Coach" | "Senior Player" | "Club Pro";
-  currentClub: string;
-  playStyle: {
+  professional_level: "ATP" | "ITF" | "Coach" | "Senior Player" | "Club Pro";
+  current_club: string;
+  play_style: {
     hand: "Right-handed" | "Left-handed";
     backhand: "One-handed" | "Two-handed";
   };
@@ -29,10 +29,10 @@ export type ProOnboardingInputs = {
   certifications: string[]; // ej: ["ITF", "PTR", "RPT"]
 
   // Oferta ProAm
-  experienceType: string; // entrenamiento 1:1, sesión de sparring, etc.
-  typicalDuration: string; // duración típica de la experiencia
+  experience_type: string; // entrenamiento 1:1, sesión de sparring, etc.
+  typical_duration: string; // duración típica de la experiencia
   location: string; // ubicación donde ofrece la experiencia
-  baseFee: number; // tarifa base en USD/EUR
+  base_fee: number; // tarifa base en USD/EUR
   currency: "USD" | "EUR";
   includes: {
     equipment: boolean;
@@ -42,9 +42,8 @@ export type ProOnboardingInputs = {
   };
 
   // Material Promocional
-  professionalPhoto: FileList | null; // foto profesional o retrato
-  introVideo: string; // link a YouTube o Vimeo (opcional)
-  socialLinks: {
+  intro_video: string; // link a YouTube o Vimeo (opcional)
+  social_links: {
     website: string;
     instagram: string;
     twitter: string;
@@ -55,10 +54,9 @@ export type ProOnboardingInputs = {
   // Datos de contacto y pago
   email: string;
   phone: string; // Teléfono / WhatsApp
-  documentId: string; // Documento/ID profesional/Pasaporte (opcional según país)
-  paymentAccount: string; // PayPal / Stripe / IBAN
+  payment_account: string; // PayPal / Stripe / IBAN
   agent: string; // Representante/Agencia (opcional)
-  imageConsent: boolean; // Consentimiento de uso de imagen
+  image_consent: boolean; // Consentimiento de uso de imagen
 };
 
 const ProOnboarding = () => {
@@ -90,13 +88,20 @@ const ProOnboarding = () => {
     return error as FieldError | undefined;
   };
 
-  const onSubmit: SubmitHandler<ProOnboardingInputs> = (data) =>
-    console.log(data);
+  const onSubmit: SubmitHandler<ProOnboardingInputs> = async (data) => {
+    try {
+      await submitProfessionalOnboarding(data);
+      alert(t("proOnboarding.success", "¡Registro exitoso!"));
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(t("proOnboarding.error", "Error al enviar el formulario. Por favor intenta nuevamente."));
+    }
+  };
 
   // Configuración de inputs para datos personales
   const personalDataInputs: InputConfig<ProOnboardingInputs>[] = [
     {
-      id: "firstName",
+      id: "first_name",
       label: t("proOnboarding.firstName.label"),
       type: "text",
       placeholder: t("proOnboarding.firstName.placeholder"),
@@ -104,7 +109,7 @@ const ProOnboarding = () => {
       autoComplete: "given-name"
     },
     {
-      id: "lastName",
+      id: "last_name",
       label: t("proOnboarding.lastName.label"),
       type: "text",
       placeholder: t("proOnboarding.lastName.placeholder"),
@@ -121,7 +126,7 @@ const ProOnboarding = () => {
       control: control
     },
     {
-      id: "birthDate",
+      id: "birth_date",
       label: t("proOnboarding.birthDate.label"),
       type: "date",
       placeholder: t("proOnboarding.birthDate.placeholder"),
@@ -159,13 +164,7 @@ const ProOnboarding = () => {
   // Configuración de inputs para datos profesionales (solo campos simples)
   const professionalDataInputs: InputConfig<ProOnboardingInputs>[] = [
     {
-      id: "sportDiscipline",
-      label: t("proOnboarding.sportDiscipline.label", "Sport Discipline"),
-      type: "text",
-      required: false // Es readonly, no requiere validación
-    },
-    {
-      id: "professionalLevel",
+      id: "professional_level",
       label: t("proOnboarding.professionalLevel.label"),
       type: "singleselect",
       placeholder: t("proOnboarding.professionalLevel.placeholder"),
@@ -177,7 +176,7 @@ const ProOnboarding = () => {
       isSearchable: false
     },
     {
-      id: "currentClub",
+      id: "current_club",
       label: t("proOnboarding.currentClub.label", "Current Club or Institution"),
       type: "text",
       placeholder: t("proOnboarding.currentClub.placeholder", "Enter your current club"),
@@ -225,7 +224,7 @@ const ProOnboarding = () => {
   // Configuración de inputs para oferta ProAm (campos simples)
   const proAmOfferInputs: InputConfig<ProOnboardingInputs>[] = [
     {
-      id: "experienceType",
+      id: "experience_type",
       label: t("proOnboarding.experienceType.label", "Tipo de experiencia ofrecida"),
       type: "singleselect",
       placeholder: t("proOnboarding.experienceType.placeholder", "Selecciona el tipo de experiencia"),
@@ -241,7 +240,7 @@ const ProOnboarding = () => {
       isSearchable: false
     },
     {
-      id: "typicalDuration",
+      id: "typical_duration",
       label: t("proOnboarding.typicalDuration.label", "Duración típica de la experiencia"),
       type: "singleselect",
       placeholder: t("proOnboarding.typicalDuration.placeholder", "Selecciona la duración"),
@@ -264,14 +263,7 @@ const ProOnboarding = () => {
   // Configuración de inputs para material promocional (campos simples)
   const promotionalMaterialInputs: InputConfig<ProOnboardingInputs>[] = [
     {
-      id: "professionalPhoto",
-      label: t("proOnboarding.professionalPhoto.label", "Foto profesional o retrato"),
-      type: "file",
-      required: true,
-      accept: "image/*"
-    },
-    {
-      id: "introVideo",
+      id: "intro_video",
       label: t("proOnboarding.introVideo.label", "Video corto de presentación"),
       type: "url",
       placeholder: t("proOnboarding.introVideo.placeholder", "youtube.com/watch?v=... o youtu.be/..."),
@@ -299,15 +291,7 @@ const ProOnboarding = () => {
       autoComplete: "tel"
     },
     {
-      id: "documentId",
-      label: t("proOnboarding.contactAndPayment.documentId.label", "Documento/ID profesional"),
-      type: "text",
-      placeholder: t("proOnboarding.contactAndPayment.documentId.placeholder", "Pasaporte o DNI"),
-      required: false,
-      helperText: t("proOnboarding.optional", "(opcional)")
-    },
-    {
-      id: "paymentAccount",
+      id: "payment_account",
       label: t("proOnboarding.contactAndPayment.paymentAccount.label", "Cuenta de pago"),
       type: "singleselect",
       placeholder: t("proOnboarding.contactAndPayment.paymentAccount.placeholder", "Selecciona método de pago"),
@@ -329,7 +313,7 @@ const ProOnboarding = () => {
       helperText: t("proOnboarding.optional", "(opcional)")
     },
     {
-      id: "imageConsent",
+      id: "image_consent",
       label: "",
       type: "checkbox",
       checkboxLabel: t("proOnboarding.contactAndPayment.imageConsent.label", "Acepto el uso de mi imagen con fines promocionales"),
@@ -346,20 +330,20 @@ const ProOnboarding = () => {
   };
 
   // Función para obtener los campos del step actual
-  const getCurrentStepFields = (): (keyof ProOnboardingInputs | `playStyle.hand` | `playStyle.backhand`)[] => {
+  const getCurrentStepFields = (): (keyof ProOnboardingInputs | `play_style.hand` | `play_style.backhand`)[] => {
     switch (step) {
       case "welcome":
         return [];
       case "personalData":
-        return ["firstName", "lastName", "nationality", "birthDate", "height", "city", "country"];
+        return ["first_name", "last_name", "nationality", "birth_date", "height", "city", "country"];
       case "professionalData":
-        return ["sportDiscipline", "professionalLevel", "currentClub", "playStyle.hand", "playStyle.backhand", "languages", "certifications"];
+        return ["professional_level", "current_club", "play_style.hand", "play_style.backhand", "languages", "certifications"];
       case "proAmOffer":
-        return ["experienceType", "typicalDuration", "location", "baseFee", "currency"];
+        return ["experience_type", "typical_duration", "location"]; // base_fee y currency se validan en handleNext en el bloque custom
       case "promotionalMaterial":
-        return ["professionalPhoto"]; // Solo la foto es requerida
+        return []; // intro_video es opcional
       case "contactAndPayment":
-        return ["email", "phone", "paymentAccount", "imageConsent"]; // documentId y agent son opcionales
+        return ["email", "phone", "payment_account", "image_consent"]; // agent es opcional
       default:
         return [];
     }
@@ -546,20 +530,7 @@ const ProfessionalDataSection = ({ inputs, register, renderInput, getFieldError 
         {t("proOnboarding.professionalInformation", "Professional Information")}
       </h4>
       <div className="row">
-        {/* Renderizar sportDiscipline con valor readonly */}
-        <div className="col-md-6 mb-3">
-          <label htmlFor="sportDiscipline" className="form-label">
-            {t("proOnboarding.sportDiscipline.label", "Sport Discipline")}
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="sportDiscipline"
-            defaultValue="Tennis"
-            readOnly
-            {...register("sportDiscipline")}
-          />
-        </div>
+
 
         {/* Renderizar todos los campos (incluyendo multiselects) usando renderInput */}
         {inputs.slice(1).map((input) => (
@@ -576,7 +547,7 @@ const ProfessionalDataSection = ({ inputs, register, renderInput, getFieldError 
           <div className="d-flex gap-2">
             <select
               className="form-control"
-              {...register("playStyle.hand", { required: true })}
+              {...register("play_style.hand", { required: true })}
             >
               <option value="">
                 {t("proOnboarding.playStyle.hand.placeholder", "Select hand...")}
@@ -592,7 +563,7 @@ const ProfessionalDataSection = ({ inputs, register, renderInput, getFieldError 
 
             <select
               className="form-control"
-              {...register("playStyle.backhand", { required: true })}
+              {...register("play_style.backhand", { required: true })}
             >
               <option value="">
                 {t("proOnboarding.playStyle.backhand.placeholder", "Select backhand...")}
@@ -651,7 +622,7 @@ const ProAmOfferSection = ({ inputs, register, errors, renderInput, getFieldErro
               type="number"
               className="form-control"
               placeholder={t("proOnboarding.baseFee.placeholder", "Ingresa la tarifa")}
-              {...register("baseFee", {
+              {...register("base_fee", {
                 required: true,
                 valueAsNumber: true,
                 min: 0,
@@ -669,7 +640,7 @@ const ProAmOfferSection = ({ inputs, register, errors, renderInput, getFieldErro
               <option value="EUR">EUR</option>
             </select>
           </div>
-          {(errors.baseFee || errors.currency) && (
+          {(errors.base_fee || errors.currency) && (
             <span className="form-error">{t("proOnboarding.formError")}</span>
           )}
         </div>
@@ -781,7 +752,7 @@ const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldErr
                   type="url"
                   className="form-control"
                   placeholder={t("proOnboarding.socialLinks.website.placeholder", "Sitio web oficial")}
-                  {...register("socialLinks.website")}
+                  {...register("social_links.website")}
                 />
               </div>
             </div>
@@ -792,7 +763,7 @@ const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldErr
                   type="url"
                   className="form-control"
                   placeholder={t("proOnboarding.socialLinks.instagram.placeholder", "Instagram")}
-                  {...register("socialLinks.instagram")}
+                  {...register("social_links.instagram")}
                 />
               </div>
             </div>
@@ -803,7 +774,7 @@ const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldErr
                   type="url"
                   className="form-control"
                   placeholder={t("proOnboarding.socialLinks.twitter.placeholder", "Twitter/X")}
-                  {...register("socialLinks.twitter")}
+                  {...register("social_links.twitter")}
                 />
               </div>
             </div>
@@ -814,7 +785,7 @@ const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldErr
                   type="url"
                   className="form-control"
                   placeholder={t("proOnboarding.socialLinks.linkedin.placeholder", "LinkedIn")}
-                  {...register("socialLinks.linkedin")}
+                  {...register("social_links.linkedin")}
                 />
               </div>
             </div>
@@ -825,7 +796,7 @@ const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldErr
                   type="url"
                   className="form-control"
                   placeholder={t("proOnboarding.socialLinks.youtube.placeholder", "YouTube")}
-                  {...register("socialLinks.youtube")}
+                  {...register("social_links.youtube")}
                 />
               </div>
             </div>
