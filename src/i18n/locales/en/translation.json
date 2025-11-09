@@ -8,7 +8,7 @@
 
     "welcome": {
       "message": "Welcome!",
-      "title": "Welcome to ProAm!",
+      "title": "Welcome to ProAm Links!",
       "subtitle": "Complete your professional profile to start offering unique experiences.",
       "description": "This process will only take a few minutes and will allow you to connect with players looking to improve their game.",
       "selectLanguage": "Select your preferred language",
@@ -202,6 +202,15 @@
         "label": "I consent to the use of my image for promotional purposes",
         "required": "You must accept the consent to continue"
       }
+    },
+    "success": "Registration successful!",
+    "error": "Error submitting form",
+    "emailDuplicate": "This email is already registered",
+    "duplicate": "A record with this data already exists",
+    "successScreen": {
+      "title": "Registration Completed!",
+      "message": "Thank you for your interest! Our team will review your profile and contact you very soon so you can start offering your professional services.",
+      "button": "Go to Home"
     }
   },
 
@@ -216,7 +225,7 @@
 
   "amateurOnboarding": {
     "welcome": {
-      "title": "Welcome to ProAm!",
+      "title": "Welcome to ProAm Links!",
       "subtitle": "Connect with professional athletes and improve your skills",
       "description": "Access personalized training, clinics, and exclusive events with professionals from various sports."
     },
@@ -248,6 +257,15 @@
       "label": "Consent",
       "checkboxLabel": "I consent to the use of my image, experience, and testimonial for promotional purposes of the platform",
       "required": "You must accept the consent to continue"
+    },
+    "success": "Registration successful!",
+    "error": "Error submitting form",
+    "emailDuplicate": "This email is already registered",
+    "duplicate": "A record with this data already exists",
+    "successScreen": {
+      "title": "Registration Completed!",
+      "message": "Thank you for joining! We’ll contact you soon so you can access exclusive experiences and enjoy sports with world-class professionals.",
+      "button": "Go to Home"
     }
   },
 

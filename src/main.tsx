@@ -5,6 +5,7 @@ import { base_path } from './environment'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import Feature from './feature-module/feature'
+import { Toaster } from 'sonner'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/bootstrap/dist/js/bootstrap.bundle.js';
 import 'aos/dist/aos.css';
@@ -22,6 +23,7 @@ createRoot(document.getElementById('root')!).render(
       <Provider store={store} >
         <BrowserRouter basename={base_path}>
           <Feature />
+          <Toaster position="top-right" richColors />
         </BrowserRouter>
       </Provider>
     </React.StrictMode>

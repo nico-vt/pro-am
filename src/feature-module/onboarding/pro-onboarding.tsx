@@ -1,27 +1,28 @@
 import { useForm, type SubmitHandler, type FieldError } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import LanguageSwitcher from "./language-switch";
+import { useNavigate } from "react-router-dom";
 import StepProgress from "./step-progress";
 import { useSteps } from "../../hooks/useSteps";
 import NavigationButtons from "./navigation-buttons";
 import { useRenderInput, type InputConfig } from "./form-utils";
 import { useCountries } from "../../hooks/useCountries";
+import { submitProfessionalOnboarding } from "../../core/supabase/client";
+import { toast } from "sonner";
 
 export type ProOnboardingInputs = {
   //  Datos personales
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   nationality: string;
-  birthDate: string; // formato ISO (YYYY-MM-DD)
+  birth_date: string; // formato ISO (YYYY-MM-DD)
   height: number; // en cm
   city: string;
   country: string;
 
   // Datos profesionales
-  sportDiscipline: "Tennis"; // fijo según tu descripción, pero se deja por claridad
-  professionalLevel: "ATP" | "ITF" | "Coach" | "Senior Player" | "Club Pro";
-  currentClub: string;
-  playStyle: {
+  professional_level: "ATP" | "ITF" | "Coach" | "Senior Player" | "Club Pro";
+  current_club: string;
+  play_style: {
     hand: "Right-handed" | "Left-handed";
     backhand: "One-handed" | "Two-handed";
   };
@@ -29,10 +30,10 @@ export type ProOnboardingInputs = {
   certifications: string[]; // ej: ["ITF", "PTR", "RPT"]
 
   // Oferta ProAm
-  experienceType: string; // entrenamiento 1:1, sesión de sparring, etc.
-  typicalDuration: string; // duración típica de la experiencia
+  experience_type: string; // entrenamiento 1:1, sesión de sparring, etc.
+  typical_duration: string; // duración típica de la experiencia
   location: string; // ubicación donde ofrece la experiencia
-  baseFee: number; // tarifa base en USD/EUR
+  base_fee: number; // tarifa base en USD/EUR
   currency: "USD" | "EUR";
   includes: {
     equipment: boolean;
@@ -42,9 +43,8 @@ export type ProOnboardingInputs = {
   };
 
   // Material Promocional
-  professionalPhoto: FileList | null; // foto profesional o retrato
-  introVideo: string; // link a YouTube o Vimeo (opcional)
-  socialLinks: {
+  intro_video: string; // link a YouTube o Vimeo (opcional)
+  social_links: {
     website: string;
     instagram: string;
     twitter: string;
@@ -55,14 +55,14 @@ export type ProOnboardingInputs = {
   // Datos de contacto y pago
   email: string;
   phone: string; // Teléfono / WhatsApp
-  documentId: string; // Documento/ID profesional/Pasaporte (opcional según país)
-  paymentAccount: string; // PayPal / Stripe / IBAN
+  payment_account: string; // PayPal / Stripe / IBAN
   agent: string; // Representante/Agencia (opcional)
-  imageConsent: boolean; // Consentimiento de uso de imagen
+  image_consent: boolean; // Consentimiento de uso de imagen
 };
 
 const ProOnboarding = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const { renderInput } = useRenderInput<ProOnboardingInputs>();
   const { countryOptions } = useCountries();
   const {
@@ -71,18 +71,29 @@ const ProOnboarding = () => {
     trigger,
     control,
     formState: { errors },
-  } = useForm<ProOnboardingInputs>({ 
+  } = useForm<ProOnboardingInputs>({
     shouldUnregister: false,
     mode: "onChange",
-    reValidateMode: "onChange"
+    reValidateMode: "onChange",
   });
-  const steps = ["welcome", "personalData", "professionalData", "proAmOffer", "promotionalMaterial", "contactAndPayment"] as const;
+  const steps = [
+    "welcome",
+    "personalData",
+    "professionalData",
+    "proAmOffer",
+    "promotionalMaterial",
+    "contactAndPayment",
+    "success",
+  ] as const;
   const { step, next, back, isFirstStep, isLastStep } = useSteps({ steps });
 
   // Helper para extraer el error simple de campos anidados
   const getFieldError = (fieldId: string): FieldError | undefined => {
-    const keys = fieldId.split('.');
-    let error: Record<string, unknown> | undefined = errors as Record<string, unknown>;
+    const keys = fieldId.split(".");
+    let error: Record<string, unknown> | undefined = errors as Record<
+      string,
+      unknown
+    >;
     for (const key of keys) {
       error = error?.[key] as Record<string, unknown> | undefined;
       if (!error) break;
@@ -90,26 +101,60 @@ const ProOnboarding = () => {
     return error as FieldError | undefined;
   };
 
-  const onSubmit: SubmitHandler<ProOnboardingInputs> = (data) =>
-    console.log(data);
+  const onSubmit: SubmitHandler<ProOnboardingInputs> = async (data) => {
+    try {
+      await submitProfessionalOnboarding(data);
+      toast.success(t("proOnboarding.success", "¡Registro exitoso!"));
+      next(); // Avanzar al step de éxito
+    } catch (error) {
+      console.error("Error submitting form:", error);
+
+      let errorMessage = t(
+        "proOnboarding.error",
+        "Error al enviar el formulario"
+      );
+
+      if (error instanceof Error) {
+        // Traducir errores comunes de Supabase a mensajes amigables
+        if (
+          error.message.includes("duplicate key") &&
+          error.message.includes("email")
+        ) {
+          errorMessage = t(
+            "proOnboarding.emailDuplicate",
+            "Este correo electrónico ya está registrado"
+          );
+        } else if (error.message.includes("duplicate key")) {
+          errorMessage = t(
+            "proOnboarding.duplicate",
+            "Ya existe un registro con estos datos"
+          );
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
+      toast.error(errorMessage);
+    }
+  };
 
   // Configuración de inputs para datos personales
   const personalDataInputs: InputConfig<ProOnboardingInputs>[] = [
     {
-      id: "firstName",
+      id: "first_name",
       label: t("proOnboarding.firstName.label"),
       type: "text",
       placeholder: t("proOnboarding.firstName.placeholder"),
       required: true,
-      autoComplete: "given-name"
+      autoComplete: "given-name",
     },
     {
-      id: "lastName",
+      id: "last_name",
       label: t("proOnboarding.lastName.label"),
       type: "text",
       placeholder: t("proOnboarding.lastName.placeholder"),
       required: true,
-      autoComplete: "family-name"
+      autoComplete: "family-name",
     },
     {
       id: "nationality",
@@ -118,16 +163,18 @@ const ProOnboarding = () => {
       placeholder: t("proOnboarding.nationality.placeholder"),
       required: true,
       options: countryOptions,
-      control: control
+      control: control,
     },
     {
-      id: "birthDate",
+      id: "birth_date",
       label: t("proOnboarding.birthDate.label"),
       type: "date",
       placeholder: t("proOnboarding.birthDate.placeholder"),
       required: true,
       autoComplete: "bday",
-      max: new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split("T")[0]
+      max: new Date(new Date().setFullYear(new Date().getFullYear() - 18))
+        .toISOString()
+        .split("T")[0],
     },
     {
       id: "height",
@@ -135,7 +182,7 @@ const ProOnboarding = () => {
       type: "height",
       placeholder: t("proOnboarding.height.placeholder"),
       required: true,
-      isMetric: i18n.language === "es"
+      isMetric: i18n.language === "es",
     },
     {
       id: "city",
@@ -143,7 +190,7 @@ const ProOnboarding = () => {
       type: "text",
       placeholder: t("proOnboarding.city.placeholder"),
       required: true,
-      autoComplete: "address-level2"
+      autoComplete: "address-level2",
     },
     {
       id: "country",
@@ -152,43 +199,48 @@ const ProOnboarding = () => {
       placeholder: t("proOnboarding.country.placeholder"),
       required: true,
       options: countryOptions,
-      control: control
-    }
+      control: control,
+    },
   ];
 
   // Configuración de inputs para datos profesionales (solo campos simples)
   const professionalDataInputs: InputConfig<ProOnboardingInputs>[] = [
     {
-      id: "sportDiscipline",
-      label: t("proOnboarding.sportDiscipline.label", "Sport Discipline"),
-      type: "text",
-      required: false // Es readonly, no requiere validación
-    },
-    {
-      id: "professionalLevel",
+      id: "professional_level",
       label: t("proOnboarding.professionalLevel.label"),
       type: "singleselect",
       placeholder: t("proOnboarding.professionalLevel.placeholder"),
       required: true,
       options: Object.entries(
-        t("proOnboarding.professionalLevel.options", { returnObjects: true }) as Record<string, string>
+        t("proOnboarding.professionalLevel.options", {
+          returnObjects: true,
+        }) as Record<string, string>
       ).map(([value, label]) => ({ value, label })),
       control: control,
-      isSearchable: false
+      isSearchable: false,
     },
     {
-      id: "currentClub",
-      label: t("proOnboarding.currentClub.label", "Current Club or Institution"),
+      id: "current_club",
+      label: t(
+        "proOnboarding.currentClub.label",
+        "Current Club or Institution"
+      ),
       type: "text",
-      placeholder: t("proOnboarding.currentClub.placeholder", "Enter your current club"),
-      required: false
+      placeholder: t(
+        "proOnboarding.currentClub.placeholder",
+        "Enter your current club"
+      ),
+      required: false,
     },
     {
       id: "languages",
       label: t("proOnboarding.languages.label", "Languages"),
       type: "multiselect",
-      placeholder: t("proOnboarding.languages.placeholder", "Select languages..."),
-      required: false,
+      placeholder: t(
+        "proOnboarding.languages.placeholder",
+        "Select languages..."
+      ),
+      required: true,
       options: [
         { value: "English", label: "English" },
         { value: "Spanish", label: "Spanish" },
@@ -198,168 +250,255 @@ const ProOnboarding = () => {
         { value: "German", label: "German" },
         { value: "Chinese", label: "Chinese" },
         { value: "Japanese", label: "Japanese" },
-        { value: "Arabic", label: "Arabic" }
+        { value: "Arabic", label: "Arabic" },
       ],
       control: control,
-      colClass: "col-md-6"
+      colClass: "col-md-6",
     },
     {
       id: "certifications",
-      label: t("proOnboarding.certifications.label", "Licenses or Certifications"),
+      label: t(
+        "proOnboarding.certifications.label",
+        "Licenses or Certifications"
+      ),
       type: "multiselect",
-      placeholder: t("proOnboarding.certifications.placeholder", "Select certifications..."),
-      required: false,
+      placeholder: t(
+        "proOnboarding.certifications.placeholder",
+        "Select certifications..."
+      ),
+      required: true,
       options: [
         { value: "ITF", label: "ITF" },
         { value: "PTR", label: "PTR" },
         { value: "RPT", label: "RPT" },
         { value: "USPTA", label: "USPTA" },
         { value: "USPTR", label: "USPTR" },
-        { value: "LTA", label: "LTA" }
+        { value: "LTA", label: "LTA" },
       ],
       control: control,
-      colClass: "col-md-6"
-    }
+      colClass: "col-md-6",
+    },
   ];
 
   // Configuración de inputs para oferta ProAm (campos simples)
   const proAmOfferInputs: InputConfig<ProOnboardingInputs>[] = [
     {
-      id: "experienceType",
-      label: t("proOnboarding.experienceType.label", "Tipo de experiencia ofrecida"),
+      id: "experience_type",
+      label: t(
+        "proOnboarding.experienceType.label",
+        "Tipo de experiencia ofrecida"
+      ),
       type: "singleselect",
-      placeholder: t("proOnboarding.experienceType.placeholder", "Selecciona el tipo de experiencia"),
+      placeholder: t(
+        "proOnboarding.experienceType.placeholder",
+        "Selecciona el tipo de experiencia"
+      ),
       required: true,
       options: [
-        { value: "training1on1", label: t("proOnboarding.experienceType.training1on1", "Entrenamiento 1:1") },
-        { value: "sparringSession", label: t("proOnboarding.experienceType.sparringSession", "Sesión de sparring") },
-        { value: "clinic", label: t("proOnboarding.experienceType.clinic", "Clínica") },
-        { value: "meetAndPlay", label: t("proOnboarding.experienceType.meetAndPlay", "Meet & Play") },
-        { value: "proAmTournament", label: t("proOnboarding.experienceType.proAmTournament", "Torneo ProAm") }
+        {
+          value: "training1on1",
+          label: t(
+            "proOnboarding.experienceType.training1on1",
+            "Entrenamiento 1:1"
+          ),
+        },
+        {
+          value: "sparringSession",
+          label: t(
+            "proOnboarding.experienceType.sparringSession",
+            "Sesión de sparring"
+          ),
+        },
+        {
+          value: "clinic",
+          label: t("proOnboarding.experienceType.clinic", "Clínica"),
+        },
+        {
+          value: "meetAndPlay",
+          label: t("proOnboarding.experienceType.meetAndPlay", "Meet & Play"),
+        },
+        {
+          value: "proAmTournament",
+          label: t(
+            "proOnboarding.experienceType.proAmTournament",
+            "Torneo ProAm"
+          ),
+        },
       ],
       control: control,
-      isSearchable: false
+      isSearchable: false,
     },
     {
-      id: "typicalDuration",
-      label: t("proOnboarding.typicalDuration.label", "Duración típica de la experiencia"),
+      id: "typical_duration",
+      label: t(
+        "proOnboarding.typicalDuration.label",
+        "Duración típica de la experiencia"
+      ),
       type: "singleselect",
-      placeholder: t("proOnboarding.typicalDuration.placeholder", "Selecciona la duración"),
+      placeholder: t(
+        "proOnboarding.typicalDuration.placeholder",
+        "Selecciona la duración"
+      ),
       required: true,
       options: Object.entries(
-        t("proOnboarding.typicalDuration.options", { returnObjects: true }) as Record<string, string>
+        t("proOnboarding.typicalDuration.options", {
+          returnObjects: true,
+        }) as Record<string, string>
       ).map(([value, label]) => ({ value, label })),
       control: control,
-      isSearchable: false
+      isSearchable: false,
     },
     {
       id: "location",
-      label: t("proOnboarding.location.label", "Ubicación donde ofrece la experiencia"),
+      label: t(
+        "proOnboarding.location.label",
+        "Ubicación donde ofrece la experiencia"
+      ),
       type: "text",
-      placeholder: t("proOnboarding.location.placeholder", "Club, ciudad o área geográfica"),
-      required: true
-    }
+      placeholder: t(
+        "proOnboarding.location.placeholder",
+        "Club, ciudad o área geográfica"
+      ),
+      required: true,
+    },
   ];
 
   // Configuración de inputs para material promocional (campos simples)
   const promotionalMaterialInputs: InputConfig<ProOnboardingInputs>[] = [
     {
-      id: "professionalPhoto",
-      label: t("proOnboarding.professionalPhoto.label", "Foto profesional o retrato"),
-      type: "file",
-      required: true,
-      accept: "image/*"
-    },
-    {
-      id: "introVideo",
+      id: "intro_video",
       label: t("proOnboarding.introVideo.label", "Video corto de presentación"),
       type: "url",
-      placeholder: t("proOnboarding.introVideo.placeholder", "youtube.com/watch?v=... o youtu.be/..."),
-      required: false,
-      helperText: t("proOnboarding.introVideo.helper", "Link a YouTube o Vimeo (opcional)")
-    }
+      placeholder: t(
+        "proOnboarding.introVideo.placeholder",
+        "youtube.com/watch?v=... o youtu.be/..."
+      ),
+      required: true,
+      helperText: t(
+        "proOnboarding.introVideo.helper",
+        "Link a YouTube o Vimeo (opcional)"
+      ),
+    },
   ];
 
   // Configuración de inputs para contacto y pago
   const contactAndPaymentInputs: InputConfig<ProOnboardingInputs>[] = [
     {
       id: "email",
-      label: t("proOnboarding.contactAndPayment.email.label", "Correo electrónico"),
+      label: t(
+        "proOnboarding.contactAndPayment.email.label",
+        "Correo electrónico"
+      ),
       type: "email",
-      placeholder: t("proOnboarding.contactAndPayment.email.placeholder", "tu@email.com"),
+      placeholder: t(
+        "proOnboarding.contactAndPayment.email.placeholder",
+        "tu@email.com"
+      ),
       required: true,
-      autoComplete: "email"
+      autoComplete: "email",
     },
     {
       id: "phone",
-      label: t("proOnboarding.contactAndPayment.phone.label", "Teléfono / WhatsApp"),
+      label: t(
+        "proOnboarding.contactAndPayment.phone.label",
+        "Teléfono / WhatsApp"
+      ),
       type: "tel",
-      placeholder: t("proOnboarding.contactAndPayment.phone.placeholder", "+1 234 567 8900"),
+      placeholder: t(
+        "proOnboarding.contactAndPayment.phone.placeholder",
+        "+1 234 567 8900"
+      ),
       required: true,
-      autoComplete: "tel"
+      autoComplete: "tel",
     },
     {
-      id: "documentId",
-      label: t("proOnboarding.contactAndPayment.documentId.label", "Documento/ID profesional"),
-      type: "text",
-      placeholder: t("proOnboarding.contactAndPayment.documentId.placeholder", "Pasaporte o DNI"),
-      required: false,
-      helperText: t("proOnboarding.optional", "(opcional)")
-    },
-    {
-      id: "paymentAccount",
-      label: t("proOnboarding.contactAndPayment.paymentAccount.label", "Cuenta de pago"),
+      id: "payment_account",
+      label: t(
+        "proOnboarding.contactAndPayment.paymentAccount.label",
+        "Cuenta de pago"
+      ),
       type: "singleselect",
-      placeholder: t("proOnboarding.contactAndPayment.paymentAccount.placeholder", "Selecciona método de pago"),
+      placeholder: t(
+        "proOnboarding.contactAndPayment.paymentAccount.placeholder",
+        "Selecciona método de pago"
+      ),
       required: true,
       options: [
         { value: "paypal", label: "PayPal" },
         { value: "stripe", label: "Stripe" },
-        { value: "iban", label: "IBAN" }
+        { value: "iban", label: "IBAN" },
       ],
       control: control,
-      isSearchable: false
+      isSearchable: false,
     },
     {
       id: "agent",
-      label: t("proOnboarding.contactAndPayment.agent.label", "Representante/Agencia"),
+      label: t(
+        "proOnboarding.contactAndPayment.agent.label",
+        "Representante/Agencia"
+      ),
       type: "text",
-      placeholder: t("proOnboarding.contactAndPayment.agent.placeholder", "Nombre del representante"),
+      placeholder: t(
+        "proOnboarding.contactAndPayment.agent.placeholder",
+        "Nombre del representante"
+      ),
       required: false,
-      helperText: t("proOnboarding.optional", "(opcional)")
+      helperText: t("proOnboarding.optional", "(opcional)"),
     },
     {
-      id: "imageConsent",
+      id: "image_consent",
       label: "",
       type: "checkbox",
-      checkboxLabel: t("proOnboarding.contactAndPayment.imageConsent.label", "Acepto el uso de mi imagen con fines promocionales"),
-      required: true
-    }
+      checkboxLabel: t(
+        "proOnboarding.contactAndPayment.imageConsent.label",
+        "Acepto el uso de mi imagen con fines promocionales"
+      ),
+      required: true,
+    },
   ];
 
   // Función para hacer scroll hacia arriba
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   };
 
   // Función para obtener los campos del step actual
-  const getCurrentStepFields = (): (keyof ProOnboardingInputs | `playStyle.hand` | `playStyle.backhand`)[] => {
+  const getCurrentStepFields = (): (
+    | keyof ProOnboardingInputs
+    | `play_style.hand`
+    | `play_style.backhand`
+  )[] => {
     switch (step) {
       case "welcome":
         return [];
       case "personalData":
-        return ["firstName", "lastName", "nationality", "birthDate", "height", "city", "country"];
+        return [
+          "first_name",
+          "last_name",
+          "nationality",
+          "birth_date",
+          "height",
+          "city",
+          "country",
+        ];
       case "professionalData":
-        return ["sportDiscipline", "professionalLevel", "currentClub", "playStyle.hand", "playStyle.backhand", "languages", "certifications"];
+        return [
+          "professional_level",
+          "current_club",
+          "play_style.hand",
+          "play_style.backhand",
+          "languages",
+          "certifications",
+        ];
       case "proAmOffer":
-        return ["experienceType", "typicalDuration", "location", "baseFee", "currency"];
+        return ["experience_type", "typical_duration", "location"]; // base_fee y currency se validan en handleNext en el bloque custom
       case "promotionalMaterial":
-        return ["professionalPhoto"]; // Solo la foto es requerida
+        return []; // intro_video es opcional
       case "contactAndPayment":
-        return ["email", "phone", "paymentAccount", "imageConsent"]; // documentId y agent son opcionales
+        return ["email", "phone", "payment_account", "image_consent"]; // agent es opcional
       default:
         return [];
     }
@@ -367,19 +506,19 @@ const ProOnboarding = () => {
 
   // Funciones de navegación con scroll y validación
   const handleNext = async () => {
-    // Si estamos en el último step, hacer submit
-    if (isLastStep) {
+    // Si estamos en contactAndPayment (el último step antes de success), hacer submit
+    if (step === "contactAndPayment") {
       await handleSubmit(onSubmit)();
       return;
     }
 
     // Obtener los campos del step actual
     const currentStepFields = getCurrentStepFields();
-    
+
     // Validar solo los campos del step actual
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isValid = await trigger(currentStepFields as any);
-    
+
     // Solo avanzar si la validación es exitosa
     if (isValid) {
       next();
@@ -395,7 +534,7 @@ const ProOnboarding = () => {
   return (
     <div>
       <div className="main-wrapper contact-us-page">
-        <section className="">
+        <section className="" style={{ minHeight: "100vh" }}>
           <div className="container">
             <form
               className="contact-us position-relative"
@@ -403,22 +542,17 @@ const ProOnboarding = () => {
             >
               {/* Step Progress - Solo mostrar después del step de bienvenida */}
               {step !== "welcome" && (
-                <StepProgress 
-                  steps={steps} 
-                  currentStep={step}
-                />
+                <StepProgress steps={steps} currentStep={step} />
               )}
 
               {/* ---------------- Step 1: Bienvenida ---------------- */}
-              {step === "welcome" && (
-                <WelcomeSection />
-              )}
+              {step === "welcome" && <WelcomeSection />}
 
               {/* ---------------- Datos Personales ---------------- */}
               {step === "personalData" && (
-                <PersonalDataSection 
+                <PersonalDataSection
                   inputs={personalDataInputs}
-                  register={register} 
+                  register={register}
                   errors={errors}
                   renderInput={renderInput}
                   getFieldError={getFieldError}
@@ -427,9 +561,9 @@ const ProOnboarding = () => {
 
               {/* ---------------- Datos Profesionales ---------------- */}
               {step === "professionalData" && (
-                <ProfessionalDataSection 
+                <ProfessionalDataSection
                   inputs={professionalDataInputs}
-                  register={register} 
+                  register={register}
                   errors={errors}
                   renderInput={renderInput}
                   getFieldError={getFieldError}
@@ -438,9 +572,9 @@ const ProOnboarding = () => {
 
               {/* ---------------- Oferta ProAm ---------------- */}
               {step === "proAmOffer" && (
-                <ProAmOfferSection 
+                <ProAmOfferSection
                   inputs={proAmOfferInputs}
-                  register={register} 
+                  register={register}
                   errors={errors}
                   renderInput={renderInput}
                   getFieldError={getFieldError}
@@ -449,9 +583,9 @@ const ProOnboarding = () => {
 
               {/* ---------------- Material Promocional ---------------- */}
               {step === "promotionalMaterial" && (
-                <PromotionalMaterialSection 
+                <PromotionalMaterialSection
                   inputs={promotionalMaterialInputs}
-                  register={register} 
+                  register={register}
                   errors={errors}
                   renderInput={renderInput}
                   getFieldError={getFieldError}
@@ -460,21 +594,26 @@ const ProOnboarding = () => {
 
               {/* ---------------- Contacto y Pago ---------------- */}
               {step === "contactAndPayment" && (
-                <ContactAndPaymentSection 
+                <ContactAndPaymentSection
                   inputs={contactAndPaymentInputs}
-                  register={register} 
+                  register={register}
                   errors={errors}
                   renderInput={renderInput}
                   getFieldError={getFieldError}
                 />
               )}
 
-              <NavigationButtons
-                onBack={handleBack}
-                onNext={handleNext}
-                isFirstStep={isFirstStep}
-                isLastStep={isLastStep}
-              />
+              {/* ---------------- Pantalla de Éxito ---------------- */}
+              {step === "success" && <SuccessSection navigate={navigate} />}
+
+              {step !== "success" && (
+                <NavigationButtons
+                  onBack={handleBack}
+                  onNext={handleNext}
+                  isFirstStep={isFirstStep}
+                  isLastStep={isLastStep}
+                />
+              )}
             </form>
           </div>
         </section>
@@ -496,20 +635,27 @@ type DataSectionProps = {
 
 type PersonalDataSectionProps = DataSectionProps & {
   inputs: InputConfig<ProOnboardingInputs>[];
-  renderInput: ReturnType<typeof useRenderInput<ProOnboardingInputs>>['renderInput'];
+  renderInput: ReturnType<
+    typeof useRenderInput<ProOnboardingInputs>
+  >["renderInput"];
   getFieldError: (fieldId: string) => FieldError | undefined;
 };
 
-const PersonalDataSection = ({ inputs, register, renderInput, getFieldError }: PersonalDataSectionProps) => {
+const PersonalDataSection = ({
+  inputs,
+  register,
+  renderInput,
+  getFieldError,
+}: PersonalDataSectionProps) => {
   const { t } = useTranslation();
-  
+
   // Construir errores simples para los campos de esta sección
   const sectionErrors: Record<string, FieldError> = {};
-  inputs.forEach(input => {
+  inputs.forEach((input) => {
     const error = getFieldError(input.id);
     if (error) sectionErrors[input.id] = error;
   });
-  
+
   return (
     <>
       <h4 className="mb-3">{t("proOnboarding.personalInformation")}</h4>
@@ -526,48 +672,33 @@ const PersonalDataSection = ({ inputs, register, renderInput, getFieldError }: P
 
 type ProfessionalDataSectionProps = DataSectionProps & {
   inputs: InputConfig<ProOnboardingInputs>[];
-  renderInput: ReturnType<typeof useRenderInput<ProOnboardingInputs>>['renderInput'];
+  renderInput: ReturnType<
+    typeof useRenderInput<ProOnboardingInputs>
+  >["renderInput"];
   getFieldError: (fieldId: string) => FieldError | undefined;
 };
 
-const ProfessionalDataSection = ({ inputs, register, renderInput, getFieldError }: ProfessionalDataSectionProps) => {
+const ProfessionalDataSection = ({
+  inputs,
+  register,
+  renderInput,
+  getFieldError,
+}: ProfessionalDataSectionProps) => {
   const { t } = useTranslation();
-  
+
   // Construir errores simples para los campos de esta sección
   const sectionErrors: Record<string, FieldError> = {};
-  inputs.forEach(input => {
+  inputs.forEach((input) => {
     const error = getFieldError(input.id);
     if (error) sectionErrors[input.id] = error;
   });
-  
+
   return (
     <>
       <h4 className="mb-3 mt-4">
         {t("proOnboarding.professionalInformation", "Professional Information")}
       </h4>
       <div className="row">
-        {/* Renderizar sportDiscipline con valor readonly */}
-        <div className="col-md-6 mb-3">
-          <label htmlFor="sportDiscipline" className="form-label">
-            {t("proOnboarding.sportDiscipline.label", "Sport Discipline")}
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="sportDiscipline"
-            defaultValue="Tennis"
-            readOnly
-            {...register("sportDiscipline")}
-          />
-        </div>
-
-        {/* Renderizar todos los campos (incluyendo multiselects) usando renderInput */}
-        {inputs.slice(1).map((input) => (
-          <div key={input.id} className={input.colClass || "col-md-6 mb-3"}>
-            {renderInput({ input, register, errors: sectionErrors })}
-          </div>
-        ))}
-
         {/* playStyle: dos selects juntos (requiere renderizado personalizado) */}
         <div className="col-md-6 mb-3">
           <label className="form-label">
@@ -576,13 +707,18 @@ const ProfessionalDataSection = ({ inputs, register, renderInput, getFieldError 
           <div className="d-flex gap-2">
             <select
               className="form-control"
-              {...register("playStyle.hand", { required: true })}
+              {...register("play_style.hand", { required: true })}
             >
               <option value="">
-                {t("proOnboarding.playStyle.hand.placeholder", "Select hand...")}
+                {t(
+                  "proOnboarding.playStyle.hand.placeholder",
+                  "Select hand..."
+                )}
               </option>
               {Object.entries(
-                t("proOnboarding.playStyle.hand.options", { returnObjects: true }) as Record<string, string>
+                t("proOnboarding.playStyle.hand.options", {
+                  returnObjects: true,
+                }) as Record<string, string>
               ).map(([key, label]) => (
                 <option key={key} value={key}>
                   {label}
@@ -592,13 +728,18 @@ const ProfessionalDataSection = ({ inputs, register, renderInput, getFieldError 
 
             <select
               className="form-control"
-              {...register("playStyle.backhand", { required: true })}
+              {...register("play_style.backhand", { required: true })}
             >
               <option value="">
-                {t("proOnboarding.playStyle.backhand.placeholder", "Select backhand...")}
+                {t(
+                  "proOnboarding.playStyle.backhand.placeholder",
+                  "Select backhand..."
+                )}
               </option>
               {Object.entries(
-                t("proOnboarding.playStyle.backhand.options", { returnObjects: true }) as Record<string, string>
+                t("proOnboarding.playStyle.backhand.options", {
+                  returnObjects: true,
+                }) as Record<string, string>
               ).map(([key, label]) => (
                 <option key={key} value={key}>
                   {label}
@@ -607,6 +748,12 @@ const ProfessionalDataSection = ({ inputs, register, renderInput, getFieldError 
             </select>
           </div>
         </div>
+        {/* Renderizar todos los campos (incluyendo multiselects) usando renderInput */}
+        {inputs.slice(1).map((input) => (
+          <div key={input.id} className={input.colClass || "col-md-6 mb-3"}>
+            {renderInput({ input, register, errors: sectionErrors })}
+          </div>
+        ))}
       </div>
     </>
   );
@@ -614,20 +761,28 @@ const ProfessionalDataSection = ({ inputs, register, renderInput, getFieldError 
 
 type ProAmOfferSectionProps = DataSectionProps & {
   inputs: InputConfig<ProOnboardingInputs>[];
-  renderInput: ReturnType<typeof useRenderInput<ProOnboardingInputs>>['renderInput'];
+  renderInput: ReturnType<
+    typeof useRenderInput<ProOnboardingInputs>
+  >["renderInput"];
   getFieldError: (fieldId: string) => FieldError | undefined;
 };
 
-const ProAmOfferSection = ({ inputs, register, errors, renderInput, getFieldError }: ProAmOfferSectionProps) => {
+const ProAmOfferSection = ({
+  inputs,
+  register,
+  errors,
+  renderInput,
+  getFieldError,
+}: ProAmOfferSectionProps) => {
   const { t } = useTranslation();
-  
+
   // Construir errores simples para los campos de esta sección
   const sectionErrors: Record<string, FieldError> = {};
-  inputs.forEach(input => {
+  inputs.forEach((input) => {
     const error = getFieldError(input.id);
     if (error) sectionErrors[input.id] = error;
   });
-  
+
   return (
     <>
       <h4 className="mb-3 mt-4">
@@ -650,8 +805,11 @@ const ProAmOfferSection = ({ inputs, register, errors, renderInput, getFieldErro
             <input
               type="number"
               className="form-control"
-              placeholder={t("proOnboarding.baseFee.placeholder", "Ingresa la tarifa")}
-              {...register("baseFee", {
+              placeholder={t(
+                "proOnboarding.baseFee.placeholder",
+                "Ingresa la tarifa"
+              )}
+              {...register("base_fee", {
                 required: true,
                 valueAsNumber: true,
                 min: 0,
@@ -669,7 +827,7 @@ const ProAmOfferSection = ({ inputs, register, errors, renderInput, getFieldErro
               <option value="EUR">EUR</option>
             </select>
           </div>
-          {(errors.baseFee || errors.currency) && (
+          {(errors.base_fee || errors.currency) && (
             <span className="form-error">{t("proOnboarding.formError")}</span>
           )}
         </div>
@@ -727,7 +885,10 @@ const ProAmOfferSection = ({ inputs, register, errors, renderInput, getFieldErro
                   id="includeVideoAnalysis"
                   {...register("includes.videoAnalysis")}
                 />
-                <label className="form-check-label" htmlFor="includeVideoAnalysis">
+                <label
+                  className="form-check-label"
+                  htmlFor="includeVideoAnalysis"
+                >
                   {t("proOnboarding.includes.videoAnalysis", "Videoanálisis")}
                 </label>
               </div>
@@ -741,20 +902,27 @@ const ProAmOfferSection = ({ inputs, register, errors, renderInput, getFieldErro
 
 type PromotionalMaterialSectionProps = DataSectionProps & {
   inputs: InputConfig<ProOnboardingInputs>[];
-  renderInput: ReturnType<typeof useRenderInput<ProOnboardingInputs>>['renderInput'];
+  renderInput: ReturnType<
+    typeof useRenderInput<ProOnboardingInputs>
+  >["renderInput"];
   getFieldError: (fieldId: string) => FieldError | undefined;
 };
 
-const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldError }: PromotionalMaterialSectionProps) => {
+const PromotionalMaterialSection = ({
+  inputs,
+  register,
+  renderInput,
+  getFieldError,
+}: PromotionalMaterialSectionProps) => {
   const { t } = useTranslation();
-  
+
   // Construir errores simples para los campos de esta sección
   const sectionErrors: Record<string, FieldError> = {};
-  inputs.forEach(input => {
+  inputs.forEach((input) => {
     const error = getFieldError(input.id);
     if (error) sectionErrors[input.id] = error;
   });
-  
+
   return (
     <>
       <h4 className="mb-3 mt-4">
@@ -771,7 +939,11 @@ const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldErr
         {/* socialLinks: campos anidados (renderizado personalizado) */}
         <div className="col-12 mb-3">
           <label className="form-label">
-            ✅ {t("proOnboarding.socialLinks.label", "Enlaces a redes o sitio web oficial")}
+            ✅{" "}
+            {t(
+              "proOnboarding.socialLinks.label",
+              "Enlaces a redes o sitio web oficial"
+            )}
           </label>
           <div className="row">
             <div className="col-md-6 mb-2">
@@ -780,8 +952,11 @@ const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldErr
                 <input
                   type="url"
                   className="form-control"
-                  placeholder={t("proOnboarding.socialLinks.website.placeholder", "Sitio web oficial")}
-                  {...register("socialLinks.website")}
+                  placeholder={t(
+                    "proOnboarding.socialLinks.website.placeholder",
+                    "Sitio web oficial"
+                  )}
+                  {...register("social_links.website")}
                 />
               </div>
             </div>
@@ -791,8 +966,11 @@ const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldErr
                 <input
                   type="url"
                   className="form-control"
-                  placeholder={t("proOnboarding.socialLinks.instagram.placeholder", "Instagram")}
-                  {...register("socialLinks.instagram")}
+                  placeholder={t(
+                    "proOnboarding.socialLinks.instagram.placeholder",
+                    "Instagram"
+                  )}
+                  {...register("social_links.instagram")}
                 />
               </div>
             </div>
@@ -802,8 +980,11 @@ const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldErr
                 <input
                   type="url"
                   className="form-control"
-                  placeholder={t("proOnboarding.socialLinks.twitter.placeholder", "Twitter/X")}
-                  {...register("socialLinks.twitter")}
+                  placeholder={t(
+                    "proOnboarding.socialLinks.twitter.placeholder",
+                    "Twitter/X"
+                  )}
+                  {...register("social_links.twitter")}
                 />
               </div>
             </div>
@@ -813,8 +994,11 @@ const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldErr
                 <input
                   type="url"
                   className="form-control"
-                  placeholder={t("proOnboarding.socialLinks.linkedin.placeholder", "LinkedIn")}
-                  {...register("socialLinks.linkedin")}
+                  placeholder={t(
+                    "proOnboarding.socialLinks.linkedin.placeholder",
+                    "LinkedIn"
+                  )}
+                  {...register("social_links.linkedin")}
                 />
               </div>
             </div>
@@ -824,8 +1008,11 @@ const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldErr
                 <input
                   type="url"
                   className="form-control"
-                  placeholder={t("proOnboarding.socialLinks.youtube.placeholder", "YouTube")}
-                  {...register("socialLinks.youtube")}
+                  placeholder={t(
+                    "proOnboarding.socialLinks.youtube.placeholder",
+                    "YouTube"
+                  )}
+                  {...register("social_links.youtube")}
                 />
               </div>
             </div>
@@ -838,20 +1025,27 @@ const PromotionalMaterialSection = ({ inputs, register, renderInput, getFieldErr
 
 type ContactAndPaymentSectionProps = DataSectionProps & {
   inputs: InputConfig<ProOnboardingInputs>[];
-  renderInput: ReturnType<typeof useRenderInput<ProOnboardingInputs>>['renderInput'];
+  renderInput: ReturnType<
+    typeof useRenderInput<ProOnboardingInputs>
+  >["renderInput"];
   getFieldError: (fieldId: string) => FieldError | undefined;
 };
 
-const ContactAndPaymentSection = ({ inputs, register, renderInput, getFieldError }: ContactAndPaymentSectionProps) => {
+const ContactAndPaymentSection = ({
+  inputs,
+  register,
+  renderInput,
+  getFieldError,
+}: ContactAndPaymentSectionProps) => {
   const { t } = useTranslation();
-  
+
   // Construir errores simples para los campos de esta sección
   const sectionErrors: Record<string, FieldError> = {};
-  inputs.forEach(input => {
+  inputs.forEach((input) => {
     const error = getFieldError(input.id);
     if (error) sectionErrors[input.id] = error;
   });
-  
+
   return (
     <>
       <h4 className="mb-3 mt-4">
@@ -860,7 +1054,13 @@ const ContactAndPaymentSection = ({ inputs, register, renderInput, getFieldError
       <div className="row">
         {/* Renderizar todos los campos usando renderInput */}
         {inputs.map((input) => (
-          <div key={input.id} className={input.colClass || (input.type === "checkbox" ? "col-12 mb-3" : "col-md-6 mb-3")}>
+          <div
+            key={input.id}
+            className={
+              input.colClass ||
+              (input.type === "checkbox" ? "col-12 mb-3" : "col-md-6 mb-3")
+            }
+          >
             {renderInput({ input, register, errors: sectionErrors })}
           </div>
         ))}
@@ -869,10 +1069,68 @@ const ContactAndPaymentSection = ({ inputs, register, renderInput, getFieldError
   );
 };
 
+const SuccessSection = ({
+  navigate,
+}: {
+  navigate: ReturnType<typeof useNavigate>;
+}) => {
+  const { t } = useTranslation();
+  return (
+    <div
+      className="d-flex align-items-center justify-content-center"
+      style={{ minHeight: "70vh" }}
+    >
+      <div className="text-center py-5">
+        {/* Icono de éxito */}
+        <div className="mb-4">
+          <svg
+            className="mx-auto"
+            width="80"
+            height="80"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ color: "#28a745" }}
+          >
+            <polyline points="20 6 9 17 4 12"></polyline>
+            <circle cx="12" cy="12" r="10" fill="none"></circle>
+          </svg>
+        </div>
+
+        {/* Mensaje de éxito */}
+        <h1 className="mb-3">
+          {t("proOnboarding.successScreen.title", "¡Registro Completado!")}
+        </h1>
+        <p className="lead text-muted mb-4">
+          {t(
+            "proOnboarding.successScreen.message",
+            "Tu perfil profesional ha sido creado exitosamente. Ahora puedes comenzar a ofrecer tus servicios."
+          )}
+        </p>
+
+        {/* Botón para ir al inicio */}
+        <button
+          type="button"
+          className="btn btn-primary btn-lg px-5"
+          onClick={() => navigate("/home")}
+        >
+          {t("proOnboarding.successScreen.button", "Ir al Inicio")}
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const WelcomeSection = () => {
   const { t } = useTranslation();
   return (
-    <div className="text-center py-4">
+    <div
+      className="d-flex align-items-center justify-content-center text-center"
+      style={{ minHeight: "70vh" }}
+    >
       <div className="mb-3">
         <h1 className="display-4 mb-4 text-primary">
           {t("proOnboarding.welcome.title", "¡Bienvenido a ProAm!")}
@@ -893,82 +1151,12 @@ const WelcomeSection = () => {
         </div>
       </div>
 
-      <div className="mb-3">
+      {/* <div className="mb-3">
         <h5 className="mb-3 text-secondary">
           {t("proOnboarding.welcome.selectLanguage", "Selecciona tu idioma preferido")}
         </h5>
         <LanguageSwitcher />
-      </div>
-
-      <div className="row justify-content-center">
-        <div className="col-md-8">
-          <div className="card border-0 shadow-sm">
-            <div className="card-body p-2">
-              <h6 className="card-title text-secondary mb-3">
-                {t("proOnboarding.welcome.stepsTitle", "Pasos a completar:")}
-              </h6>
-              <div className="row text-start">
-                <div className="col-md-6 mb-3">
-                  <div className="d-flex align-items-center">
-                    <div className="me-3">
-                      <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{width: '32px', height: '32px', fontSize: '14px'}}>
-                        1
-                      </div>
-                    </div>
-                    <div>
-                      <small className="fw-semibold">
-                        {t("stepProgress.personalData", "Datos Personales")}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6 mb-3">
-                  <div className="d-flex align-items-center">
-                    <div className="me-3">
-                      <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{width: '32px', height: '32px', fontSize: '14px'}}>
-                        2
-                      </div>
-                    </div>
-                    <div>
-                      <small className="fw-semibold">
-                        {t("stepProgress.professionalData", "Datos Profesionales")}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6 mb-3">
-                  <div className="d-flex align-items-center">
-                    <div className="me-3">
-                      <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{width: '32px', height: '32px', fontSize: '14px'}}>
-                        3
-                      </div>
-                    </div>
-                    <div>
-                      <small className="fw-semibold">
-                        {t("stepProgress.proAmOffer", "Oferta ProAm")}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6 mb-3">
-                  <div className="d-flex align-items-center">
-                    <div className="me-3">
-                      <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{width: '32px', height: '32px', fontSize: '14px'}}>
-                        4
-                      </div>
-                    </div>
-                    <div>
-                      <small className="fw-semibold">
-                        {t("stepProgress.promotionalMaterial", "Material Promocional")}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </div> */}
     </div>
   );
 };

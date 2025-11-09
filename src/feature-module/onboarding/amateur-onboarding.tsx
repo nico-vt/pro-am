@@ -1,29 +1,31 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useSteps } from "../../hooks/useSteps";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import StepProgress from "./step-progress";
-import LanguageSwitcher from "./language-switch";
 import NavigationButtons from "./navigation-buttons";
 import { useRenderInput, type InputConfig } from "./form-utils";
 import { useCountries } from "../../hooks/useCountries";
+import { submitAmateurOnboarding } from "../../core/supabase/client";
+import { toast } from "sonner";
 
 // Tipos divididos por sección
 type PersonalData = {
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   nationality: string;
-  birthDate: string; // formato ISO (YYYY-MM-DD)
+  birth_date: string; // formato ISO (YYYY-MM-DD)
   height: number; // en cm
   city: string;
   country: string;
-  professionalPhoto: FileList | null; // foto profesional o retrato
+  professional_photo: FileList | null; // foto profesional o retrato
 };
 
 type ContactAndPaymentData = {
   email: string;
   phone: string; // Teléfono / WhatsApp
-  paymentAccount: string; // Cuenta de PayPal / Stripe / IBAN
-  imageConsent: boolean; // Consentimiento de uso de imagen
+  payment_account: string; // Cuenta de PayPal / Stripe / IBAN
+  image_consent: boolean; // Consentimiento de uso de imagen
 };
 
 // Tipo unificado para el formulario completo
@@ -31,12 +33,14 @@ export type AmateurOnboardingInputs = PersonalData & ContactAndPaymentData;
 
 const AmateurOnboarding = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { renderInput } = useRenderInput<AmateurOnboardingInputs>();
   const { countryOptions } = useCountries();
   const {
     register,
     handleSubmit,
     trigger,
+    control,
     formState: { errors },
   } = useForm<AmateurOnboardingInputs>({
     shouldUnregister: false,
@@ -44,11 +48,33 @@ const AmateurOnboarding = () => {
     reValidateMode: "onChange",
   });
 
-  const steps = ["welcome", "personalData", "contactAndPayment"] as const;
+  const steps = ["welcome", "personalData", "contactAndPayment", "success"] as const;
   const { step, next, back, isFirstStep, isLastStep } = useSteps({ steps });
 
-  const onSubmit: SubmitHandler<AmateurOnboardingInputs> = (data) =>
-    console.log(data);
+  const onSubmit: SubmitHandler<AmateurOnboardingInputs> = async (data) => {
+    try {
+      await submitAmateurOnboarding(data);
+      toast.success(t("amateurOnboarding.success", "¡Registro exitoso!"));
+      next(); // Avanzar al step de éxito
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      
+      let errorMessage = t("amateurOnboarding.error", "Error al enviar el formulario");
+      
+      if (error instanceof Error) {
+        // Traducir errores comunes de Supabase para mejor UX
+        if (error.message.includes("duplicate key") && error.message.includes("email")) {
+          errorMessage = t("amateurOnboarding.emailDuplicate", "Este correo electrónico ya está registrado");
+        } else if (error.message.includes("duplicate key")) {
+          errorMessage = t("amateurOnboarding.duplicate", "Ya existe un registro con estos datos");
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      toast.error(errorMessage);
+    }
+  };
 
   // Función para hacer scroll hacia arriba
   const scrollToTop = () => {
@@ -60,8 +86,8 @@ const AmateurOnboarding = () => {
 
   // Funciones de navegación con scroll
   const handleNext = async () => {
-    // Si estamos en el último step, hacer submit
-    if (isLastStep) {
+    // Si estamos en contactAndPayment (el último step antes de success), hacer submit
+    if (step === "contactAndPayment") {
       await handleSubmit(onSubmit)();
       return;
     }
@@ -91,21 +117,21 @@ const AmateurOnboarding = () => {
         return [];
       case "personalData":
         return [
-          "firstName",
-          "lastName",
+          "firstname",
+          "lastname",
           "nationality",
-          "birthDate",
+          "birth_date",
           "height",
           "city",
           "country",
-          "professionalPhoto",
+          "professional_photo",
         ];
       case "contactAndPayment":
         return [
           "email",
           "phone",
-          "paymentAccount",
-          "imageConsent",
+          "payment_account",
+          "image_consent",
         ];
       default:
         return [];
@@ -114,7 +140,7 @@ const AmateurOnboarding = () => {
 
   const personalDataInputs: InputConfig<AmateurOnboardingInputs>[] = [
     {
-      id: "firstName",
+      id: "firstname",
       label: "proOnboarding.firstName.label",
       type: "text",
       placeholder: "proOnboarding.firstName.placeholder",
@@ -123,7 +149,7 @@ const AmateurOnboarding = () => {
       colClass: "col-md-6",
     },
     {
-      id: "lastName",
+      id: "lastname",
       label: "proOnboarding.lastName.label",
       type: "text",
       placeholder: "proOnboarding.lastName.placeholder",
@@ -134,14 +160,15 @@ const AmateurOnboarding = () => {
     {
       id: "nationality",
       label: "proOnboarding.nationality.label",
-      type: "select",
+      type: "singleselect",
       placeholder: "proOnboarding.nationality.placeholder",
       required: true,
       colClass: "col-md-6",
       options: countryOptions,
+      control: control,
     },
     {
-      id: "birthDate",
+      id: "birth_date",
       label: "proOnboarding.birthDate.label",
       type: "date",
       required: true,
@@ -168,14 +195,15 @@ const AmateurOnboarding = () => {
     {
       id: "country",
       label: "proOnboarding.country.label",
-      type: "select",
+      type: "singleselect",
       placeholder: "proOnboarding.country.placeholder",
       required: true,
       colClass: "col-md-6",
       options: countryOptions,
+      control: control,
     },
     {
-      id: "professionalPhoto",
+      id: "professional_photo",
       label: "proOnboarding.professionalPhoto.label",
       type: "file",
       accept: "image/*",
@@ -205,9 +233,9 @@ const AmateurOnboarding = () => {
       colClass: "col-md-6",
     },
     {
-      id: "paymentAccount",
+      id: "payment_account",
       label: "amateurOnboarding.paymentAccount.label",
-      type: "select",
+      type: "singleselect",
       placeholder: "amateurOnboarding.paymentAccount.placeholder",
       required: true,
       colClass: "col-12",
@@ -216,9 +244,11 @@ const AmateurOnboarding = () => {
         { value: "stripe", label: "Stripe" },
         { value: "iban", label: "IBAN" },
       ],
+      control: control,
+      isSearchable: false,
     },
     {
-      id: "imageConsent",
+      id: "image_consent",
       label: "amateurOnboarding.imageConsent.label",
       type: "checkbox",
       checkboxLabel: "amateurOnboarding.imageConsent.checkboxLabel",
@@ -232,7 +262,7 @@ const AmateurOnboarding = () => {
     switch (step) {
       case "welcome":
         return (
-          <div className="text-center py-5">
+          <div className="d-flex align-items-center justify-content-center text-center" style={{ minHeight: '70vh' }}>
             <div className="mb-3">
               <h1 className="display-4 mb-4 text-primary">
                 {t("amateurOnboarding.welcome.title", "¡Bienvenido a ProAm!")}
@@ -251,7 +281,7 @@ const AmateurOnboarding = () => {
                   )}
                 </p>
               </div>
-              <div className="mb-3">
+              {/* <div className="mb-3">
                 <h5 className="mb-3 text-secondary">
                   {t(
                     "proOnboarding.welcome.selectLanguage",
@@ -259,7 +289,7 @@ const AmateurOnboarding = () => {
                   )}
                 </h5>
                 <LanguageSwitcher />
-              </div>
+              </div> */}
             </div>
           </div>
         );
@@ -292,6 +322,43 @@ const AmateurOnboarding = () => {
           </div>
         );
 
+      case "success":
+        return (
+          <div className="d-flex align-items-center justify-content-center" style={{ minHeight: '70vh' }}>
+            <div className="text-center py-5">
+              <div className="mb-4">
+                <svg
+                  width="80"
+                  height="80"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-success"
+                >
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+              <h1 className="display-4 mb-4 text-success">
+                {t("amateurOnboarding.successScreen.title", "¡Registro Completado!")}
+              </h1>
+              <p className="lead text-muted mb-4">
+                {t("amateurOnboarding.successScreen.message", "Tu perfil ha sido creado exitosamente. Ahora puedes explorar y reservar experiencias con profesionales.")}
+              </p>
+              <button
+                type="button"
+                className="btn btn-primary btn-lg"
+                onClick={() => navigate("/home")}
+              >
+                {t("amateurOnboarding.successScreen.button", "Ir al Inicio")}
+              </button>
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
@@ -300,26 +367,28 @@ const AmateurOnboarding = () => {
   return (
     <div>
       <div className="main-wrapper contact-us-page">
-        <section className="">
+        <section className="" style={{ minHeight: '100vh' }}>
           <div className="container">
             <form
               className="contact-us position-relative"
               onSubmit={handleSubmit(onSubmit)}
             >
-              {/* Step Progress - Solo mostrar después del step de bienvenida */}
-              {step !== "welcome" && (
+              {/* Step Progress - Solo mostrar después del step de bienvenida y antes de success */}
+              {step !== "welcome" && step !== "success" && (
                 <StepProgress steps={steps} currentStep={step} />
               )}
 
               {/* Renderizar contenido del step actual */}
               {renderStepContent()}
 
-              <NavigationButtons
-                onBack={handleBack}
-                onNext={handleNext}
-                isFirstStep={isFirstStep}
-                isLastStep={isLastStep}
-              />
+              {step !== "success" && (
+                <NavigationButtons
+                  onBack={handleBack}
+                  onNext={handleNext}
+                  isFirstStep={isFirstStep}
+                  isLastStep={isLastStep}
+                />
+              )}
             </form>
           </div>
         </section>
