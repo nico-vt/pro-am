@@ -1,5 +1,6 @@
 import { useForm, type SubmitHandler, type FieldError } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import LanguageSwitcher from "./language-switch";
 import StepProgress from "./step-progress";
 import { useSteps } from "../../hooks/useSteps";
@@ -62,6 +63,7 @@ export type ProOnboardingInputs = {
 
 const ProOnboarding = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const { renderInput } = useRenderInput<ProOnboardingInputs>();
   const { countryOptions } = useCountries();
   const {
@@ -75,7 +77,7 @@ const ProOnboarding = () => {
     mode: "onChange",
     reValidateMode: "onChange"
   });
-  const steps = ["welcome", "personalData", "professionalData", "proAmOffer", "promotionalMaterial", "contactAndPayment"] as const;
+  const steps = ["welcome", "personalData", "professionalData", "proAmOffer", "promotionalMaterial", "contactAndPayment", "success"] as const;
   const { step, next, back, isFirstStep, isLastStep } = useSteps({ steps });
 
   // Helper para extraer el error simple de campos anidados
@@ -93,6 +95,7 @@ const ProOnboarding = () => {
     try {
       await submitProfessionalOnboarding(data);
       toast.success(t("proOnboarding.success", "¡Registro exitoso!"));
+      next(); // Avanzar al step de éxito
     } catch (error) {
       console.error("Error submitting form:", error);
       
@@ -366,8 +369,8 @@ const ProOnboarding = () => {
 
   // Funciones de navegación con scroll y validación
   const handleNext = async () => {
-    // Si estamos en el último step, hacer submit
-    if (isLastStep) {
+    // Si estamos en contactAndPayment (el último step antes de success), hacer submit
+    if (step === "contactAndPayment") {
       await handleSubmit(onSubmit)();
       return;
     }
@@ -468,12 +471,19 @@ const ProOnboarding = () => {
                 />
               )}
 
-              <NavigationButtons
-                onBack={handleBack}
-                onNext={handleNext}
-                isFirstStep={isFirstStep}
-                isLastStep={isLastStep}
-              />
+              {/* ---------------- Pantalla de Éxito ---------------- */}
+              {step === "success" && (
+                <SuccessSection navigate={navigate} />
+              )}
+
+              {step !== "success" && (
+                <NavigationButtons
+                  onBack={handleBack}
+                  onNext={handleNext}
+                  isFirstStep={isFirstStep}
+                  isLastStep={isLastStep}
+                />
+              )}
             </form>
           </div>
         </section>
@@ -852,6 +862,56 @@ const ContactAndPaymentSection = ({ inputs, register, renderInput, getFieldError
         ))}
       </div>
     </>
+  );
+};
+
+const SuccessSection = ({ navigate }: { navigate: ReturnType<typeof useNavigate> }) => {
+  const { t } = useTranslation();
+  return (
+    <section className="" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center' }}>
+      <div className="container">
+        <div className="contact-us position-relative text-center py-5">
+          {/* Icono de éxito */}
+          <div className="mb-4">
+            <svg
+              className="mx-auto"
+              width="80"
+              height="80"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ color: '#28a745' }}
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+              <circle cx="12" cy="12" r="10" fill="none"></circle>
+            </svg>
+          </div>
+
+          {/* Mensaje de éxito */}
+          <h1 className="mb-3">
+            {t("proOnboarding.successScreen.title", "¡Registro Completado!")}
+          </h1>
+          <p className="lead text-muted mb-4">
+            {t(
+              "proOnboarding.successScreen.message",
+              "Tu perfil profesional ha sido creado exitosamente. Ahora puedes comenzar a ofrecer tus servicios."
+            )}
+          </p>
+
+          {/* Botón para ir al inicio */}
+          <button
+            type="button"
+            className="btn btn-primary btn-lg px-5"
+            onClick={() => navigate("/home")}
+          >
+            {t("proOnboarding.successScreen.button", "Ir al Inicio")}
+          </button>
+        </div>
+      </div>
+    </section>
   );
 };
 
