@@ -38,6 +38,7 @@ const AmateurOnboarding = () => {
     register,
     handleSubmit,
     trigger,
+    control,
     formState: { errors },
   } = useForm<AmateurOnboardingInputs>({
     shouldUnregister: false,
@@ -142,11 +143,12 @@ const AmateurOnboarding = () => {
     {
       id: "nationality",
       label: "proOnboarding.nationality.label",
-      type: "select",
+      type: "singleselect",
       placeholder: "proOnboarding.nationality.placeholder",
       required: true,
       colClass: "col-md-6",
       options: countryOptions,
+      control: control,
     },
     {
       id: "birth_date",
@@ -176,11 +178,12 @@ const AmateurOnboarding = () => {
     {
       id: "country",
       label: "proOnboarding.country.label",
-      type: "select",
+      type: "singleselect",
       placeholder: "proOnboarding.country.placeholder",
       required: true,
       colClass: "col-md-6",
       options: countryOptions,
+      control: control,
     },
     {
       id: "professional_photo",
@@ -215,7 +218,7 @@ const AmateurOnboarding = () => {
     {
       id: "payment_account",
       label: "amateurOnboarding.paymentAccount.label",
-      type: "select",
+      type: "singleselect",
       placeholder: "amateurOnboarding.paymentAccount.placeholder",
       required: true,
       colClass: "col-12",
@@ -224,6 +227,8 @@ const AmateurOnboarding = () => {
         { value: "stripe", label: "Stripe" },
         { value: "iban", label: "IBAN" },
       ],
+      control: control,
+      isSearchable: false,
     },
     {
       id: "image_consent",
