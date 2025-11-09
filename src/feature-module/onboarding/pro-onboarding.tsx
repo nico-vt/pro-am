@@ -240,7 +240,7 @@ const ProOnboarding = () => {
         "proOnboarding.languages.placeholder",
         "Select languages..."
       ),
-      required: false,
+      required: true,
       options: [
         { value: "English", label: "English" },
         { value: "Spanish", label: "Spanish" },
@@ -266,7 +266,7 @@ const ProOnboarding = () => {
         "proOnboarding.certifications.placeholder",
         "Select certifications..."
       ),
-      required: false,
+      required: true,
       options: [
         { value: "ITF", label: "ITF" },
         { value: "PTR", label: "PTR" },
@@ -373,7 +373,7 @@ const ProOnboarding = () => {
         "proOnboarding.introVideo.placeholder",
         "youtube.com/watch?v=... o youtu.be/..."
       ),
-      required: false,
+      required: true,
       helperText: t(
         "proOnboarding.introVideo.helper",
         "Link a YouTube o Vimeo (opcional)"
