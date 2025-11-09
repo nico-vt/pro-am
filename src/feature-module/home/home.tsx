@@ -8,10 +8,12 @@ import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
 import { all_routes } from "../router/all_routes";
 // import { Dropdown } from "primereact/dropdown";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
 
   const routes=all_routes;
+  const { t } = useTranslation("home");
   // const [selectedTimeframe, setSelectedTimeframe] = useState();
   // const [selectedSort, setSelectedSort] = useState();
 
@@ -82,14 +84,8 @@ const Home = () => {
             <div className="row align-items-center w-100">
               <div className="col-lg-8 col-md-10">
                 <div className="section-search">
-                  <h1>
-                    Hacé que tu talento juegue a tu favor.
-                  </h1>
-                  <p className="sub-info">
-                    Una plataforma que te vincula directamente con amateurs y
-                    aficionados que pagarán por vivir la experiencia real de
-                    jugar, entrenar o compartir cancha contigo.
-                  </p>
+                  <h1>{t('hero.title')}</h1>
+                  <p className="sub-info">{t('hero.subtitle')}</p>
                   {/* <div className="search-box">
                     <form action={routes.coachesGrid}>
                       <div className="search-input line">
@@ -140,17 +136,17 @@ const Home = () => {
                       className="btn btn-primary"
                       style={{ backgroundColor: '#a9a51d', borderColor: '#a9a51d' }}
                     >
-                      Soy amateur
+                      {t('buttons.amateur')}
                       <span className="lh-1">
                         <i className="feather-arrow-right-circle ms-2" />
                       </span>
                     </Link>
-                    <Link 
-                      to={routes.proOnboarding} 
+                    <Link
+                      to={routes.proOnboarding}
                       className="btn btn-secondary"
                       style={{ backgroundColor: '#3ab9ec', borderColor: '#3ab9ec' }}
                     >
-                      Soy profesional
+                      {t('buttons.pro')}
                       <span className="lh-1">
                         <i className="feather-arrow-right-circle ms-2" />
                       </span>
@@ -158,7 +154,6 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              {/* La columna de la imagen se puede quedar comentada o eliminarla */}
             </div>
           </div>
         </div>
@@ -170,23 +165,17 @@ const Home = () => {
           <div className="row">
             <div className="col-lg-12 d-flex align-items-center">
               <div className="start-your-journey aos" data-aos="fade-up">
-                <h2>
-                  ¿Qué es ProAmLinks?
-                </h2>
-                <p className="mb-2">
-                Pro Am Links es una red internacional que une profesionales de varios deportes, con amateurs interesados en experiencias reales de juego, de entrenamiento, etc.
-                </p>
-                <p>
-                Si sos profesional y buscas una nueva vía para valorizar tu experiencia, ampliar tu red de contactos y generar ingresos adicionales, eso es Pro Am Links. 
-                </p>
+                <h2>{t('about.title')}</h2>
+                <p className="mb-2">{t('about.p1')}</p>
+                <p>{t('about.p2')}</p>
                 <div className="mt-4">
-                  <h4>¿Cómo funciona?</h4>
-                  <p>Te registras con tu perfil profesional, definís tus condiciones y disponibilidad, y nosotros conectamos tu propuesta con aficionados dispuestos a pagar por compartir la experiencia contigo. La gestión, los pagos y la comunicación se realizan desde una sola plataforma, de manera segura y transparente. Nadie te va a contactar hasta que haya pagado el fee que tú mismo estableciste. De cada transacción Pro Am Links retiene solamente el 20% y el restante 80%, es tuyo.</p>
+                  <h4>{t('how.title')}</h4>
+                  <p>{t('how.p1')}</p>
                 </div>
                 <div className="mt-4">
-                  <h4>¿Por qué unirte ahora?</h4>
-                  <p>Estamos iniciando nuestra etapa de expansión en Latinoamérica, y el Uruguay Open es la primera oportunidad para que los jugadores profesionales se integren desde el comienzo. Los primeros perfiles seleccionados, obtendrán mayor visibilidad en los países dónde decidan jugar.</p>
-                  <p>Si sos profesional o formas parte del circuito, registrate escaneando el código QR y completá tu ficha. Nuestro equipo revisará tu perfil y te contactará para integrarte al programa inicial de profesionales de Pro Am Links.</p>
+                  <h4>{t('why.title')}</h4>
+                  <p>{t('why.p1')}</p>
+                  <p>{t('why.p2')}</p>
                 </div>
               </div>
             </div>
