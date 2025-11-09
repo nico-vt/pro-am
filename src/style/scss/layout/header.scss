@@ -47,7 +47,9 @@
         margin-bottom: 0;
         @include mixins.respond-below(custom991) {
             height: 65px;
-            @include mixins.margin-padding(null, 0);
+            /* ----- MODIFICACIÓN 1 ----- */
+            /* Restaurado el padding horizontal para alinear logo y selector en móvil */
+            @include mixins.margin-padding(null, 0 15px 0 15px);
         }
         .main-nav {
             > li {
@@ -181,7 +183,9 @@
             justify-content: space-evenly;
         } 
         @include mixins.respond-below(custom575) {
-            width: 100%;
+            /* ----- MODIFICACIÓN 2 ----- */
+            /* El 100% rompía el flex del header-nav y tiraba el selector para abajo */
+            width: auto; 
         }       
     }
     .main-menu-wrapper {
