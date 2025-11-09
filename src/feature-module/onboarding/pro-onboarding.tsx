@@ -7,6 +7,7 @@ import NavigationButtons from "./navigation-buttons";
 import { useRenderInput, type InputConfig } from "./form-utils";
 import { useCountries } from "../../hooks/useCountries";
 import { submitProfessionalOnboarding } from "../../core/supabase/client";
+import { toast } from "sonner";
 
 export type ProOnboardingInputs = {
   //  Datos personales
@@ -91,10 +92,24 @@ const ProOnboarding = () => {
   const onSubmit: SubmitHandler<ProOnboardingInputs> = async (data) => {
     try {
       await submitProfessionalOnboarding(data);
-      alert(t("proOnboarding.success", "¡Registro exitoso!"));
+      toast.success(t("proOnboarding.success", "¡Registro exitoso!"));
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert(t("proOnboarding.error", "Error al enviar el formulario. Por favor intenta nuevamente."));
+      
+      let errorMessage = t("proOnboarding.error", "Error al enviar el formulario");
+      
+      if (error instanceof Error) {
+        // Traducir errores comunes de Supabase a mensajes amigables
+        if (error.message.includes("duplicate key") && error.message.includes("email")) {
+          errorMessage = t("proOnboarding.emailDuplicate", "Este correo electrónico ya está registrado");
+        } else if (error.message.includes("duplicate key")) {
+          errorMessage = t("proOnboarding.duplicate", "Ya existe un registro con estos datos");
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      toast.error(errorMessage);
     }
   };
 

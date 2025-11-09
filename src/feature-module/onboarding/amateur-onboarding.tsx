@@ -7,6 +7,7 @@ import NavigationButtons from "./navigation-buttons";
 import { useRenderInput, type InputConfig } from "./form-utils";
 import { useCountries } from "../../hooks/useCountries";
 import { submitAmateurOnboarding } from "../../core/supabase/client";
+import { toast } from "sonner";
 
 // Tipos divididos por sección
 type PersonalData = {
@@ -52,10 +53,24 @@ const AmateurOnboarding = () => {
   const onSubmit: SubmitHandler<AmateurOnboardingInputs> = async (data) => {
     try {
       await submitAmateurOnboarding(data);
-      alert(t("amateurOnboarding.success", "¡Registro exitoso!"));
+      toast.success(t("amateurOnboarding.success", "¡Registro exitoso!"));
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert(t("amateurOnboarding.error", "Error al enviar el formulario. Por favor intenta nuevamente."));
+      
+      let errorMessage = t("amateurOnboarding.error", "Error al enviar el formulario");
+      
+      if (error instanceof Error) {
+        // Traducir errores comunes de Supabase para mejor UX
+        if (error.message.includes("duplicate key") && error.message.includes("email")) {
+          errorMessage = t("amateurOnboarding.emailDuplicate", "Este correo electrónico ya está registrado");
+        } else if (error.message.includes("duplicate key")) {
+          errorMessage = t("amateurOnboarding.duplicate", "Ya existe un registro con estos datos");
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      toast.error(errorMessage);
     }
   };
 

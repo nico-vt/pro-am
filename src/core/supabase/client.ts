@@ -31,7 +31,10 @@ async function postToSupabase<T>(table: string, data: T) {
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: response.statusText }));
     console.error('[postToSupabase] Error response:', error);
-    throw new Error(error.message || 'Failed to submit form');
+    
+    // Extraer el mensaje de error más específico de Supabase
+    const errorMessage = error.message || error.hint || error.details || 'Failed to submit form';
+    throw new Error(errorMessage);
   }
 
   console.log('[postToSupabase] Success!');
