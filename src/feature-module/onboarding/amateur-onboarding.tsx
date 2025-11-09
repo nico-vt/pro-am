@@ -18,7 +18,6 @@ type PersonalData = {
   height: number; // en cm
   city: string;
   country: string;
-  professional_photo: FileList | null; // foto profesional o retrato
 };
 
 type ContactAndPaymentData = {
@@ -124,7 +123,6 @@ const AmateurOnboarding = () => {
           "height",
           "city",
           "country",
-          "professional_photo",
         ];
       case "contactAndPayment":
         return [
@@ -201,15 +199,6 @@ const AmateurOnboarding = () => {
       colClass: "col-md-6",
       options: countryOptions,
       control: control,
-    },
-    {
-      id: "professional_photo",
-      label: "proOnboarding.professionalPhoto.label",
-      type: "file",
-      accept: "image/*",
-      helperText: "proOnboarding.professionalPhoto.helper",
-      required: true,
-      colClass: "col-12",
     },
   ];
 
