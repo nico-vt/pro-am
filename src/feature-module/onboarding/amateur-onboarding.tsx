@@ -6,24 +6,25 @@ import LanguageSwitcher from "./language-switch";
 import NavigationButtons from "./navigation-buttons";
 import { useRenderInput, type InputConfig } from "./form-utils";
 import { useCountries } from "../../hooks/useCountries";
+import { submitAmateurOnboarding } from "../../core/supabase/client";
 
 // Tipos divididos por sección
 type PersonalData = {
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   nationality: string;
-  birthDate: string; // formato ISO (YYYY-MM-DD)
+  birth_date: string; // formato ISO (YYYY-MM-DD)
   height: number; // en cm
   city: string;
   country: string;
-  professionalPhoto: FileList | null; // foto profesional o retrato
+  professional_photo: FileList | null; // foto profesional o retrato
 };
 
 type ContactAndPaymentData = {
   email: string;
   phone: string; // Teléfono / WhatsApp
-  paymentAccount: string; // Cuenta de PayPal / Stripe / IBAN
-  imageConsent: boolean; // Consentimiento de uso de imagen
+  payment_account: string; // Cuenta de PayPal / Stripe / IBAN
+  image_consent: boolean; // Consentimiento de uso de imagen
 };
 
 // Tipo unificado para el formulario completo
@@ -47,8 +48,15 @@ const AmateurOnboarding = () => {
   const steps = ["welcome", "personalData", "contactAndPayment"] as const;
   const { step, next, back, isFirstStep, isLastStep } = useSteps({ steps });
 
-  const onSubmit: SubmitHandler<AmateurOnboardingInputs> = (data) =>
-    console.log(data);
+  const onSubmit: SubmitHandler<AmateurOnboardingInputs> = async (data) => {
+    try {
+      await submitAmateurOnboarding(data);
+      alert(t("amateurOnboarding.success", "¡Registro exitoso!"));
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert(t("amateurOnboarding.error", "Error al enviar el formulario. Por favor intenta nuevamente."));
+    }
+  };
 
   // Función para hacer scroll hacia arriba
   const scrollToTop = () => {
@@ -91,21 +99,21 @@ const AmateurOnboarding = () => {
         return [];
       case "personalData":
         return [
-          "firstName",
-          "lastName",
+          "firstname",
+          "lastname",
           "nationality",
-          "birthDate",
+          "birth_date",
           "height",
           "city",
           "country",
-          "professionalPhoto",
+          "professional_photo",
         ];
       case "contactAndPayment":
         return [
           "email",
           "phone",
-          "paymentAccount",
-          "imageConsent",
+          "payment_account",
+          "image_consent",
         ];
       default:
         return [];
@@ -114,7 +122,7 @@ const AmateurOnboarding = () => {
 
   const personalDataInputs: InputConfig<AmateurOnboardingInputs>[] = [
     {
-      id: "firstName",
+      id: "firstname",
       label: "proOnboarding.firstName.label",
       type: "text",
       placeholder: "proOnboarding.firstName.placeholder",
@@ -123,7 +131,7 @@ const AmateurOnboarding = () => {
       colClass: "col-md-6",
     },
     {
-      id: "lastName",
+      id: "lastname",
       label: "proOnboarding.lastName.label",
       type: "text",
       placeholder: "proOnboarding.lastName.placeholder",
@@ -141,7 +149,7 @@ const AmateurOnboarding = () => {
       options: countryOptions,
     },
     {
-      id: "birthDate",
+      id: "birth_date",
       label: "proOnboarding.birthDate.label",
       type: "date",
       required: true,
@@ -175,7 +183,7 @@ const AmateurOnboarding = () => {
       options: countryOptions,
     },
     {
-      id: "professionalPhoto",
+      id: "professional_photo",
       label: "proOnboarding.professionalPhoto.label",
       type: "file",
       accept: "image/*",
@@ -205,7 +213,7 @@ const AmateurOnboarding = () => {
       colClass: "col-md-6",
     },
     {
-      id: "paymentAccount",
+      id: "payment_account",
       label: "amateurOnboarding.paymentAccount.label",
       type: "select",
       placeholder: "amateurOnboarding.paymentAccount.placeholder",
@@ -218,7 +226,7 @@ const AmateurOnboarding = () => {
       ],
     },
     {
-      id: "imageConsent",
+      id: "image_consent",
       label: "amateurOnboarding.imageConsent.label",
       type: "checkbox",
       checkboxLabel: "amateurOnboarding.imageConsent.checkboxLabel",
