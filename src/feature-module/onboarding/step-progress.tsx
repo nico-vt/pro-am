@@ -27,8 +27,8 @@ const StepProgress = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  // Filter out 'welcome' step from display
-  const visibleSteps = steps.filter(step => step !== 'welcome');
+  // Filter out 'welcome' and 'success' steps from display
+  const visibleSteps = steps.filter(step => step !== 'welcome' && step !== 'success');
   
   const getCurrentStepIndex = () => {
     return visibleSteps.findIndex(step => step === currentStep);
@@ -70,8 +70,8 @@ const StepProgress = ({
   const spacing = getSpacing();
   const circleRadius = getCircleRadius();
 
-  // Don't render if current step is 'welcome'
-  if (currentStep === 'welcome') {
+  // Don't render if current step is 'welcome' or 'success'
+  if (currentStep === 'welcome' || currentStep === 'success') {
     return null;
   }
 
