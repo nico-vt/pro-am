@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import ImageWithBasePath from "../../core/data/img/ImageWithBasePath";
+// import ImageWithBasePath from "../../core/data/img/ImageWithBasePath";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
+// import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import { all_routes } from "../router/all_routes";
 // import { Dropdown } from "primereact/dropdown";
@@ -23,30 +23,30 @@ const Home = () => {
   // const sortOptions = [{ name: "German" }, { name: "Russian" }, { name: "France" }, { name: "UK" }, { name: "Colombia" }];
 
 
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-  };
+  // const settings = {
+  //   dots: false,
+  //   infinite: true,
+  //   speed: 500,
+  //   slidesToShow: 3,
+  //   slidesToScroll: 1,
+  // };
 
-  const images = {
-    dots: false,
-    infinite: true,
-    arrows: false,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-  };
+  // const images = {
+  //   dots: false,
+  //   infinite: true,
+  //   arrows: false,
+  //   speed: 500,
+  //   slidesToShow: 5,
+  //   slidesToScroll: 1,
+  // };
 
-  const options = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-  };
+  // const options = {
+  //   dots: false,
+  //   infinite: true,
+  //   speed: 500,
+  //   slidesToShow: 4,
+  //   slidesToScroll: 1,
+  // };
 
   useEffect(() => {
     AOS.init({ duration: 1200, once: true });
@@ -164,7 +164,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Journey */}
+      {/* ¿Qué es ProAmLinks? */}
       <section className="section journey-section">
         <div className="container">
           <div className="row">
@@ -193,10 +193,9 @@ const Home = () => {
           </div>
         </div>
       </section>
-      {/* /Journey */}
 
 
-      <section className="section work-section">
+      {/* <section className="section work-section">
         <div className="work-cock-img">
           <ImageWithBasePath src="assets/img/icons/work-cock.svg" alt="Icon" />
         </div>
@@ -289,10 +288,10 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Rental Deals */}
-      <section className="section featured-venues">
+      {/* <section className="section featured-venues">
         <div className="container">
           <div className="section-heading aos" data-aos="fade-up">
             <h2>
@@ -307,7 +306,6 @@ const Home = () => {
             <div className="featured-slider-group ">
               <div className="owl-carousel featured-venues-slider owl-theme">
                 <Slider {...settings}>
-                  {/* Featured Item */}
                   <div className="featured-venues-item aos" data-aos="fade-up">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -383,8 +381,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Featured Item */}
-                  {/* Featured Item */}
                   <div className="featured-venues-item aos" data-aos="fade-up">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -461,8 +457,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Featured Item */}
-                  {/* Featured Item */}
                   <div className="featured-venues-item aos" data-aos="fade-up">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -538,8 +532,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Featured Item */}
-                  {/* Featured Item */}
                   <div className="featured-venues-item aos" data-aos="fade-up">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -616,12 +608,10 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Featured Item */}
                 </Slider>
               </div>
             </div>
           </div>
-          {/* View More */}
           <div className="view-all text-center aos" data-aos="fade-up">
             <Link
               to={routes.listingGrid}
@@ -633,13 +623,12 @@ const Home = () => {
               </span>
             </Link>
           </div>
-          {/* View More */}
         </div>
-      </section>
+      </section> */}
       {/* /Rental Deals */}
 
       {/* Services */}
-      <section className="section service-section">
+      {/* <section className="section service-section">
         <div className="work-cock-img">
           <ImageWithBasePath src="assets/img/icons/work-cock.svg" alt="Service" />
         </div>
@@ -743,11 +732,11 @@ const Home = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
       {/* /Services */}
 
       {/* Convenient */}
-      <section className="section convenient-section">
+      {/* <section className="section convenient-section">
         <div className="cock-img">
           <div className="cock-img-one">
             <ImageWithBasePath src="assets/img/icons/cock-01.svg" alt="Icon" />
@@ -788,11 +777,11 @@ const Home = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </section> */}
       {/* /Convenient */}
 
       {/* Featured Coaches */}
-      <section className="section featured-section">
+      {/* <section className="section featured-section">
         <div className="container">
           <div className="section-heading aos" data-aos="fade-up">
             <h2>
@@ -807,7 +796,7 @@ const Home = () => {
             <div className="featured-slider-group aos" data-aos="fade-up">
               <div className="owl-carousel featured-coache-slider owl-theme">
                 <Slider {...options}>
-                  {/* Featured Item */}
+                   
                   <div className="featured-venues-item">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -845,8 +834,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Featured Item */}
-                  {/* Featured Item */}
                   <div className="featured-venues-item">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -884,8 +871,7 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Featured Item */}
-                  {/* Featured Item */}
+                   
                   <div className="featured-venues-item">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -923,8 +909,7 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Featured Item */}
-                  {/* Featured Item */}
+                   
                   <div className="featured-venues-item">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -962,8 +947,7 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Featured Item */}
-                  {/* Featured Item */}
+                   
                   <div className="featured-venues-item">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -1001,7 +985,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Featured Item */}
                 </Slider>
               </div>
             </div>
@@ -1018,11 +1001,9 @@ const Home = () => {
             </Link>
           </div>
         </div>
-      </section>
-      {/* /Featured Coaches */}
+      </section> */}
 
-      {/* Group Coaching */}
-      <section className="section group-coaching">
+      {/* <section className="section group-coaching">
         <div className="container">
           <div className="section-heading aos" data-aos="fade-up">
             <h2>
@@ -1157,11 +1138,11 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       {/* Group Coaching */}
 
       {/* Earn Money */}
-      <section className="section earn-money">
+      {/* <section className="section earn-money">
         <div className="cock-img cock-position">
           <div className="cock-img-one ">
             <ImageWithBasePath src="assets/img/icons/cock-01.svg" alt="Icon" />
@@ -1295,11 +1276,11 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       {/* /Earn Money */}
 
        {/* Courts Near */}
-       <section className="section court-near">
+       {/* <section className="section court-near">
         <div className="container">
           <div className="section-heading aos" data-aos="fade-up">
             <h2>
@@ -1314,7 +1295,6 @@ const Home = () => {
             <div className="featured-slider-group aos" data-aos="fade-up">
               <div className="owl-carousel featured-venues-slider owl-theme">
                 <Slider {...options}>
-                  {/* Courts Item */}
                   <div className="featured-venues-item court-near-item">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -1359,8 +1339,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Courts Item */}
-                  {/* Courts Item */}
                   <div className="featured-venues-item court-near-item">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -1405,8 +1383,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Courts Item */}
-                  {/* Courts Item */}
                   <div className="featured-venues-item court-near-item">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -1451,8 +1427,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Courts Item */}
-                  {/* Courts Item */}
                   <div className="featured-venues-item court-near-item">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -1497,12 +1471,10 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Courts Item */}
                 </Slider>
               </div>
             </div>
           </div>
-          {/* View More */}
           <div className="view-all text-center aos" data-aos="fade-up">
             <Link
               to={routes.listingGrid}
@@ -1514,13 +1486,11 @@ const Home = () => {
               </span>
             </Link>
           </div>
-          {/* View More */}
         </div>
-      </section>
-      {/* /Courts Near */}
+      </section> */}
 
       {/* Testimonials */}
-      <section className="section our-testimonials">
+      {/* <section className="section our-testimonials">
         <div className="container">
           <div className="section-heading aos" data-aos="fade-up">
             <h2>
@@ -1535,7 +1505,6 @@ const Home = () => {
             <div className="featured-slider-group aos" data-aos="fade-up">
               <div className="owl-carousel testimonial-slide featured-venues-slider owl-theme">
                 <Slider {...settings}>
-                  {/* Testimonials Item */}
                   <div className="testimonial-group">
                     <div className="testimonial-review">
                       <div className="rating-point">
@@ -1573,8 +1542,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Testimonials Item */}
-                  {/* Testimonials Item */}
                   <div className="testimonial-group">
                     <div className="testimonial-review">
                       <div className="rating-point">
@@ -1613,8 +1580,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Testimonials Item */}
-                  {/* Testimonials Item */}
                   <div className="testimonial-group">
                     <div className="testimonial-review">
                       <div className="rating-point">
@@ -1652,8 +1617,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Testimonials Item */}
-                  {/* Testimonials Item */}
                   <div className="testimonial-group">
                     <div className="testimonial-review">
                       <div className="rating-point">
@@ -1692,11 +1655,9 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /Testimonials Item */}
                 </Slider>
               </div>
             </div>
-            {/* Testimonials Slide */}
             <div className="brand-slider-group aos" data-aos="fade-up">
               <div className="owl-carousel testimonial-brand-slider owl-theme">
                 <Slider {...images}>
@@ -1724,14 +1685,13 @@ const Home = () => {
                 </Slider>
               </div>
             </div>
-            {/* /Testimonials Slide */}
           </div>
         </div>
-      </section>
+      </section> */}
       {/* /Testimonials */}
 
       {/* Featured Plans */}
-      <section className="section featured-plan">
+      {/* <section className="section featured-plan">
         <div className="work-img ">
           <div className="work-img-right">
             <ImageWithBasePath src="assets/img/bg/work-bg.png" alt="Icon" />
@@ -1761,7 +1721,6 @@ const Home = () => {
           <div className="price-wrap aos" data-aos="fade-up">
             <div className="row justify-content-center">
               <div className="col-lg-4 d-flex col-md-6">
-                {/* Price Card */}
                 <div className="price-card flex-fill ">
                   <div className="price-head">
                     <ImageWithBasePath src="assets/img/icons/price-01.svg" alt="Price" />
@@ -1815,10 +1774,8 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-                {/* /Price Card */}
               </div>
               <div className="col-lg-4 d-flex col-md-6">
-                {/* Price Card */}
                 <div className="price-card flex-fill">
                   <div className="price-head expert-price">
                     <ImageWithBasePath src="assets/img/icons/price-02.svg" alt="Price" />
@@ -1873,10 +1830,8 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-                {/* /Price Card */}
               </div>
               <div className="col-lg-4 d-flex col-md-6">
-                {/* Price Card */}
                 <div className="price-card flex-fill">
                   <div className="price-head">
                     <ImageWithBasePath src="assets/img/icons/price-03.svg" alt="Price" />
@@ -1930,15 +1885,14 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-                {/* /Price Card */}
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       {/* /Featured Plans */}
       {/* Latest News */}
-      <section className="section featured-venues latest-news">
+      {/* <section className="section featured-venues latest-news">
         <div className="container">
           <div className="section-heading aos" data-aos="fade-up">
             <h2>
@@ -1954,7 +1908,6 @@ const Home = () => {
             <div className="featured-slider-group ">
               <div className="owl-carousel featured-venues-slider owl-theme">
                 <Slider {...settings}>
-                  {/* News */}
                   <div className="featured-venues-item aos" data-aos="fade-up">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -2016,8 +1969,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /News */}
-                  {/* News */}
                   <div className="featured-venues-item aos" data-aos="fade-up">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -2079,8 +2030,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /News */}
-                  {/* News */}
                   <div className="featured-venues-item aos" data-aos="fade-up">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -2142,8 +2091,6 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /News */}
-                  {/* News */}
                   <div className="featured-venues-item aos" data-aos="fade-up">
                     <div className="listing-item mb-0">
                       <div className="listing-img">
@@ -2205,12 +2152,10 @@ const Home = () => {
                       </div>
                     </div>
                   </div>
-                  {/* /News */}
                 </Slider>
               </div>
             </div>
           </div>
-          {/* View More */}
           <div className="view-all text-center aos" data-aos="fade-up">
             <Link
               to={routes.blogGrid}
@@ -2222,12 +2167,11 @@ const Home = () => {
               </span>
             </Link>
           </div>
-          {/* View More */}
         </div>
-      </section>
+      </section> */}
       {/* /Latest News */}
       {/* Newsletter */}
-      <section className="section newsletter-sport">
+      {/* <section className="section newsletter-sport">
         <div className="container">
           <div className="row">
             <div className="col-sm-12">
@@ -2270,7 +2214,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       {/* /Newsletter */}
 
 </>
