@@ -310,20 +310,37 @@
     .btn-primary {
         transition: background-color 0.3s ease, border-color 0.3s ease;
         &:hover {
-            background: #0a5c47; // Un verde más oscuro y alineado al primario
-            border-color: #0a5c47;
+            background-color: #8a8617 !important;
+            border-color: #8a8617 !important;
         }
     }
 
     .btn-secondary {
         transition: background-color 0.3s ease, border-color 0.3s ease;
         &:hover {
-            background: #151c2a; // Un azul/gris más oscuro que el secundario
-            border-color: #151c2a;
+            background-color: #2f96c3 !important;
+            border-color: #2f96c3 !important;
         }
     }
 }
 
+.header-trans {
+    .main-nav > li > a {
+        color: colors.$white;
+    }
+    .main-nav > li.active > a {
+        color: #a9a51d;
+    }
+    .main-nav > li:hover > a {
+        color: #a9a51d;
+    }
+    .header-navbar-rht .log-register a {
+        color: colors.$white;
+        &:hover {
+            color: #a9a51d;
+        }
+    }
+}
 
 @-webkit-keyframes fly {
     0% {

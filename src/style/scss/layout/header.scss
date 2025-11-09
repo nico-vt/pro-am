@@ -47,7 +47,9 @@
         margin-bottom: 0;
         @include mixins.respond-below(custom991) {
             height: 65px;
-            @include mixins.margin-padding(null, 0);
+            /* ----- MODIFICACIÓN 1 ----- */
+            /* Restaurado el padding horizontal para alinear logo y selector en móvil */
+            @include mixins.margin-padding(null, 0 15px 0 15px);
         }
         .main-nav {
             > li {
@@ -73,18 +75,21 @@
                         }
                     }
                     &:hover {
-                        color: colors.$active_color;
+                        color: colors.$white;
                     }
                 }
                 .submenu {                    
                     li {
                         position: variables.$relative;
                         &.active {
-                            color: colors.$active_color;
                             >a {
-                                color: colors.$active_color;
+                                color: colors.$darkgray;
+                                text-decoration: underline;
+                                text-underline-offset: 4px;
                                 @include mixins.respond-below(custom991) { 
                                     color: colors.$white;
+                                    text-decoration: underline;
+                                    text-underline-offset: 4px;
                                 }
                             }
                         }
@@ -98,13 +103,14 @@
                             width: 100%;
                             position: variables.$relative;
                             font-weight: typography.$medium;
+                            color: colors.$darkgray;
                             @include mixins.respond-below(custom991) { 
                                 padding: 12px 15px;
                                 color: colors.$white;
                                 font-size: 14px;
                             }
                             &:hover {
-                                color: colors.$active_color;
+                                color: colors.$primarycolor;
                                 padding-left: 20px;
                                 @include mixins.respond-below(custom991) { 
                                     color: colors.$white;
@@ -177,7 +183,9 @@
             justify-content: space-evenly;
         } 
         @include mixins.respond-below(custom575) {
-            width: 100%;
+            /* ----- MODIFICACIÓN 2 ----- */
+            /* El 100% rompía el flex del header-nav y tiraba el selector para abajo */
+            width: auto; 
         }       
     }
     .main-menu-wrapper {
@@ -293,9 +301,11 @@
                 &.active {
                     > a {
                         display: variables.$block;
-                        color: colors.$active_color;
+                        color: colors.$white;
+                        text-decoration: underline;
+                        text-underline-offset: 4px;
                         &:before {
-                            opacity: 1;
+                            opacity: 0;
                         }
                     }  
                 }
@@ -405,8 +415,10 @@
         padding: 0;
         --bs-nav-link-padding-x: 0;
         --bs-nav-link-padding-y: 0;
+        display: flex;
+        align-items: center;
         @include mixins.respond-below(custom575) {
-            display: none;
+            display: flex;
         }
         >li {
             -webkit-box-align: center;
@@ -797,9 +809,16 @@ header {
             .main-nav {
                 > li {
                     > a {
-                        color: colors.$darkgray;
+                        color: colors.$white;
                         @include mixins.respond-below(custom991) {
                            color: colors.$white;
+                        }
+                    }
+                    &.active {
+                        > a {
+                            color: colors.$white;
+                            text-decoration: underline;
+                            text-underline-offset: 4px;
                         }
                     }
                 }
